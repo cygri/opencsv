@@ -50,7 +50,6 @@
         <url>http://sourceforge.net/tracker/?group_id=148905</url>
     </issueManagement>
     <build>
-        <testSourceDirectory>test</testSourceDirectory>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

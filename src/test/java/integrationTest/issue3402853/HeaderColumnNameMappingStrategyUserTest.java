@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class HeaderColumnNameMappingStrategyUserTest {
 
-    private static final String USER_FILE = "test/integrationTest/issue3402853/user.csv";
+    private static final String USER_FILE = "src/test/java/integrationTest/issue3402853/user.csv";
 
     private List<MockUserBean> createTestParseResult() throws FileNotFoundException {
         CSVReader reader = new CSVReader(new FileReader(USER_FILE));
