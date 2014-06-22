@@ -9,11 +9,11 @@ package integrationTest.issue3402853;
  */
 public class MockUserBean {
     public static final String DEFAULT_BLANK_FIELD = "";
+    private String first_name = DEFAULT_BLANK_FIELD;
+    private String last_name = DEFAULT_BLANK_FIELD;
     private String profile_id = "";
     private String email = "";
     private String secondary_email = "";
-    private String first_name = DEFAULT_BLANK_FIELD;
-    private String last_name = DEFAULT_BLANK_FIELD;
 
     public String getProfile_Id() {
         return profile_id;
@@ -93,12 +93,12 @@ public class MockUserBean {
         return false;
     }
 
-    public void setSecondary_Email(String secondaryEmail) {
-        this.secondary_email = secondaryEmail;
-    }
-
     public String getSecondary_Email() {
         return secondary_email;
+    }
+
+    public void setSecondary_Email(String secondaryEmail) {
+        this.secondary_email = secondaryEmail;
     }
 
     /**

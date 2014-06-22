@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.opencsv</groupId>
@@ -9,10 +9,10 @@
     <description>A simple library for reading and writing CSV in Java</description>
     <url>http://opencsv.sf.net</url>
     <parent>
-    	<groupId>org.sonatype.oss</groupId>
-    	<artifactId>oss-parent</artifactId>
-    	<version>7</version>
-  	</parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -207,10 +207,10 @@
         </plugins>
     </reporting>
     <distributionManagement>
-		<!-- 
-			Deployment repos provided by Sonatype parent POM. For more info see:
-			https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
-		-->
+        <!--
+            Deployment repos provided by Sonatype parent POM. For more info see:
+            https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+        -->
         <site>
             <id>opencsv.sf.net</id>
             <url>scp://shell.sourceforge.net/home/project-web/opencsv/htdocs</url>

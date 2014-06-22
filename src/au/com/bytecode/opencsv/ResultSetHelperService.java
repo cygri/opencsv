@@ -39,6 +39,17 @@ public class ResultSetHelperService implements ResultSetHelper {
     static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
     static final String DEFAULT_TIMESTAMP_FORMAT = "dd-MMM-yyyy HH:mm:ss";
 
+    private static String read(Clob c) throws SQLException, IOException {
+        StringBuilder sb = new StringBuilder((int) c.length());
+        Reader r = c.getCharacterStream();
+        char[] cbuf = new char[CLOBBUFFERSIZE];
+        int n;
+        while ((n = r.read(cbuf, 0, cbuf.length)) != -1) {
+            sb.append(cbuf, 0, n);
+        }
+        return sb.toString();
+    }
+
     public String[] getColumnNames(ResultSet rs) throws SQLException {
         List<String> names = new ArrayList<String>();
         ResultSetMetaData metadata = rs.getMetaData();
@@ -177,17 +188,6 @@ public class ResultSetHelperService implements ResultSetHelper {
 
         return value;
 
-    }
-
-    private static String read(Clob c) throws SQLException, IOException {
-        StringBuilder sb = new StringBuilder((int) c.length());
-        Reader r = c.getCharacterStream();
-        char[] cbuf = new char[CLOBBUFFERSIZE];
-        int n;
-        while ((n = r.read(cbuf, 0, cbuf.length)) != -1) {
-            sb.append(cbuf, 0, n);
-        }
-        return sb.toString();
     }
 
 }

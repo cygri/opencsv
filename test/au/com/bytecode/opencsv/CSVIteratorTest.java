@@ -17,9 +17,9 @@ import static org.mockito.Mockito.when;
  * To change this template use File | Settings | File Templates.
  */
 public class CSVIteratorTest {
+    private static final String[] STRINGS = {"test1", "test2"};
     private CSVIterator iterator;
     private CSVReader mockReader;
-    private static final String[] STRINGS = {"test1", "test2"};
 
     @Before
     public void setUp() throws IOException {

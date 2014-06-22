@@ -14,6 +14,7 @@ package au.com.bytecode.opencsv;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
+
 import java.io.*;
 import java.sql.Clob;
 import java.sql.SQLException;

@@ -31,20 +31,15 @@ import java.util.List;
  */
 public class CSVReader implements Closeable, Iterable<String[]> {
 
-    private BufferedReader br;
-
-    private boolean hasNext = true;
-
-    CSVParser parser;
-
-    int skipLines;
-
-    private boolean linesSkiped;
-
     /**
      * The default line to start reading.
      */
     public static final int DEFAULT_SKIP_LINES = 0;
+    CSVParser parser;
+    int skipLines;
+    private BufferedReader br;
+    private boolean hasNext = true;
+    private boolean linesSkiped;
 
     /**
      * Constructs CSVReader using a comma for the separator.
@@ -180,7 +175,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * tokens.
      *
      * @return a List of String[], with each String[] representing a line of the
-     *         file.
+     * file.
      * @throws IOException if bad things happen during the read
      */
     public List<String[]> readAll() throws IOException {
@@ -199,7 +194,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * Reads the next line from the buffer and converts to a string array.
      *
      * @return a string array with each comma-separated element as a separate
-     *         entry.
+     * entry.
      * @throws IOException if bad things happen during the read
      */
     public String[] readNext() throws IOException {

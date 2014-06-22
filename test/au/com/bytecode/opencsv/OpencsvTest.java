@@ -28,45 +28,44 @@ import static org.junit.Assert.assertTrue;
 
 public class OpencsvTest {
 
-	private File tempFile = null;
-	private CSVWriter writer = null;
-	private CSVReader reader = null;
+    private File tempFile = null;
+    private CSVWriter writer = null;
+    private CSVReader reader = null;
 
-	@Before
-	public void setUp() throws IOException {
-		tempFile = File.createTempFile("csvWriterTest", ".csv");
-		tempFile.deleteOnExit();
-	}
+    @Before
+    public void setUp() throws IOException {
+        tempFile = File.createTempFile("csvWriterTest", ".csv");
+        tempFile.deleteOnExit();
+    }
 
-	/**
-	 * Test the full cycle of write-read
-	 * 
-	 */
-	@Test
-	public void testWriteRead() throws IOException {
-		final String[][] data = new String[][]{{"hello, a test", "one nested \" test"}, {"\"\"", "test", null, "8"}};
+    /**
+     * Test the full cycle of write-read
+     */
+    @Test
+    public void testWriteRead() throws IOException {
+        final String[][] data = new String[][]{{"hello, a test", "one nested \" test"}, {"\"\"", "test", null, "8"}};
 
-		writer = new CSVWriter(new FileWriter(tempFile));
+        writer = new CSVWriter(new FileWriter(tempFile));
         for (String[] aData : data) {
             writer.writeNext(aData);
         }
-		writer.close();
+        writer.close();
 
-		reader = new CSVReader(new FileReader(tempFile));
+        reader = new CSVReader(new FileReader(tempFile));
 
-		String[] line;
-		for (int row = 0; (line = reader.readNext()) != null; row++) {
-			assertTrue(line.length == data[row].length);
+        String[] line;
+        for (int row = 0; (line = reader.readNext()) != null; row++) {
+            assertTrue(line.length == data[row].length);
 
-			for (int col = 0; col < line.length; col++) {
-				if (data[row][col] == null) {
-					assertTrue(line[col].equals(""));
-				} else {
-					assertTrue(line[col].equals(data[row][col]));
-				}
-			}
-		}
+            for (int col = 0; col < line.length; col++) {
+                if (data[row][col] == null) {
+                    assertTrue(line[col].equals(""));
+                } else {
+                    assertTrue(line[col].equals(data[row][col]));
+                }
+            }
+        }
 
-		reader.close();
-	}
+        reader.close();
+    }
 }

@@ -29,50 +29,37 @@ import java.util.List;
 public class CSVWriter implements Closeable, Flushable {
 
     public static final int INITIAL_STRING_SIZE = 128;
-
-    private Writer rawWriter;
-
-    private PrintWriter pw;
-
-    private char separator;
-
-    private char quotechar;
-
-    private char escapechar;
-
-    private String lineEnd;
-
     /**
      * The character used for escaping quotes.
      */
     public static final char DEFAULT_ESCAPE_CHARACTER = '"';
-
     /**
      * The default separator to use if none is supplied to the constructor.
      */
     public static final char DEFAULT_SEPARATOR = ',';
-
     /**
      * The default quote character to use if none is supplied to the
      * constructor.
      */
     public static final char DEFAULT_QUOTE_CHARACTER = '"';
-
     /**
      * The quote constant to use when you wish to suppress all quoting.
      */
     public static final char NO_QUOTE_CHARACTER = '\u0000';
-
     /**
      * The escape constant to use when you wish to suppress all escaping.
      */
     public static final char NO_ESCAPE_CHARACTER = '\u0000';
-
     /**
      * Default line terminator uses platform encoding.
      */
     public static final String DEFAULT_LINE_END = "\n";
-
+    private Writer rawWriter;
+    private PrintWriter pw;
+    private char separator;
+    private char quotechar;
+    private char escapechar;
+    private String lineEnd;
     private ResultSetHelper resultService = new ResultSetHelperService();
 
     /**

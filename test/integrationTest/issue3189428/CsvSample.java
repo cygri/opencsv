@@ -16,13 +16,13 @@ import java.util.List;
 public class CsvSample {
     String filePath = "test/integrationTest/issue3189428/mysample.csv";
 
+    public CsvSample() {
+    }
+
     public static void main(String[] args)
             throws Exception {
         CsvSample sample = new CsvSample();
         sample.doSample();
-    }
-
-    public CsvSample() {
     }
 
     public void doSample()

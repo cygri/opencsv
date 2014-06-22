@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 
 public class CSVParserTest {
 
+    private static final String ESCAPE_TEST_STRING = "\\\\1\\2\\\"3\\"; // \\1\2\"\
     CSVParser csvParser;
 
     @Before
@@ -31,7 +32,6 @@ public class CSVParserTest {
         assertEquals(" a", nextItem[2]);
         assertEquals(" test.", nextItem[3]);
     }
-
 
     @Test
     public void parseSimpleString() throws IOException {
@@ -264,9 +264,9 @@ public class CSVParserTest {
     /**
      * This is an interesting issue where the data does not use quotes but IS using a quote within the field as a
      * inch symbol.  So we want to keep that quote as part of the field and not as the start or end of a field.
-     *
+     * <p/>
      * Test data is as follows.
-     *
+     * <p/>
      * RPO;2012;P; ; ; ;SDX;ACCESSORY WHEEL, 16", ALUMINUM, DESIGN 1
      * RPO;2012;P; ; ; ;SDZ;ACCESSORY WHEEL - 17" - ALLOY - DESIGN 1
      *
@@ -428,8 +428,6 @@ public class CSVParserTest {
         String[] nextLine = csvParser.parseLine(null);
         assertNull(nextLine);
     }
-
-    private static final String ESCAPE_TEST_STRING = "\\\\1\\2\\\"3\\"; // \\1\2\"\
 
     @Test
     public void validateEscapeStringBeforeRealTest() {

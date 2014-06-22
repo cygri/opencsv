@@ -27,9 +27,10 @@ public interface MappingStrategy<T> {
 
     /**
      * Implementation will have to return a property descriptor from a bean based on the current column.
+     *
      * @param col the column to find the description for
-     * @throws java.beans.IntrospectionException
      * @return the related PropertyDescriptor
+     * @throws java.beans.IntrospectionException
      */
     public abstract PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
 
@@ -38,6 +39,7 @@ public interface MappingStrategy<T> {
     /**
      * Implementation of this method can grab the header line before parsing begins to use to map columns
      * to bean properties.
+     *
      * @param reader the CSVReader to use for header parsing
      * @throws java.io.IOException if parsing fails
      */

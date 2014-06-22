@@ -29,62 +29,47 @@ import java.util.List;
  */
 public class CSVParser {
 
-    final char separator;
-
-    final char quotechar;
-
-    final char escape;
-
-    final boolean strictQuotes;
-
-    private String pending;
-    private boolean inField = false;
-
-    final boolean ignoreLeadingWhiteSpace;
-
-    final boolean ignoreQuotations;
-
     /**
      * The default separator to use if none is supplied to the constructor.
      */
     public static final char DEFAULT_SEPARATOR = ',';
-
     public static final int INITIAL_READ_SIZE = 128;
-
     /**
      * The default quote character to use if none is supplied to the
      * constructor.
      */
     public static final char DEFAULT_QUOTE_CHARACTER = '"';
-
-
     /**
      * The default escape character to use if none is supplied to the
      * constructor.
      */
     public static final char DEFAULT_ESCAPE_CHARACTER = '\\';
-
     /**
      * The default strict quote behavior to use if none is supplied to the
      * constructor
      */
     public static final boolean DEFAULT_STRICT_QUOTES = false;
-
     /**
      * The default leading whitespace behavior to use if none is supplied to the
      * constructor
      */
     public static final boolean DEFAULT_IGNORE_LEADING_WHITESPACE = true;
-
     /**
      * I.E. if the quote character is set to null then there is no quote character.
      */
     public static final boolean DEFAULT_IGNORE_QUOTATIONS = false;
-
     /**
      * This is the "null" character - if a value is set to this then it is ignored.
      */
     static final char NULL_CHARACTER = '\0';
+    final char separator;
+    final char quotechar;
+    final char escape;
+    final boolean strictQuotes;
+    final boolean ignoreLeadingWhiteSpace;
+    final boolean ignoreQuotations;
+    private String pending;
+    private boolean inField = false;
 
     /**
      * Constructs CSVParser using a comma for the separator.
