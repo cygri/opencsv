@@ -249,7 +249,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         try {
             return !br.ready();
         } catch (IOException e) {
-            return "Stream closed".equals(e.getMessage());
+            return true;
         }
     }
 
