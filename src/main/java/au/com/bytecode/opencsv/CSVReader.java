@@ -227,6 +227,11 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @throws IOException if bad things happen during the read
      */
     private String getNextLine() throws IOException {
+        if (isClosed()) {
+            hasNext = false;
+            return null;
+        }
+
         if (!this.linesSkiped) {
             for (int i = 0; i < skipLines; i++) {
                 br.readLine();
@@ -238,6 +243,14 @@ public class CSVReader implements Closeable, Iterable<String[]> {
             hasNext = false;
         }
         return hasNext ? nextLine : null;
+    }
+
+    private boolean isClosed() {
+        try {
+            return !br.ready();
+        } catch (IOException e) {
+            return "Stream closed".equals(e.getMessage());
+        }
     }
 
     /**

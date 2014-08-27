@@ -20,11 +20,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.CharBuffer;
-import java.util.Iterator;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
@@ -485,15 +485,28 @@ public class CSVReaderTest {
         assertNotNull(csvr.iterator());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void creatingIteratorForReaderWithNullDataThrowsRuntimeException() throws IOException {
-        Reader mockReader = mock(Reader.class);
-        when(mockReader.read(Matchers.<CharBuffer>any())).thenThrow(new IOException("test io exception"));
-        when(mockReader.read()).thenThrow(new IOException("test io exception"));
-        when(mockReader.read((char[]) notNull())).thenThrow(new IOException("test io exception"));
-        when(mockReader.read((char[]) notNull(), anyInt(), anyInt())).thenThrow(new IOException("test io exception"));
-        csvr = new CSVReader(mockReader);
-        Iterator iterator = csvr.iterator();
+        try {
+            Reader mockReader = mock(Reader.class);
+            when(mockReader.read(Matchers.<CharBuffer>any())).thenThrow(new IOException("test io exception"));
+            when(mockReader.read()).thenThrow(new IOException("test io exception"));
+            when(mockReader.read((char[]) notNull())).thenThrow(new IOException("test io exception"));
+            when(mockReader.read((char[]) notNull(), anyInt(), anyInt())).thenThrow(new IOException("test io exception"));
+            csvr = new CSVReader(mockReader);
+            csvr.iterator();
+
+        } catch (Throwable t) {
+            fail("No exception should be thrown! Message: " + t.getMessage());
+        }
     }
 
+    @Test
+    public void attemptToReadCloseStreamReturnsNull() throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new StringReader(""));
+        bufferedReader.close();
+        bufferedReader.close();
+        CSVReader csvReader = new CSVReader(bufferedReader);
+        assertNull(csvReader.readNext());
+    }
 }
