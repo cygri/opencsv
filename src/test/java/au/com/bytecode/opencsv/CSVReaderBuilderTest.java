@@ -87,5 +87,4 @@ public class CSVReaderBuilderTest {
         final CSVReader actual = builder.build();
         assertSame(0, actual.skipLines);
     }
-
 }

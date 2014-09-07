@@ -209,7 +209,7 @@ public class CSVParser {
             }
         }
 
-        List<String> tokensOnThisLine = new ArrayList<String>();
+        List<String> tokensOnThisLine = new ArrayList<>();
         StringBuilder sb = new StringBuilder(INITIAL_READ_SIZE);
         boolean inQuotes = false;
         if (pending != null) {
@@ -314,7 +314,6 @@ public class CSVParser {
      * @return true if every character in the sequence is whitespace
      */
     protected boolean isAllWhiteSpace(CharSequence sb) {
-        boolean result = true;
         for (int i = 0; i < sb.length(); i++) {
             char c = sb.charAt(i);
 
@@ -322,6 +321,6 @@ public class CSVParser {
                 return false;
             }
         }
-        return result;
+        return true;
     }
 }

@@ -43,7 +43,7 @@ public class CsvToBean<T> {
         try {
             mapper.captureHeader(csv);
             String[] line;
-            List<T> list = new ArrayList<T>();
+            List<T> list = new ArrayList<>();
             while (null != (line = csv.readNext())) {
                 T obj = processLine(mapper, line);
                 list.add(obj); // TODO: (Kyle) null check object
@@ -87,7 +87,7 @@ public class CsvToBean<T> {
 
     private PropertyEditor getPropertyEditorValue(Class<?> cls) {
         if (editorMap == null) {
-            editorMap = new HashMap<Class<?>, PropertyEditor>();
+            editorMap = new HashMap<>();
         }
 
         PropertyEditor editor = editorMap.get(cls);
@@ -106,7 +106,6 @@ public class CsvToBean<T> {
         }
     }
 
-
     /*
      * Attempt to find custom property editor on descriptor first, else try the propery editor manager.
      */
@@ -115,5 +114,4 @@ public class CsvToBean<T> {
         if (null != cls) return (PropertyEditor) cls.newInstance();
         return getPropertyEditorValue(desc.getPropertyType());
     }
-
 }

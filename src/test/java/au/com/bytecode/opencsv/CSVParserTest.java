@@ -182,7 +182,7 @@ public class CSVParserTest {
     }
 
     private String setUpMultiLineInsideQuotes() {
-        StringBuffer sb = new StringBuffer(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
 
         sb.append("Small test,\"This is a test across \ntwo lines.\"");
 
@@ -357,9 +357,7 @@ public class CSVParserTest {
 
     @Test(expected = IOException.class)
     public void anIOExceptionThrownifStringEndsInsideAQuotedString() throws IOException {
-        String[] nextLine = csvParser.parseLine("This,is a \"bad line to parse.");
-
-
+        csvParser.parseLine("This,is a \"bad line to parse.");
     }
 
     @Test
@@ -446,7 +444,6 @@ public class CSVParserTest {
         int lastChar = ESCAPE_TEST_STRING.length() - 1;
         assertFalse(csvParser.isNextCharacterEscapable(ESCAPE_TEST_STRING, true, lastChar));
         assertFalse(csvParser.isNextCharacterEscapable(ESCAPE_TEST_STRING, false, lastChar));
-
     }
 
 
@@ -471,27 +468,26 @@ public class CSVParserTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void quoteAndEscapeCannotBeTheSame() {
-        CSVParser p = new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER);
+        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER);
     }
 
     @Test
     public void quoteAndEscapeCanBeTheSameIfNull() {
-        CSVParser p = new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.NULL_CHARACTER, CSVParser.NULL_CHARACTER);
+        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.NULL_CHARACTER, CSVParser.NULL_CHARACTER);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void separatorCharacterCannotBeNull() {
-        CSVParser p = new CSVParser(CSVParser.NULL_CHARACTER);
+        new CSVParser(CSVParser.NULL_CHARACTER);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void separatorAndEscapeCannotBeTheSame() {
-        CSVParser p = new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_SEPARATOR);
+        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_SEPARATOR);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void separatorAndQuoteCannotBeTheSame() {
-        CSVParser p = new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER);
+        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER);
     }
-
 }

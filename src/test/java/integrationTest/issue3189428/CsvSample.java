@@ -55,10 +55,9 @@ public class CsvSample {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    protected void testRawCsvRead(String originalCommentText)
-            throws FileNotFoundException, IOException {
+    protected void testRawCsvRead(String originalCommentText) throws IOException {
         CSVReader reader = new CSVReader(new FileReader(filePath));
-        String[] nextLine = null;
+        String[] nextLine;
         int count = 0;
         while ((nextLine = reader.readNext()) != null) {
             if (!nextLine[0].equals("field1")) {

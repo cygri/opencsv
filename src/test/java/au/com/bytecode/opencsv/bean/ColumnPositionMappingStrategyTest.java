@@ -15,8 +15,6 @@ package au.com.bytecode.opencsv.bean;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,13 +23,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-
 public class ColumnPositionMappingStrategyTest {
     private ColumnPositionMappingStrategy<MockBean> strat;
 
     @Before
     public void setUp() throws Exception {
-        strat = new ColumnPositionMappingStrategy<MockBean>();
+        strat = new ColumnPositionMappingStrategy<>();
         strat.setType(MockBean.class);
     }
 
@@ -43,7 +40,7 @@ public class ColumnPositionMappingStrategyTest {
 
         strat.setColumnMapping("name", "orderNumber", "id", "num");
 
-        CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
+        CsvToBean<MockBean> csv = new CsvToBean<>();
         List<MockBean> list = csv.parse(strat, new StringReader(s));
         assertNotNull(list);
         assertTrue(list.size() == 2);
@@ -63,7 +60,7 @@ public class ColumnPositionMappingStrategyTest {
         String[] columns = new String[]{"name", "orderNumber", "id", "num"};
         strat.setColumnMapping(columns);
 
-        CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
+        CsvToBean<MockBean> csv = new CsvToBean<>();
         List<MockBean> list = csv.parse(strat, new StringReader(s));
         assertNotNull(list);
         assertTrue(list.size() == 2);
@@ -139,5 +136,4 @@ public class ColumnPositionMappingStrategyTest {
         assertEquals(null, strat.getColumnName(0));
         assertArrayEquals(new String[0], strat.getColumnMapping());
     }
-
 }

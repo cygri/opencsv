@@ -45,11 +45,11 @@ public class MockUserBean {
         String firstname = isEmpty(getFirst_Name()) ? "" : getFirst_Name().trim();
         String lastname = isEmpty(getLast_Name()) ? "" : getLast_Name().trim();
         String email = isEmpty(getEmail()) ? "" : getEmail().trim();
-        StringBuffer value = new StringBuffer();
-        value.append(",user id:" + userId);
-        value.append(",email:" + email);
-        value.append(",first name:" + firstname);
-        value.append(",last name:" + lastname);
+        StringBuilder value = new StringBuilder();
+        value.append(",user id:").append(userId);
+        value.append(",email:").append(email);
+        value.append(",first name:").append(firstname);
+        value.append(",last name:").append(lastname);
 
         return value.toString();
     }
@@ -59,11 +59,7 @@ public class MockUserBean {
             return false;
         }
 
-        if (this == obj) {
-            return true;
-        }
-
-        return ((MockUserBean) obj).toString().equalsIgnoreCase(this.toString());
+        return this == obj || (obj).toString().equalsIgnoreCase(this.toString());
     }
 
     public int hashCode() {
@@ -79,11 +75,8 @@ public class MockUserBean {
     }
 
     private boolean isNameEmpty(String name) {
-        if (name == null || name.length() == 0 || DEFAULT_BLANK_FIELD.equals(name)) {
-            return true;
-        }
+        return name == null || name.length() == 0 || DEFAULT_BLANK_FIELD.equals(name);
 
-        return false;
     }
 
     public String getSecondary_Email() {
@@ -101,11 +94,7 @@ public class MockUserBean {
      * @return
      */
     public boolean isEmpty(final String value) {
-        if ((null == value) || (value.trim().length() == 0)) {
-            return true;
-        }
-
-        return false;
+        return (null == value) || (value.trim().length() == 0);
     }
 
 }

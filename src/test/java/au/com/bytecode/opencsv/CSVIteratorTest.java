@@ -24,7 +24,7 @@ public class CSVIteratorTest {
     @Test(expected = RuntimeException.class)
     public void readerExceptionCausesRunTimeException() throws IOException {
         when(mockReader.readNext()).thenThrow(new IOException("reader threw test exception"));
-        String[] stuff = iterator.next();
+        iterator.next();
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -41,7 +41,7 @@ public class CSVIteratorTest {
     public void hasNextWorks() throws IOException {
         when(mockReader.readNext()).thenReturn(null);
         assertTrue(iterator.hasNext()); // initial read from constructor
-        String[] stuff = iterator.next();
+        iterator.next();
         assertFalse(iterator.hasNext());
     }
 }

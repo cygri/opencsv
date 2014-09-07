@@ -14,7 +14,7 @@ public class MockResultSetBuilder {
 
     public static ResultSet buildResultSet(ResultSetMetaData metaData, String[] columnValues, int[] columnTypes) throws SQLException {
         ResultSet resultSet = mock(ResultSet.class);
-        List<Boolean> wnrl = new ArrayList<Boolean>();
+        List<Boolean> wnrl = new ArrayList<>();
         when(resultSet.getMetaData()).thenReturn(metaData);
 
         for (int i = 0; i < columnValues.length; i++) {
@@ -55,7 +55,7 @@ public class MockResultSetBuilder {
                 when(rs.getBoolean(index)).thenReturn(Boolean.valueOf(value));
                 break;
             case BIGINT:
-                when(rs.getLong(index)).thenReturn(value != null ? Long.valueOf(value).longValue() : 0);
+                when(rs.getLong(index)).thenReturn(value != null ? Long.valueOf(value) : 0);
                 wnrl.add(value == null);
                 break;
             case Types.DECIMAL:
@@ -68,7 +68,7 @@ public class MockResultSetBuilder {
             case Types.INTEGER:
             case Types.TINYINT:
             case Types.SMALLINT:
-                when(rs.getInt(index)).thenReturn(value != null ? new Integer(value).intValue() : 0);
+                when(rs.getInt(index)).thenReturn(value != null ? new Integer(value) : 0);
                 wnrl.add(value == null);
                 break;
             case ResultSetHelperService.NVARCHAR: // todo : use rs.getNString
@@ -165,7 +165,6 @@ public class MockResultSetBuilder {
         } else {
             when(rs.getString(index)).thenReturn(value);
         }
-
     }
 
     private static void buildNextExpect(ResultSet rs, int numRows) throws SQLException {
@@ -178,6 +177,5 @@ public class MockResultSetBuilder {
             }
             when(rs.next()).thenReturn(true, nextArray);
         }
-
     }
 }

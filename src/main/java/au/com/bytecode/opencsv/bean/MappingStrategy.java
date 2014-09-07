@@ -44,5 +44,4 @@ public interface MappingStrategy<T> {
      * @throws java.io.IOException if parsing fails
      */
     public void captureHeader(CSVReader reader) throws IOException;
-
 }

@@ -33,9 +33,9 @@ public class HeaderColumnNameMappingStrategyUserTest {
 
     private List<MockUserBean> createTestParseResult() throws FileNotFoundException {
         CSVReader reader = new CSVReader(new FileReader(USER_FILE));
-        HeaderColumnNameMappingStrategy<MockUserBean> strat = new HeaderColumnNameMappingStrategy<MockUserBean>();
+        HeaderColumnNameMappingStrategy<MockUserBean> strat = new HeaderColumnNameMappingStrategy<>();
         strat.setType(MockUserBean.class);
-        CsvToBean<MockUserBean> csv = new CsvToBean<MockUserBean>();
+        CsvToBean<MockUserBean> csv = new CsvToBean<>();
         return csv.parse(strat, reader);
     }
 

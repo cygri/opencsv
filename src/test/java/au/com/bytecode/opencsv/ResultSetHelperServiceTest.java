@@ -14,10 +14,7 @@ package au.com.bytecode.opencsv;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.sql.*;
@@ -25,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ResultSetHelperServiceTest {
 
@@ -33,21 +32,20 @@ public class ResultSetHelperServiceTest {
     @Test
     public void canPrintColumnNames() throws SQLException {
 
-        ResultSet resultSet = Mockito.mock(ResultSet.class);
+        ResultSet resultSet = mock(ResultSet.class);
 
         String[] expectedNames = {"name1", "name2", "name3"};
 
         ResultSetMetaData metaData = MockResultSetMetaDataBuilder.buildMetaData(expectedNames);
 
-        Mockito.when(resultSet.getMetaData()).thenReturn(metaData);
+        when(resultSet.getMetaData()).thenReturn(metaData);
 
         // end expects
 
         ResultSetHelperService service = new ResultSetHelperService();
 
         String[] columnNames = service.getColumnNames(resultSet);
-        Assert.assertArrayEquals(expectedNames, columnNames);
-
+        assertArrayEquals(expectedNames, columnNames);
     }
 
     @Test
@@ -64,7 +62,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -82,7 +79,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -99,7 +95,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -116,7 +111,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -134,7 +128,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -151,7 +144,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -169,7 +161,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -187,7 +178,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet, true);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -205,7 +195,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -227,7 +216,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -250,7 +238,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet, false, customDateFormat, null);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -272,7 +259,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -293,7 +279,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -315,7 +300,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet, false, null, customFormat);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -334,7 +318,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -353,7 +336,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     @Test
@@ -372,7 +354,6 @@ public class ResultSetHelperServiceTest {
 
         String[] columnValues = service.getColumnValues(resultSet);
         assertArrayEquals(expectedValues, columnValues);
-
     }
 
     private String buildClobString(int clobsize) {

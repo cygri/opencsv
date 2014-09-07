@@ -45,7 +45,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     }
 
     protected PropertyDescriptor findDescriptor(String name) throws IntrospectionException {
-        if (null == descriptorMap) descriptorMap = loadDescriptorMap(getType()); //lazy load descriptors
+        if (null == descriptorMap) descriptorMap = loadDescriptorMap(); //lazy load descriptors
         return descriptorMap.get(name.toUpperCase().trim());
     }
 
@@ -53,8 +53,8 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
         return desc.getName().equals(name.trim());
     }
 
-    protected Map<String, PropertyDescriptor> loadDescriptorMap(Class<T> cls) throws IntrospectionException {
-        Map<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
+    protected Map<String, PropertyDescriptor> loadDescriptorMap() throws IntrospectionException {
+        Map<String, PropertyDescriptor> map = new HashMap<>();
 
         PropertyDescriptor[] descriptors;
         descriptors = loadDescriptors(getType());

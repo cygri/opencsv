@@ -15,8 +15,6 @@ package au.com.bytecode.opencsv.bean;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
-
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -26,7 +24,6 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-
 public class HeaderColumnNameTranslateMappingStrategyTest {
 
     @Test
@@ -34,15 +31,15 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
         String s = "n,o,foo\n" +
                 "kyle,123456,emp123\n" +
                 "jimmy,abcnum,cust09878";
-        HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<MockBean>();
+        HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<>();
         strat.setType(MockBean.class);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("n", "name");
         map.put("o", "orderNumber");
         map.put("foo", "id");
         strat.setColumnMapping(map);
 
-        CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
+        CsvToBean<MockBean> csv = new CsvToBean<>();
         List<MockBean> list = csv.parse(strat, new StringReader(s));
         assertNotNull(list);
         assertTrue(list.size() == 2);
@@ -57,16 +54,16 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
         String s = "n,o,foo\n" +
                 "kyle,123456,emp123\n" +
                 "jimmy,abcnum,cust09878";
-        HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<MockBean>();
+        HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<>();
         strat.setType(MockBean.class);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("n", "name");
         map.put("o", "orderNumber");
         map.put("foo", "id");
         strat.setColumnMapping(map);
 
-        CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
-        List<MockBean> list = csv.parse(strat, new StringReader(s));
+        CsvToBean<MockBean> csv = new CsvToBean<>();
+        csv.parse(strat, new StringReader(s));
 
         assertEquals("name", strat.getColumnName(0));
         assertEquals("orderNumber", strat.getColumnName(1));
@@ -79,22 +76,21 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
         String s = "n,o,Foo\n" +
                 "kyle,123456,emp123\n" +
                 "jimmy,abcnum,cust09878";
-        HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<MockBean>();
+        HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<>();
         strat.setType(MockBean.class);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("n", "name");
         map.put("o", "orderNumber");
         map.put("foo", "id");
         strat.setColumnMapping(map);
         assertNotNull(strat.getColumnMapping());
 
-        CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
-        List<MockBean> list = csv.parse(strat, new StringReader(s));
+        CsvToBean<MockBean> csv = new CsvToBean<>();
+        csv.parse(strat, new StringReader(s));
 
         assertEquals("name", strat.getColumnName(0));
         assertEquals("orderNumber", strat.getColumnName(1));
         assertEquals("id", strat.getColumnName(2));
         assertNull(strat.getColumnName(3));
     }
-
 }

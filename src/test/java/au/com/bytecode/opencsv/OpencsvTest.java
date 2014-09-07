@@ -1,5 +1,4 @@
 package au.com.bytecode.opencsv;
-
 /**
  Copyright 2005 Bytecode Pty Ltd.
 
@@ -15,7 +14,6 @@ package au.com.bytecode.opencsv;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,8 +27,6 @@ import static org.junit.Assert.assertTrue;
 public class OpencsvTest {
 
     private File tempFile = null;
-    private CSVWriter writer = null;
-    private CSVReader reader = null;
 
     @Before
     public void setUp() throws IOException {
@@ -45,13 +41,13 @@ public class OpencsvTest {
     public void testWriteRead() throws IOException {
         final String[][] data = new String[][]{{"hello, a test", "one nested \" test"}, {"\"\"", "test", null, "8"}};
 
-        writer = new CSVWriter(new FileWriter(tempFile));
+        CSVWriter writer = new CSVWriter(new FileWriter(tempFile));
         for (String[] aData : data) {
             writer.writeNext(aData);
         }
         writer.close();
 
-        reader = new CSVReader(new FileReader(tempFile));
+        CSVReader reader = new CSVReader(new FileReader(tempFile));
 
         String[] line;
         for (int row = 0; (line = reader.readNext()) != null; row++) {
@@ -65,7 +61,6 @@ public class OpencsvTest {
                 }
             }
         }
-
         reader.close();
     }
 }

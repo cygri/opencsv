@@ -20,7 +20,7 @@ import java.util.Map;
  */
 
 public class HeaderColumnNameTranslateMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
-    private Map<String, String> columnMapping = new HashMap<String, String>();
+    private Map<String, String> columnMapping = new HashMap<>();
 
     protected String getColumnName(int col) {
         return col < header.length ? columnMapping.get(header[col].toUpperCase()) : null;

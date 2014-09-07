@@ -15,8 +15,6 @@ package au.com.bytecode.opencsv.bean;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
-
 import au.com.bytecode.opencsv.CSVReader;
 import org.junit.Test;
 
@@ -38,9 +36,9 @@ public class HeaderColumnNameMappingStrategyTest {
 
 
     private List<MockBean> createTestParseResult(String parseString) {
-        HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<MockBean>();
+        HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<>();
         strat.setType(MockBean.class);
-        CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
+        CsvToBean<MockBean> csv = new CsvToBean<>();
         return csv.parse(strat, new StringReader(parseString));
     }
 
@@ -79,7 +77,7 @@ public class HeaderColumnNameMappingStrategyTest {
 
     @Test
     public void verifyColumnNames() throws IOException, IntrospectionException {
-        HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<MockBean>();
+        HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<>();
         strat.setType(MockBean.class);
         assertNull(strat.getColumnName(0));
         assertNull(strat.findDescriptor(0));
@@ -93,5 +91,4 @@ public class HeaderColumnNameMappingStrategyTest {
         assertEquals(strat.findDescriptor(0), strat.findDescriptor("name"));
         assertTrue(strat.matches("name", strat.findDescriptor("name")));
     }
-
 }

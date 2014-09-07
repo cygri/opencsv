@@ -15,6 +15,8 @@
  */
 package au.com.bytecode.opencsv;
 
+import static au.com.bytecode.opencsv.CSVParser.*;
+
 /**
  * Builder for creating a CSVParser.
  * <p/>
@@ -30,14 +32,12 @@ package au.com.bytecode.opencsv;
  */
 public class CSVParserBuilder {
 
-    char separator = CSVParser.DEFAULT_SEPARATOR;
-    char quoteChar = CSVParser.DEFAULT_QUOTE_CHARACTER;
-    char escapeChar = CSVParser.DEFAULT_ESCAPE_CHARACTER;
-    boolean strictQuotes = CSVParser.DEFAULT_STRICT_QUOTES;
-    ;
-    boolean ignoreLeadingWhiteSpace =
-            CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
-    boolean ignoreQuotations = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
+    char separator = DEFAULT_SEPARATOR;
+    char quoteChar = DEFAULT_QUOTE_CHARACTER;
+    char escapeChar = DEFAULT_ESCAPE_CHARACTER;
+    boolean strictQuotes = DEFAULT_STRICT_QUOTES;
+    boolean ignoreLeadingWhiteSpace = DEFAULT_IGNORE_LEADING_WHITESPACE;
+    boolean ignoreQuotations = DEFAULT_IGNORE_QUOTATIONS;
 
     /**
      * Sets the delimiter to use for separating entries

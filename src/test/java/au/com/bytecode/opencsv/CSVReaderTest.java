@@ -15,7 +15,6 @@ package au.com.bytecode.opencsv;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -91,7 +90,6 @@ public class CSVReaderTest {
 
         //test end of stream
         assertNull(csvr.readNext());
-
     }
 
     @Test
@@ -185,7 +183,6 @@ public class CSVReaderTest {
 
         String[] nextLine = c.readNext();
         assertEquals(3, nextLine.length);
-
     }
 
     /**
@@ -251,7 +248,6 @@ public class CSVReaderTest {
         assertEquals("a", nextLine[0]);
         assertEquals("1234567", nextLine[1]);
         assertEquals("c", nextLine[2]);
-
     }
 
 
@@ -277,7 +273,6 @@ public class CSVReaderTest {
         assertEquals(1, nextLine[1].length());
         assertEquals("\'", nextLine[1]);
         assertEquals("c", nextLine[2]);
-
     }
 
     /**
@@ -302,7 +297,6 @@ public class CSVReaderTest {
         assertEquals(0, nextLine[1].length());
         assertEquals("", nextLine[1]);
         assertEquals("c", nextLine[2]);
-
     }
 
     @Test
@@ -325,7 +319,7 @@ public class CSVReaderTest {
     @Test
     public void testEscapedQuote() throws IOException {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("a,\"123\\\"4567\",c").append("\n");// a,123"4",c
 
@@ -335,13 +329,12 @@ public class CSVReaderTest {
         assertEquals(3, nextLine.length);
 
         assertEquals("123\"4567", nextLine[1]);
-
     }
 
     @Test
     public void testEscapedEscape() throws IOException {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("a,\"123\\\\4567\",c").append("\n");// a,123"4",c
 
@@ -351,7 +344,6 @@ public class CSVReaderTest {
         assertEquals(3, nextLine.length);
 
         assertEquals("123\\4567", nextLine[1]);
-
     }
 
 
@@ -378,7 +370,6 @@ public class CSVReaderTest {
         assertEquals(2, nextLine[1].length());
         assertEquals("''", nextLine[1]);
         assertEquals("c", nextLine[2]);
-
     }
 
     /**
@@ -403,7 +394,6 @@ public class CSVReaderTest {
 
         assertEquals("1234567", nextLine[1]);
         assertEquals("c", nextLine[2]);
-
     }
 
     @Test
@@ -428,7 +418,7 @@ public class CSVReaderTest {
 
         sb.append("a,b,c,ddd\\\"eee\nf,g,h,\"iii,jjj\"");
 
-        CSVReader c = new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVReader.DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
+        new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVReader.DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -437,7 +427,7 @@ public class CSVReaderTest {
 
         sb.append("a,b,c,ddd\\\"eee\nf,g,h,\"iii,jjj\"");
 
-        CSVReader c = new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_SEPARATOR, CSVReader.DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
+        new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_SEPARATOR, CSVReader.DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -446,7 +436,7 @@ public class CSVReaderTest {
 
         sb.append("a,b,c,ddd\\\"eee\nf,g,h,\"iii,jjj\"");
 
-        CSVReader c = new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER, CSVReader.DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
+        new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER, CSVReader.DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
     }
 
     /**

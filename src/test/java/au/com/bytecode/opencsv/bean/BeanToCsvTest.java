@@ -2,7 +2,6 @@ package au.com.bytecode.opencsv.bean;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +12,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class BeanToCsvTest {
 
@@ -36,7 +35,7 @@ public class BeanToCsvTest {
 
     @Before
     public void setTestData() {
-        testData = new ArrayList<MockBean>();
+        testData = new ArrayList<>();
         MockBean mb = new MockBean();
         mb.setName("kyle");
         mb.setOrderNumber("abc123456");
@@ -51,7 +50,7 @@ public class BeanToCsvTest {
 
     @Before
     public void setNullData() {
-        nullData = new ArrayList<MockBean>();
+        nullData = new ArrayList<>();
         MockBean mb = new MockBean();
         mb.setName(null);
         mb.setOrderNumber(null);
@@ -91,19 +90,19 @@ public class BeanToCsvTest {
 
     @Test
     public void beanReturnsFalseOnEmptyList() {
-        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
+        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
         strat.setType(MockBean.class);
         String[] columns = new String[]{"name", "orderNumber", "num"};
         strat.setColumnMapping(columns);
 
         StringWriter sw = new StringWriter();
 
-        assertFalse(bean.write(strat, sw, new ArrayList<Object>()));
+        assertFalse(bean.write(strat, sw, new ArrayList<>()));
     }
 
     @Test
     public void beanReturnsFalseOnNull() {
-        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
+        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
         strat.setType(MockBean.class);
         String[] columns = new String[]{"name", "orderNumber", "num"};
         strat.setColumnMapping(columns);
@@ -115,7 +114,7 @@ public class BeanToCsvTest {
 
     @Test
     public void testWriteQuotes() throws IOException {
-        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
+        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
         strat.setType(MockBean.class);
         String[] columns = new String[]{"name", "orderNumber", "num"};
         strat.setColumnMapping(columns);
@@ -124,16 +123,16 @@ public class BeanToCsvTest {
 
         boolean value = bean.write(strat, sw, testData);
 
-        Assert.assertTrue(value);
+        assertTrue(value);
 
         String content = sw.getBuffer().toString();
-        Assert.assertNotNull(content);
-        Assert.assertEquals(TEST_STRING, content);
+        assertNotNull(content);
+        assertEquals(TEST_STRING, content);
     }
 
     @Test
     public void testWriteNulls() throws IOException {
-        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
+        ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
         strat.setType(MockBean.class);
         String[] columns = new String[]{"name", "orderNumber", "num"};
         strat.setColumnMapping(columns);
@@ -142,10 +141,10 @@ public class BeanToCsvTest {
 
         boolean value = bean.write(strat, sw, nullData);
 
-        Assert.assertTrue(value);
+        assertTrue(value);
 
         String content = sw.getBuffer().toString();
-        Assert.assertNotNull(content);
-        Assert.assertEquals(NULL_TEST_STRING, content);
+        assertNotNull(content);
+        assertEquals(NULL_TEST_STRING, content);
     }
 }

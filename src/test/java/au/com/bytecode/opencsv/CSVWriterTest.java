@@ -1,5 +1,4 @@
 package au.com.bytecode.opencsv;
-
 /**
  Copyright 2005 Bytecode Pty Ltd.
 
@@ -15,7 +14,6 @@ package au.com.bytecode.opencsv;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
 import org.junit.Test;
 
 import java.io.*;
@@ -27,7 +25,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class CSVWriterTest {
-
 
    /**
     * Test routine for converting output to a string.
@@ -145,7 +142,6 @@ public class CSVWriterTest {
       String[] multiline = {"This is a \n multiline entry", "so is \n this"};
       output = invokeNoEscapeWriter(multiline);
       assertEquals("'This is a \n multiline entry','so is \n this'\n", output);
-
    }
 
    @Test
@@ -164,7 +160,7 @@ public class CSVWriterTest {
    @Test
    public void testWriteAll() throws IOException {
 
-      List<String[]> allElements = new ArrayList<String[]>();
+      List<String[]> allElements = new ArrayList<>();
       String[] line1 = "Name#Phone#Email".split("#");
       String[] line2 = "Glen#1234#glen@abcd.com".split("#");
       String[] line3 = "John#5678#john@efgh.com".split("#");
@@ -180,7 +176,6 @@ public class CSVWriterTest {
       String[] lines = result.split("\n");
 
       assertEquals(3, lines.length);
-
    }
 
    /**
@@ -191,7 +186,7 @@ public class CSVWriterTest {
    @Test
    public void testWriteAllObjects() throws IOException {
 
-      List<String[]> allElements = new ArrayList<String[]>(3);
+      List<String[]> allElements = new ArrayList<>(3);
       String[] line1 = "Name#Phone#Email".split("#");
       String[] line2 = "Glen#1234#glen@abcd.com".split("#");
       String[] line3 = "John#5678#john@efgh.com".split("#");
@@ -276,7 +271,6 @@ public class CSVWriterTest {
       String result = sw.toString();
 
       assertEquals("\"Foo\",,\"Bar\",\"baz\"\n", result);
-
    }
 
    @Test
@@ -293,7 +287,6 @@ public class CSVWriterTest {
 
       // If this line is not executed, it is not written in the file.
       writer.close();
-
    }
 
    @Test(expected = IOException.class)
@@ -336,7 +329,7 @@ public class CSVWriterTest {
    @Test
    public void testNestedQuotes() {
       String[] data = new String[]{"\"\"", "test"};
-      String oracle = new String("\"\"\"\"\"\",\"test\"\n");
+      String oracle = "\"\"\"\"\"\",\"test\"\n";
 
       CSVWriter writer = null;
       File tempFile = null;
@@ -399,7 +392,6 @@ public class CSVWriterTest {
       String result = sw.toString();
 
       assertTrue(result.endsWith("\r"));
-
    }
 
    @Test
@@ -516,5 +508,4 @@ public class CSVWriterTest {
       assertNotNull(result);
       assertEquals("'Foo','Bar','baz'\n'v1','v2''v2a','v3'\n", result);
    }
-
 }

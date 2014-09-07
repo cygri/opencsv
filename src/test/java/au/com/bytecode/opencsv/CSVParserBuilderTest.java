@@ -103,5 +103,4 @@ public class CSVParserBuilderTest {
         assertEquals(expected, builder.ignoreQuotations);
         assertEquals(expected, builder.build().ignoreQuotations);
     }
-
 }

@@ -15,7 +15,6 @@ package au.com.bytecode.opencsv.bean;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 public class MockBean {
     private String name;
     private String id;
