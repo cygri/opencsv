@@ -26,13 +26,6 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertArrayEquals;
 
-/**
- * Created by IntelliJ IDEA.
- * User: scott
- * Date: Dec 13, 2009
- * Time: 12:34:58 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ResultSetHelperServiceTest {
 
     private static final String BUILDSTRING = "abcdefghijklmnopqrstuvwxyz";

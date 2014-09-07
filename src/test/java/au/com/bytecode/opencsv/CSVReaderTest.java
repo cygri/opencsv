@@ -36,10 +36,6 @@ public class CSVReaderTest {
 
     CSVReader csvr;
 
-
-    /**
-     * Setup the test.
-     */
     @Before
     public void setUp() throws Exception {
         StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);

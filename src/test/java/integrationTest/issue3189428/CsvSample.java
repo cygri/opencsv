@@ -19,16 +19,12 @@ public class CsvSample {
     public CsvSample() {
     }
 
-    public static void main(String[] args)
-            throws Exception {
+    public static void main(String[] args) throws Exception {
         CsvSample sample = new CsvSample();
         sample.doSample();
     }
 
-    public void doSample()
-            throws Exception {
-        // First write
-
+    public void doSample() throws Exception {
         String[] fields = new String[5];
         fields[0] = "field1";
         fields[1] = "3.0";
@@ -186,5 +182,4 @@ public class CsvSample {
         }
 
     }
-
 }

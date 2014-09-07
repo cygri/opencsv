@@ -1,12 +1,5 @@
 package integrationTest.issue3402853;
 
-/**
- * Created by IntelliJ IDEA.
- * User: sconway
- * Date: 9/5/11
- * Time: 10:06 PM
- * To change this template use File | Settings | File Templates.
- */
 public class MockUserBean {
     public static final String DEFAULT_BLANK_FIELD = "";
     private String first_name = DEFAULT_BLANK_FIELD;

@@ -23,11 +23,11 @@ public class CsvToBeanTest {
         return new MappingStrategy() {
 
             public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+                return null;
             }
 
             public Object createBean() throws InstantiationException, IllegalAccessException {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+                return null;
             }
 
             public void captureHeader(CSVReader reader) throws IOException {

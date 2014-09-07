@@ -1,10 +1,4 @@
 package au.com.bytecode.opencsv;
-/**
- * Created by IntelliJ IDEA.
- * User: Scott Conway
- * Date: Oct 7, 2009
- * Time: 9:56:48 PM
- */
 
 import org.junit.Before;
 import org.junit.Test;

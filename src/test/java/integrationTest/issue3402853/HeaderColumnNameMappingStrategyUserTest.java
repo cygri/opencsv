@@ -15,8 +15,6 @@ package integrationTest.issue3402853;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
-
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -52,5 +50,4 @@ public class HeaderColumnNameMappingStrategyUserTest {
         assertEquals("", bean.getLast_Name());
         assertEquals("bc1er1163", bean.getProfile_Id());
     }
-
 }

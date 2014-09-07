@@ -31,7 +31,7 @@ public class BeanToCsvTest {
 
     @Before
     public void setUp() {
-        bean = new BeanToCsv<MockBean>();
+        bean = new BeanToCsv<>();
     }
 
     @Before

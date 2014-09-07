@@ -1,12 +1,5 @@
 package au.com.bytecode.opencsv;
 
-/**
- * Created by IntelliJ IDEA.
- * User: scott
- * Date: 12/20/10
- * Time: 2:56 PM
- * To change this template use File | Settings | File Templates.
- */
 public class TestUtilities {
     public static String displayStringArray(String header, String[] stringArray) {
         StringBuffer sb = new StringBuffer();

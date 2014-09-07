@@ -9,13 +9,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by IntelliJ IDEA.
- * User: sconway
- * Date: 10/29/11
- * Time: 12:41 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CSVIteratorTest {
     private static final String[] STRINGS = {"test1", "test2"};
     private CSVIterator iterator;

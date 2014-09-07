@@ -4,13 +4,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by IntelliJ IDEA.
- * User: scott
- * Date: 12/20/10
- * Time: 2:57 PM
- * To change this template use File | Settings | File Templates.
- */
 public class TestUtilitiesTest {
 
     @Test
