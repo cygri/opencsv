@@ -2,7 +2,7 @@ package au.com.bytecode.opencsv;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +12,7 @@ import static junit.framework.Assert.assertEquals;
  * To change this template use File | Settings | File Templates.
  */
 public class TestUtilitiesTest {
+
     @Test
     public void displayStringArray() {
         String[] stringArray = new String[3];
