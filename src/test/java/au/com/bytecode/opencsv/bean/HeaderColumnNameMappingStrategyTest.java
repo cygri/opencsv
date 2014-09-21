@@ -16,6 +16,7 @@ package au.com.bytecode.opencsv.bean;
  limitations under the License.
  */
 import au.com.bytecode.opencsv.CSVReader;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
@@ -26,7 +27,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class HeaderColumnNameMappingStrategyTest {
-    private static final String TEST_STRING = "name,orderNumber,num\n" +
+
+   private static final String TEST_STRING = "name,orderNumber,num\n" +
             "kyle,abc123456,123\n" +
             "jimmy,def098765,456";
 
@@ -34,14 +36,32 @@ public class HeaderColumnNameMappingStrategyTest {
             "\"kyle\",\"abc123456\",\"123\"\n" +
             "\"jimmy\",\"def098765\",\"456\"";
 
+   private HeaderColumnNameMappingStrategy<MockBean> strat;
+
+   @Before
+   public void setUp() {
+      strat = new HeaderColumnNameMappingStrategy<>();
+   }
 
     private List<MockBean> createTestParseResult(String parseString) {
-        HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<>();
         strat.setType(MockBean.class);
         CsvToBean<MockBean> csv = new CsvToBean<>();
         return csv.parse(strat, new StringReader(parseString));
     }
 
+   @Test(expected = IllegalStateException.class)
+   public void getColumnIndexWithoutHeaderThrowsException() {
+      assertNull(strat.getColumnIndex("some index name"));
+   }
+
+   @Test
+   public void getColumnIndexAfterParse() {
+      List<MockBean> list = createTestParseResult(TEST_STRING);
+      assertEquals(0, strat.getColumnIndex("name").intValue());
+      assertEquals(1, strat.getColumnIndex("orderNumber").intValue());
+      assertEquals(2, strat.getColumnIndex("num").intValue());
+      assertNull(strat.getColumnIndex("unknown column"));
+   }
     @Test
     public void testParse() {
         List<MockBean> list = createTestParseResult(TEST_STRING);

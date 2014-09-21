@@ -23,11 +23,16 @@ import java.io.IOException;
 public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
     private String[] columnMapping = new String[]{};
 
-    public void captureHeader(CSVReader reader) throws IOException {
+   public void captureHeader(CSVReader reader) throws IOException {
         //do nothing, first line is not header
     }
 
-    protected String getColumnName(int col) {
+   @Override
+   public Integer getColumnIndex(String name) {
+      return indexLookup.get(name);
+   }
+
+   protected String getColumnName(int col) {
         return col < columnMapping.length ? columnMapping[col] : null;
     }
 
@@ -36,6 +41,8 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
     }
 
     public void setColumnMapping(String... columnMapping) {
-        this.columnMapping = columnMapping != null ? columnMapping.clone() : new String[]{};
+       this.columnMapping = columnMapping != null ? columnMapping.clone() : new String[]{};
+       resetIndexMap();
+       createIndexLookup(this.columnMapping);
     }
 }

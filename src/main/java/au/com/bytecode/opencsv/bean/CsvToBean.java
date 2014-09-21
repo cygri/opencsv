@@ -36,17 +36,27 @@ public class CsvToBean<T> {
     }
 
     public List<T> parse(MappingStrategy<T> mapper, Reader reader) {
+       return parse(mapper, reader, null);
+    }
+
+   public List<T> parse(MappingStrategy<T> mapper, Reader reader, CsvToBeanFilter filter) {
         return parse(mapper, new CSVReader(reader));
     }
 
-    public List<T> parse(MappingStrategy<T> mapper, CSVReader csv) {
+   public List<T> parse(MappingStrategy<T> mapper, CSVReader csv) {
+      return parse(mapper, csv, null);
+   }
+
+   public List<T> parse(MappingStrategy<T> mapper, CSVReader csv, CsvToBeanFilter filter) {
         try {
             mapper.captureHeader(csv);
             String[] line;
             List<T> list = new ArrayList<>();
             while (null != (line = csv.readNext())) {
-                T obj = processLine(mapper, line);
-                list.add(obj); // TODO: (Kyle) null check object
+               if (filter == null || filter.allowLine(line)) {
+                  T obj = processLine(mapper, line);
+                  list.add(obj); // TODO: (Kyle) null check object
+               }
             }
             return list;
         } catch (Exception e) {

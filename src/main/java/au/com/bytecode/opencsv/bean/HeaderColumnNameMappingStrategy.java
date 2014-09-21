@@ -28,12 +28,35 @@ import java.util.Map;
 
 public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     protected String[] header;
+   protected Map<String, Integer> indexLookup = new HashMap<>();
     protected Map<String, PropertyDescriptor> descriptorMap = null;
     protected Class<T> type;
 
     public void captureHeader(CSVReader reader) throws IOException {
         header = reader.readNext();
     }
+
+   protected void createIndexLookup(String[] values) {
+      if (indexLookup.isEmpty()) {
+         for (int i = 0; i < values.length; i++) {
+            indexLookup.put(values[i], i);
+         }
+      }
+   }
+
+   protected void resetIndexMap() {
+      indexLookup.clear();
+   }
+
+   public Integer getColumnIndex(String name) {
+      if (null == header) {
+         throw new IllegalStateException("The header row hasn't been read yet.");
+      }
+
+      createIndexLookup(header);
+
+      return indexLookup.get(name);
+   }
 
     public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
         String columnName = getColumnName(col);

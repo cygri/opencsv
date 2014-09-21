@@ -25,23 +25,35 @@ import java.io.IOException;
 
 public interface MappingStrategy<T> {
 
-    /**
-     * Implementation will have to return a property descriptor from a bean based on the current column.
-     *
-     * @param col the column to find the description for
-     * @return the related PropertyDescriptor
-     * @throws java.beans.IntrospectionException
-     */
-    public abstract PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
+   /**
+    * Implementation will have to return a property descriptor from a bean based on the current column.
+    *
+    * @param col the column to find the description for
+    * @return the related PropertyDescriptor
+    * @throws java.beans.IntrospectionException
+    */
+   public abstract PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
 
-    public abstract T createBean() throws InstantiationException, IllegalAccessException;
+   public abstract T createBean() throws InstantiationException, IllegalAccessException;
 
-    /**
-     * Implementation of this method can grab the header line before parsing begins to use to map columns
-     * to bean properties.
-     *
-     * @param reader the CSVReader to use for header parsing
-     * @throws java.io.IOException if parsing fails
-     */
-    public void captureHeader(CSVReader reader) throws IOException;
+   /**
+    * Implementation of this method can grab the header line before parsing begins to use to map columns
+    * to bean properties.
+    *
+    * @param reader the CSVReader to use for header parsing
+    * @throws java.io.IOException if parsing fails
+    */
+   public void captureHeader(CSVReader reader) throws IOException;
+
+   /**
+    * Gets the column index that corresponds to a specific colum name.
+    * If the CSV file doesn't have a header row, this method will always return
+    * null.
+    *
+    * @param name the column name
+    * @return the column index, or null if the name doesn't exist
+    * @throws IllegalStateException if the CSV file has a header row and it
+    *                               hasn't been read yet.
+    */
+   public Integer getColumnIndex(String name);
 }

@@ -32,6 +32,30 @@ public class ColumnPositionMappingStrategyTest {
         strat.setType(MockBean.class);
     }
 
+   @Test
+   public void getColumnIndexBeforeMappingSetReturnsNull() {
+      assertNull(strat.getColumnIndex("name"));
+   }
+
+   @Test
+   public void getColumnIndexEmptyMappingReturnsNull() {
+      strat.setColumnMapping(null);
+      assertNull(strat.getColumnIndex("name"));
+   }
+
+   @Test
+   public void getColumnIndex() {
+      assertNull(strat.getColumnIndex("name"));
+      String[] columns = new String[]{"name", "orderNumber", "id"};
+      strat.setColumnMapping(columns);
+
+      assertEquals(0, strat.getColumnIndex("name").intValue());
+      assertEquals(1, strat.getColumnIndex("orderNumber").intValue());
+      assertEquals(2, strat.getColumnIndex("id").intValue());
+
+      assertNull(strat.getColumnIndex("name not mapped"));
+   }
+
     @Test
     public void testParse() {
         String s = "" +
