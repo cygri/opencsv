@@ -15,9 +15,10 @@ package integrationTest.issue3402853;
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.bean.CsvToBean;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameMappingStrategy;
+
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -29,25 +30,25 @@ import static org.junit.Assert.assertNotNull;
 
 public class HeaderColumnNameMappingStrategyUserTest {
 
-    private static final String USER_FILE = "src/test/java/integrationTest/issue3402853/user.csv";
+   private static final String USER_FILE = "src/test/java/integrationTest/issue3402853/user.csv";
 
-    private List<MockUserBean> createTestParseResult() throws FileNotFoundException {
-        CSVReader reader = new CSVReader(new FileReader(USER_FILE));
-        HeaderColumnNameMappingStrategy<MockUserBean> strat = new HeaderColumnNameMappingStrategy<>();
-        strat.setType(MockUserBean.class);
-        CsvToBean<MockUserBean> csv = new CsvToBean<>();
-        return csv.parse(strat, reader);
-    }
+   private List<MockUserBean> createTestParseResult() throws FileNotFoundException {
+      CSVReader reader = new CSVReader(new FileReader(USER_FILE));
+      HeaderColumnNameMappingStrategy<MockUserBean> strat = new HeaderColumnNameMappingStrategy<>();
+      strat.setType(MockUserBean.class);
+      CsvToBean<MockUserBean> csv = new CsvToBean<>();
+      return csv.parse(strat, reader);
+   }
 
-    @Test
-    public void testParse() throws FileNotFoundException {
-        List<MockUserBean> list = createTestParseResult();
-        assertNotNull(list);
-        assertEquals(2, list.size());
-        MockUserBean bean = list.get(0);
-        assertEquals("rbst218@yahoo.com", bean.getEmail());
-        assertEquals("\\\"CHia Sia Ta", bean.getFirst_Name());
-        assertEquals("", bean.getLast_Name());
-        assertEquals("bc1er1163", bean.getProfile_Id());
-    }
+   @Test
+   public void testParse() throws FileNotFoundException {
+      List<MockUserBean> list = createTestParseResult();
+      assertNotNull(list);
+      assertEquals(2, list.size());
+      MockUserBean bean = list.get(0);
+      assertEquals("rbst218@yahoo.com", bean.getEmail());
+      assertEquals("\\\"CHia Sia Ta", bean.getFirst_Name());
+      assertEquals("", bean.getLast_Name());
+      assertEquals("bc1er1163", bean.getProfile_Id());
+   }
 }

@@ -147,7 +147,7 @@ limitations under the License.
         </junit>
 
         <!--
-        <java classname="au.com.bytecode.opencsv.CSVReaderTest">
+        <java classname="com.opencsv.CSVReaderTest">
             <classpath>
                 <pathelement location="${lib.dir}/junit.jar"/>
                 <pathelement location="${classes.dir}"/>
