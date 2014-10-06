@@ -4,7 +4,7 @@
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
     <packaging>bundle</packaging>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.2-SNAPSHOT</version>
     <name>opencsv</name>
     <description>A simple library for reading and writing CSV in Java</description>
     <url>http://opencsv.sf.net</url>
