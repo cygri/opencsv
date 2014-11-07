@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="Custom ruleset" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>This ruleset checks code for violations</description>
+    <rule ref="rulesets/java/strings.xml"/>
+    <rule ref="rulesets/java/unusedcode.xml"/>
+    <rule ref="rulesets/java/imports.xml/DuplicateImports"/>
+    <rule ref="rulesets/java/braces.xml"/>
+    <rule ref="rulesets/java/basic.xml/UnnecessaryConversionTemporary"/>
+    <rule ref="rulesets/java/codesize.xml"/>
+    <rule ref="rulesets/java/optimizations.xml/AvoidInstantiatingObjectsInLoops"/>
+    <rule ref="rulesets/java/optimizations.xml/UseArrayListInsteadOfVector"/>
+    <rule ref="rulesets/java/optimizations.xml/UseStringBufferForStringAppends"/>
+    <rule ref="rulesets/java/optimizations.xml/UseArraysAsList"/>
+    <rule ref="rulesets/java/optimizations.xml/AvoidArrayLoops"/>
+    <rule ref="rulesets/java/strictexception.xml"/>
+
+    <rule ref="rulesets/java/basic.xml/EmptyCatchBlock" message="Must handle exceptions">
+        <priority>2</priority>
+    </rule>
+    <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="5"/>
+        </properties>
+    </rule>
+</ruleset>

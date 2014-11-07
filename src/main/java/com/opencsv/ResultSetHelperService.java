@@ -82,25 +82,25 @@ public class ResultSetHelperService implements ResultSetHelper {
       return values.toArray(valueArray);
    }
 
-   private String handleObject(Object obj) {
+   protected String handleObject(Object obj) {
       return obj == null ? "" : String.valueOf(obj);
    }
 
-   private String handleBigDecimal(BigDecimal decimal) {
+   protected String handleBigDecimal(BigDecimal decimal) {
       return decimal == null ? "" : decimal.toString();
    }
 
-   private String handleLong(ResultSet rs, int columnIndex) throws SQLException {
+   protected String handleLong(ResultSet rs, int columnIndex) throws SQLException {
       long lv = rs.getLong(columnIndex);
       return rs.wasNull() ? "" : Long.toString(lv);
    }
 
-   private String handleInteger(ResultSet rs, int columnIndex) throws SQLException {
+   protected String handleInteger(ResultSet rs, int columnIndex) throws SQLException {
       int i = rs.getInt(columnIndex);
       return rs.wasNull() ? "" : Integer.toString(i);
    }
 
-   private String handleDate(ResultSet rs, int columnIndex, String dateFormatString) throws SQLException {
+   protected String handleDate(ResultSet rs, int columnIndex, String dateFormatString) throws SQLException {
       java.sql.Date date = rs.getDate(columnIndex);
       String value = null;
       if (date != null) {
@@ -110,11 +110,11 @@ public class ResultSetHelperService implements ResultSetHelper {
       return value;
    }
 
-   private String handleTime(Time time) {
+   protected String handleTime(Time time) {
       return time == null ? null : time.toString();
    }
 
-   private String handleTimestamp(Timestamp timestamp, String timestampFormatString) {
+   protected String handleTimestamp(Timestamp timestamp, String timestampFormatString) {
       SimpleDateFormat timeFormat = new SimpleDateFormat(timestampFormatString);
       return timestamp == null ? null : timeFormat.format(timestamp);
    }

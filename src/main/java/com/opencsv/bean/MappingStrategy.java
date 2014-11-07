@@ -23,6 +23,12 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 
+/**
+ * The interface for the classes that handle translating between the columns in the csv file
+ * to an actual object.
+ *
+ * @param <T> type of object you are converting the data to.
+ */
 public interface MappingStrategy<T> {
 
    /**
@@ -32,9 +38,16 @@ public interface MappingStrategy<T> {
     * @return the related PropertyDescriptor
     * @throws java.beans.IntrospectionException
     */
-   public abstract PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
+   PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
 
-   public abstract T createBean() throws InstantiationException, IllegalAccessException;
+    /**
+     * Implementation will return a bean of the type of object you are mapping.
+     *
+     * @return A new instance of the class being mapped.
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    T createBean() throws InstantiationException, IllegalAccessException;
 
    /**
     * Implementation of this method can grab the header line before parsing begins to use to map columns
@@ -43,7 +56,7 @@ public interface MappingStrategy<T> {
     * @param reader the CSVReader to use for header parsing
     * @throws java.io.IOException if parsing fails
     */
-   public void captureHeader(CSVReader reader) throws IOException;
+   void captureHeader(CSVReader reader) throws IOException;
 
    /**
     * Gets the column index that corresponds to a specific colum name.
@@ -52,8 +65,6 @@ public interface MappingStrategy<T> {
     *
     * @param name the column name
     * @return the column index, or null if the name doesn't exist
-    * @throws IllegalStateException if the CSV file has a header row and it
-    *                               hasn't been read yet.
     */
-   public Integer getColumnIndex(String name);
+   Integer getColumnIndex(String name);
 }

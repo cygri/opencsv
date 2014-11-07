@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
+/*
  * Copyright 2007 Kyle Miller.
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,13 @@ import java.util.Map;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ */
+
+/**
+ * Maps data to objects using the column names in the first row of the csv
+ * file as reference.  This way the column order does not matter.
+ *
+ * @param <T>
  */
 
 public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
@@ -48,6 +55,16 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
       indexLookup.clear();
    }
 
+   /**
+    * Gets the column index that corresponds to a specific colum name.
+    * If the CSV file doesn't have a header row, this method will always return
+    * null.
+    *
+    * @param name the column name
+    * @return the column index, or null if the name doesn't exist
+    * @throws IllegalStateException if the CSV file has a header row and it
+    *                               hasn't been read yet.
+    */
    public Integer getColumnIndex(String name) {
       if (null == header) {
          throw new IllegalStateException("The header row hasn't been read yet.");
