@@ -215,8 +215,9 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public void writeNext(String[] nextLine, boolean applyQuotesToAll) {
 
-      if (nextLine == null)
+      if (nextLine == null) {
          return;
+      }
 
       StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
       for (int i = 0; i < nextLine.length; i++) {
@@ -227,13 +228,15 @@ public class CSVWriter implements Closeable, Flushable {
 
          String nextElement = nextLine[i];
 
-         if (nextElement == null)
+         if (nextElement == null) {
             continue;
+         }
 
          Boolean stringContainsSpecialCharacters = stringContainsSpecialCharacters(nextElement);
 
-         if ((applyQuotesToAll || stringContainsSpecialCharacters) && quotechar != NO_QUOTE_CHARACTER)
+         if ((applyQuotesToAll || stringContainsSpecialCharacters) && quotechar != NO_QUOTE_CHARACTER) {
             sb.append(quotechar);
+         }
 
          if (stringContainsSpecialCharacters) {
             sb.append(processLine(nextElement));
@@ -241,8 +244,9 @@ public class CSVWriter implements Closeable, Flushable {
             sb.append(nextElement);
          }
 
-         if ((applyQuotesToAll || stringContainsSpecialCharacters) && quotechar != NO_QUOTE_CHARACTER)
+         if ((applyQuotesToAll || stringContainsSpecialCharacters) && quotechar != NO_QUOTE_CHARACTER) {
             sb.append(quotechar);
+         }
       }
 
       sb.append(lineEnd);
@@ -267,16 +271,18 @@ public class CSVWriter implements Closeable, Flushable {
       StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
       for (int j = 0; j < nextElement.length(); j++) {
          char nextChar = nextElement.charAt(j);
-         if (escapechar != NO_ESCAPE_CHARACTER && nextChar == quotechar) {
-            sb.append(escapechar).append(nextChar);
-         } else if (escapechar != NO_ESCAPE_CHARACTER && nextChar == escapechar) {
-            sb.append(escapechar).append(nextChar);
-         } else {
-            sb.append(nextChar);
-         }
+         processCharacter(sb, nextChar);
       }
 
       return sb;
+   }
+
+   private void processCharacter(StringBuilder sb, char nextChar) {
+      if (escapechar != NO_ESCAPE_CHARACTER && (nextChar == quotechar || nextChar == escapechar)) {
+         sb.append(escapechar).append(nextChar);
+      } else {
+         sb.append(nextChar);
+      }
    }
 
    /**

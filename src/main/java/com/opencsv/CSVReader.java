@@ -183,8 +183,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         List<String[]> allElements = new ArrayList<>();
         while (hasNext) {
             String[] nextLineAsTokens = readNext();
-            if (nextLineAsTokens != null)
+            if (nextLineAsTokens != null) {
                 allElements.add(nextLineAsTokens);
+            }
         }
         return allElements;
 

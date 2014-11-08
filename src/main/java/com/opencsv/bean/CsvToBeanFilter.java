@@ -70,6 +70,6 @@ public interface CsvToBeanFilter {
     * @return true if the line is to be included in the output.  Otherwise,
     * false.
     */
-   public boolean allowLine(String[] line);
+   boolean allowLine(String[] line);
 
 }

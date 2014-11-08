@@ -1,6 +1,7 @@
 package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
+import org.apache.commons.lang3.StringUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -77,7 +78,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
 
    public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
       String columnName = getColumnName(col);
-      return (null != columnName && columnName.trim().length() > 0) ? findDescriptor(columnName) : null;
+      return (StringUtils.isNotBlank(columnName)) ? findDescriptor(columnName) : null;
    }
 
    protected String getColumnName(int col) {
@@ -85,7 +86,9 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
    }
 
    protected PropertyDescriptor findDescriptor(String name) throws IntrospectionException {
-      if (null == descriptorMap) descriptorMap = loadDescriptorMap(); //lazy load descriptors
+      if (null == descriptorMap) {
+         descriptorMap = loadDescriptorMap(); //lazy load descriptors
+      }
       return descriptorMap.get(name.toUpperCase().trim());
    }
 

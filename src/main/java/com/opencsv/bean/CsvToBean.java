@@ -53,14 +53,18 @@ public class CsvToBean<T> {
          String[] line;
          List<T> list = new ArrayList<>();
          while (null != (line = csv.readNext())) {
-            if (filter == null || filter.allowLine(line)) {
-               T obj = processLine(mapper, line);
-               list.add(obj); // TODO: (Kyle) null check object
-            }
+            processLine(mapper, filter, line, list);
          }
          return list;
       } catch (Exception e) {
          throw new RuntimeException("Error parsing CSV!", e);
+      }
+   }
+
+   private void processLine(MappingStrategy<T> mapper, CsvToBeanFilter filter, String[] line, List<T> list) throws IllegalAccessException, InvocationTargetException, InstantiationException, IntrospectionException {
+      if (filter == null || filter.allowLine(line)) {
+         T obj = processLine(mapper, line);
+         list.add(obj); // TODO: (Kyle) null check object
       }
    }
 
@@ -121,7 +125,9 @@ public class CsvToBean<T> {
     */
    protected PropertyEditor getPropertyEditor(PropertyDescriptor desc) throws InstantiationException, IllegalAccessException {
       Class<?> cls = desc.getPropertyEditorClass();
-      if (null != cls) return (PropertyEditor) cls.newInstance();
+      if (null != cls) {
+         return (PropertyEditor) cls.newInstance();
+      }
       return getPropertyEditorValue(desc.getPropertyType());
    }
 }
