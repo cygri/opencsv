@@ -16,6 +16,8 @@ package com.opencsv;
  limitations under the License.
  */
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -280,6 +282,8 @@ public class CSVParser {
     }
 
     /**
+     * Checks to see if the character after the index is a quotation character.
+     *
      * precondition: the current character is a quote or an escape
      *
      * @param nextLine the current line
@@ -290,10 +294,45 @@ public class CSVParser {
     private boolean isNextCharacterEscapedQuote(String nextLine, boolean inQuotes, int i) {
         return inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
                 && nextLine.length() > (i + 1)  // there is indeed another character to check.
-                && nextLine.charAt(i + 1) == quotechar;
+                && isCharacterQuoteCharacter(nextLine.charAt(i + 1));
     }
 
     /**
+     * Checks to see if the passed in character is the defined quotation character.
+     *
+     * @param c
+     * @return true if c is the defined quotation character
+     */
+    private boolean isCharacterQuoteCharacter(char c) {
+        return c == quotechar;
+    }
+
+    /**
+     * checks to see if the character is the defined escape character.
+     *
+     * @param c
+     * @return true if the character is the defined escape character
+     */
+    private boolean isCharacterEscapeCharacter(char c) {
+        return c == escape;
+    }
+
+    /**
+     * Checks to see if the character passed in could be escapable.  Escapable characters for openCSV are the
+     * quotation character or the escape character.
+     *
+     * @param c
+     * @return true if the character could be escapable.
+     */
+    private boolean isCharacterEscapable(char c) {
+        return isCharacterQuoteCharacter(c) || isCharacterEscapeCharacter(c);
+    }
+
+    /**
+     * Checks to see if the character after the current index in a String is an escapable character.
+     * Meaning the next character is either a quotation character or the escape char and you are inside
+     * quotes.
+     *
      * precondition: the current character is an escape
      *
      * @param nextLine the current line
@@ -304,23 +343,18 @@ public class CSVParser {
     protected boolean isNextCharacterEscapable(String nextLine, boolean inQuotes, int i) {
         return inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
                 && nextLine.length() > (i + 1)  // there is indeed another character to check.
-                && (nextLine.charAt(i + 1) == quotechar || nextLine.charAt(i + 1) == this.escape);
+                && isCharacterEscapable(nextLine.charAt(i + 1));
     }
 
     /**
+     * Checks if every element is the character sequence is whitespace.
+     *
      * precondition: sb.length() > 0
      *
      * @param sb A sequence of characters to examine
      * @return true if every character in the sequence is whitespace
      */
     protected boolean isAllWhiteSpace(CharSequence sb) {
-        for (int i = 0; i < sb.length(); i++) {
-            char c = sb.charAt(i);
-
-            if (!Character.isWhitespace(c)) {
-                return false;
-            }
-        }
-        return true;
+        return StringUtils.isWhitespace(sb);
     }
 }

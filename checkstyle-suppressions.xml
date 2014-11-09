@@ -8,4 +8,5 @@
     <suppress files="." checks="HiddenField"/>
     <suppress files="." checks="FinalParameters"/>
     <suppress files="." checks="DesignForExtension"/>
+    <suppress files="." checks="JavadocVariable"/>
 </suppressions>
