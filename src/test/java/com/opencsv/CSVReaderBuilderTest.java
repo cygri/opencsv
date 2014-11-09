@@ -22,7 +22,6 @@ public class CSVReaderBuilderTest {
    @Test
    public void testDefaultBuilder() {
       assertSame(reader, builder.reader);
-      assertNotNull(builder.csvParserBuilder);
       assertNull(builder.csvParser);
       assertEquals(
             CSVReader.DEFAULT_SKIP_LINES,

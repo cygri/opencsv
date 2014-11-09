@@ -31,8 +31,8 @@ public class HeaderColumnNameTranslateMappingStrategy<T> extends HeaderColumnNam
    }
 
    public void setColumnMapping(Map<String, String> columnMapping) {
-      for (String key : columnMapping.keySet()) {
-         this.columnMapping.put(key.toUpperCase(), columnMapping.get(key));
+      for (Map.Entry<String, String> entry : columnMapping.entrySet()) {
+         this.columnMapping.put(entry.getKey().toUpperCase(), entry.getValue());
       }
    }
 }

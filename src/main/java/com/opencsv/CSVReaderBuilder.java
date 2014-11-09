@@ -40,11 +40,10 @@ public class CSVReaderBuilder {
 
    final Reader reader;
    int skipLines = CSVReader.DEFAULT_SKIP_LINES;
-   CSVParserBuilder csvParserBuilder = new CSVParserBuilder();
    /*@Nullable*/ CSVParser csvParser = null;
 
    /**
-    * Sets the reader to an underlying CSV source
+    * Sets the reader to an underlying CSV source.
     *
     * @param reader the reader to an underlying CSV source.
     */
@@ -57,7 +56,7 @@ public class CSVReaderBuilder {
    }
 
    /**
-    * Sets the line number to skip for start reading
+    * Sets the line number to skip for start reading.
     *
     * @param skipLines the line number to skip for start reading
     */

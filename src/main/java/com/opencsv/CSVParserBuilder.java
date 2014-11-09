@@ -40,7 +40,7 @@ public class CSVParserBuilder {
     boolean ignoreQuotations = DEFAULT_IGNORE_QUOTATIONS;
 
     /**
-     * Sets the delimiter to use for separating entries
+     * Sets the delimiter to use for separating entries.
      *
      * @param separator the delimiter to use for separating entries
      */
@@ -52,9 +52,9 @@ public class CSVParserBuilder {
 
 
     /**
-     * Sets the character to use for quoted elements
+     * Sets the character to use for quoted elements.
      *
-     * @param quotechar the character to use for quoted elements
+     * @param quoteChar the character to use for quoted elements
      */
     CSVParserBuilder withQuoteChar(
             final char quoteChar) {
@@ -64,9 +64,9 @@ public class CSVParserBuilder {
 
 
     /**
-     * Sets the character to use for escaping a separator or quote
+     * Sets the character to use for escaping a separator or quote.
      *
-     * @param escape the character to use for escaping a separator or quote
+     * @param escapeChar the character to use for escaping a separator or quote
      */
     CSVParserBuilder withEscapeChar(
             final char escapeChar) {
@@ -77,7 +77,7 @@ public class CSVParserBuilder {
 
     /**
      * Sets the strict quotes setting - if true, characters
-     * outside the quotes are ignored
+     * outside the quotes are ignored.
      *
      * @param strictQuotes if true, characters outside the quotes are ignored
      */
@@ -89,7 +89,7 @@ public class CSVParserBuilder {
 
     /**
      * Sets the ignore leading whitespace setting - if true, white space
-     * in front of a quote in a field is ignored
+     * in front of a quote in a field is ignored.
      *
      * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
      */
@@ -100,7 +100,7 @@ public class CSVParserBuilder {
     }
 
     /**
-     * Sets the ignore quotations mode - if true, quotations are ignored
+     * Sets the ignore quotations mode - if true, quotations are ignored.
      *
      * @param ignoreQuotations if true, quotations are ignored
      */
@@ -111,7 +111,7 @@ public class CSVParserBuilder {
     }
 
     /**
-     * Constructs CSVParser
+     * Constructs CSVParser.
      */
     CSVParser build() {
         return new CSVParser(
