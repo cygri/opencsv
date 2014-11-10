@@ -18,89 +18,89 @@ public class CSVParserBuilderTest {
    public void testDefaultBuilder() {
       assertEquals(
             CSVParser.DEFAULT_SEPARATOR,
-            builder.separator);
+              builder.getSeparator());
       assertEquals(
             CSVParser.DEFAULT_QUOTE_CHARACTER,
-            builder.quoteChar);
+              builder.getQuoteChar());
       assertEquals(
             CSVParser.DEFAULT_ESCAPE_CHARACTER,
-            builder.escapeChar);
+              builder.getEscapeChar());
       assertEquals(
             CSVParser.DEFAULT_STRICT_QUOTES,
-            builder.strictQuotes);
+              builder.isStrictQuotes());
       assertEquals(
             CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
-            builder.ignoreLeadingWhiteSpace);
+              builder.isIgnoreLeadingWhiteSpace());
       assertEquals(
             CSVParser.DEFAULT_IGNORE_QUOTATIONS,
-            builder.ignoreQuotations);
+              builder.isIgnoreQuotations());
 
       CSVParser parser = builder.build();
       assertEquals(
             CSVParser.DEFAULT_SEPARATOR,
-            parser.separator);
+              parser.getSeparator());
       assertEquals(
             CSVParser.DEFAULT_QUOTE_CHARACTER,
-            parser.quotechar);
+              parser.getQuotechar());
       assertEquals(
             CSVParser.DEFAULT_ESCAPE_CHARACTER,
-            parser.escape);
+              parser.getEscape());
       assertEquals(
             CSVParser.DEFAULT_STRICT_QUOTES,
-            parser.strictQuotes);
+              parser.isStrictQuotes());
       assertEquals(
             CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
-            parser.ignoreLeadingWhiteSpace);
+              parser.isIgnoreLeadingWhiteSpace());
       assertEquals(
             CSVParser.DEFAULT_IGNORE_QUOTATIONS,
-            parser.ignoreQuotations);
+              parser.isIgnoreQuotations());
    }
 
    @Test
    public void testWithSeparator() {
       final char expected = '1';
       builder.withSeparator(expected);
-      assertEquals(expected, builder.separator);
-      assertEquals(expected, builder.build().separator);
+       assertEquals(expected, builder.getSeparator());
+       assertEquals(expected, builder.build().getSeparator());
    }
 
    @Test
    public void testWithQuoteChar() {
       final char expected = '2';
       builder.withQuoteChar(expected);
-      assertEquals(expected, builder.quoteChar);
-      assertEquals(expected, builder.build().quotechar);
+       assertEquals(expected, builder.getQuoteChar());
+       assertEquals(expected, builder.build().getQuotechar());
    }
 
    @Test
    public void testWithEscapeChar() {
       final char expected = '3';
       builder.withEscapeChar(expected);
-      assertEquals(expected, builder.escapeChar);
-      assertEquals(expected, builder.build().escape);
+       assertEquals(expected, builder.getEscapeChar());
+       assertEquals(expected, builder.build().getEscape());
    }
 
    @Test
    public void testWithStrictQuotes() {
       final boolean expected = true;
       builder.withStrictQuotes(expected);
-      assertEquals(expected, builder.strictQuotes);
-      assertEquals(expected, builder.build().strictQuotes);
+       assertEquals(expected, builder.isStrictQuotes());
+       assertEquals(expected, builder.build().isStrictQuotes());
    }
 
    @Test
    public void testWithIgnoreLeadingWhiteSpace() {
       final boolean expected = true;
       builder.withIgnoreLeadingWhiteSpace(expected);
-      assertEquals(expected, builder.ignoreLeadingWhiteSpace);
-      assertEquals(expected, builder.build().ignoreLeadingWhiteSpace);
+       assertEquals(expected, builder.isIgnoreLeadingWhiteSpace());
+       assertEquals(expected, builder.build().isIgnoreLeadingWhiteSpace());
    }
 
    @Test
    public void testWithIgnoreQuotations() {
       final boolean expected = true;
       builder.withIgnoreQuotations(expected);
-      assertEquals(expected, builder.ignoreQuotations);
-      assertEquals(expected, builder.build().ignoreQuotations);
+       assertEquals(expected, builder.isIgnoreQuotations());
+       assertEquals(expected, builder.build().isIgnoreQuotations());
    }
 }

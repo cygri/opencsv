@@ -214,6 +214,18 @@ public class CSVParserTest {
    }
 
    @Test
+   public void testNotStrictQuoteSimple() throws IOException {
+      csvParser = new CSVParser(',', '\"', '\\', false);
+      String testString = "\"a\",\"b\",\"c\"";
+
+      String[] nextLine = csvParser.parseLine(testString);
+      assertEquals(3, nextLine.length);
+      assertEquals("a", nextLine[0]);
+      assertEquals("b", nextLine[1]);
+      assertEquals("c", nextLine[2]);
+   }
+
+   @Test
    public void testStrictQuoteWithSpacesAndTabs() throws IOException {
       csvParser = new CSVParser(',', '\"', '\\', true);
       String testString = " \t      \"a\",\"b\"      \t       ,   \"c\"   ";
@@ -223,6 +235,23 @@ public class CSVParserTest {
       assertEquals("a", nextLine[0]);
       assertEquals("b", nextLine[1]);
       assertEquals("c", nextLine[2]);
+   }
+
+   /**
+    * Shows that without the strict quotes opencsv will read until the separator or the end of the line.
+    *
+    * @throws IOException
+    */
+   @Test
+   public void testNotStrictQuoteWithSpacesAndTabs() throws IOException {
+      csvParser = new CSVParser(',', '\"', '\\', false);
+      String testString = " \t      \"a\",\"b\"      \t       ,   \"c\"   ";
+
+      String[] nextLine = csvParser.parseLine(testString);
+      assertEquals(3, nextLine.length);
+      assertEquals("a", nextLine[0]);
+      assertEquals("b\"      \t       ", nextLine[1]);
+      assertEquals("c\"   ", nextLine[2]);
    }
 
    @Test
@@ -255,6 +284,18 @@ public class CSVParserTest {
       assertEquals("TX", nextLine[3]);
    }
 
+   @Test(expected = IOException.class)
+   public void testFalseIgnoreQuotations() throws IOException {
+      csvParser = new CSVParser(CSVParser.DEFAULT_SEPARATOR,
+              CSVParser.DEFAULT_QUOTE_CHARACTER,
+              CSVParser.DEFAULT_ESCAPE_CHARACTER,
+              CSVParser.DEFAULT_STRICT_QUOTES,
+              CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
+              false);
+      String testString = "Bob,test\",Beaumont,TX";
+
+      String[] nextLine = csvParser.parseLine(testString);
+   }
    /**
     * This is an interesting issue where the data does not use quotes but IS using a quote within the field as a
     * inch symbol.  So we want to keep that quote as part of the field and not as the start or end of a field.

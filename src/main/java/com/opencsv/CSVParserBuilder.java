@@ -15,7 +15,7 @@
  */
 package com.opencsv;
 
-import static com.opencsv.CSVParser.*;
+
 
 /**
  * Builder for creating a CSVParser.
@@ -32,17 +32,18 @@ import static com.opencsv.CSVParser.*;
  */
 public class CSVParserBuilder {
 
-    char separator = DEFAULT_SEPARATOR;
-    char quoteChar = DEFAULT_QUOTE_CHARACTER;
-    char escapeChar = DEFAULT_ESCAPE_CHARACTER;
-    boolean strictQuotes = DEFAULT_STRICT_QUOTES;
-    boolean ignoreLeadingWhiteSpace = DEFAULT_IGNORE_LEADING_WHITESPACE;
-    boolean ignoreQuotations = DEFAULT_IGNORE_QUOTATIONS;
+    private char separator = CSVParser.DEFAULT_SEPARATOR;
+    private char quoteChar = CSVParser.DEFAULT_QUOTE_CHARACTER;
+    private char escapeChar = CSVParser.DEFAULT_ESCAPE_CHARACTER;
+    private boolean strictQuotes = CSVParser.DEFAULT_STRICT_QUOTES;
+    private boolean ignoreLeadingWhiteSpace = CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
+    private boolean ignoreQuotations = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
 
     /**
      * Sets the delimiter to use for separating entries.
      *
      * @param separator the delimiter to use for separating entries
+     * @return The CSVParserBuilder
      */
     CSVParserBuilder withSeparator(
             final char separator) {
@@ -54,7 +55,8 @@ public class CSVParserBuilder {
     /**
      * Sets the character to use for quoted elements.
      *
-     * @param quoteChar the character to use for quoted elements
+     * @param quoteChar the character to use for quoted element.
+     * @return The CSVParserBuilder
      */
     CSVParserBuilder withQuoteChar(
             final char quoteChar) {
@@ -66,7 +68,8 @@ public class CSVParserBuilder {
     /**
      * Sets the character to use for escaping a separator or quote.
      *
-     * @param escapeChar the character to use for escaping a separator or quote
+     * @param escapeChar the character to use for escaping a separator or quote.
+     * @return The CSVParserBuilder
      */
     CSVParserBuilder withEscapeChar(
             final char escapeChar) {
@@ -80,6 +83,7 @@ public class CSVParserBuilder {
      * outside the quotes are ignored.
      *
      * @param strictQuotes if true, characters outside the quotes are ignored
+     * @return The CSVParserBuilder
      */
     CSVParserBuilder withStrictQuotes(
             final boolean strictQuotes) {
@@ -92,6 +96,7 @@ public class CSVParserBuilder {
      * in front of a quote in a field is ignored.
      *
      * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
+     * @return The CSVParserBuilder
      */
     CSVParserBuilder withIgnoreLeadingWhiteSpace(
             final boolean ignoreLeadingWhiteSpace) {
@@ -103,6 +108,7 @@ public class CSVParserBuilder {
      * Sets the ignore quotations mode - if true, quotations are ignored.
      *
      * @param ignoreQuotations if true, quotations are ignored
+     * @return The CSVParserBuilder
      */
     CSVParserBuilder withIgnoreQuotations(
             final boolean ignoreQuotations) {
@@ -112,6 +118,7 @@ public class CSVParserBuilder {
 
     /**
      * Constructs CSVParser.
+     * @return a new CSVParser with defined settings.
      */
     CSVParser build() {
         return new CSVParser(
@@ -121,5 +128,47 @@ public class CSVParserBuilder {
                 strictQuotes,
                 ignoreLeadingWhiteSpace,
                 ignoreQuotations);
+    }
+
+    /**
+     * @return the defined separator.
+     */
+    public char getSeparator() {
+        return separator;
+    }
+
+    /**
+     * @return the defined quotation character.
+     */
+    public char getQuoteChar() {
+        return quoteChar;
+    }
+
+    /**
+     * @return the defined escape character.
+     */
+    public char getEscapeChar() {
+        return escapeChar;
+    }
+
+    /**
+     * @return the defined strict quotation setting.
+     */
+    public boolean isStrictQuotes() {
+        return strictQuotes;
+    }
+
+    /**
+     * @return the defined ignoreLeadingWhiteSpace setting.
+     */
+    public boolean isIgnoreLeadingWhiteSpace() {
+        return ignoreLeadingWhiteSpace;
+    }
+
+    /**
+     * @return the defined ignoreQuotation setting.
+     */
+    public boolean isIgnoreQuotations() {
+        return ignoreQuotations;
     }
 }
