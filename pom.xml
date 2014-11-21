@@ -251,11 +251,11 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
-                <configuration>
-                    <goal>report</goal>
-                    <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                </configuration>
+                <!--<configuration>-->
+                <!--<goal>report</goal>-->
+                <!--<dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>-->
+                <!--<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>-->
+                <!--</configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

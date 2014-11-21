@@ -23,7 +23,7 @@ package com.opencsv.bean;
  * <code>setState(String)</code>.  The FEATURE_NAME and STATE columns in the
  * CSV file will be used.  Any additional columns will be ignored.  The filter
  * will eliminate any lines where the STATE value is "production".
- * <p/>
+ *
  * <pre>
  * {@code
  * private class StateFilter implements CsvToBeanFilter {

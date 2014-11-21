@@ -211,13 +211,18 @@ public class CSVReader implements Closeable, Iterable<String[]> {
                 if (result == null) {
                     result = r;
                 } else {
-                    String[] t = new String[result.length + r.length];
-                    System.arraycopy(result, 0, t, 0, result.length);
-                    System.arraycopy(r, 0, t, result.length, r.length);
-                    result = t;
+                    result = getStrings(result, r);
                 }
             }
         } while (parser.isPending());
+        return result;
+    }
+
+    private String[] getStrings(String[] result, String[] r) {
+        String[] t = new String[result.length + r.length];
+        System.arraycopy(result, 0, t, 0, result.length);
+        System.arraycopy(r, 0, t, result.length, r.length);
+        result = t;
         return result;
     }
 

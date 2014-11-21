@@ -19,7 +19,7 @@ package com.opencsv;
 
 /**
  * Builder for creating a CSVParser.
- * <p/>
+ *
  * <code>
  * final CSVParser parser =
  * new CSVParserBuilder()

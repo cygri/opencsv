@@ -173,10 +173,10 @@ public class CSVWriter implements Closeable, Flushable {
 
    /**
     * Writes the entire ResultSet to a CSV file.
-    * <p/>
+    *
     * The caller is responsible for closing the ResultSet.
     *
-    * @param rs                 the recordset to write
+    * @param rs                 the result set to write
     * @param includeColumnNames true if you want column names in the output, false otherwise
     * @throws java.io.IOException   thrown by getColumnValue
     * @throws java.sql.SQLException thrown by getColumnValue
@@ -187,8 +187,12 @@ public class CSVWriter implements Closeable, Flushable {
 
    /**
     * Writes the entire ResultSet to a CSV file.
-    * <p/>
+    *
     * The caller is responsible for closing the ResultSet.
+    *
+    * @param rs the Result set to write.
+    * @param includeColumnNames  include the column names in the output.
+    * @param trim remove spaces from the data before writing.
     *
     * @throws java.io.IOException   thrown by getColumnValue
     * @throws java.sql.SQLException thrown by getColumnValue
@@ -309,6 +313,10 @@ public class CSVWriter implements Closeable, Flushable {
 
    /**
     * Checks to see if the there has been an error in the printstream.
+    *
+    * @return <code>true</code> if the print stream has encountered an error,
+    *          either on the underlying output stream or during a format
+    *          conversion.
     */
    public boolean checkError() {
       return pw.checkError();

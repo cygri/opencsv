@@ -20,7 +20,7 @@ import java.io.Reader;
 
 /**
  * Builder for creating a CSVReader.
- * <p/>
+ *
  * <code>
  * final CSVParser parser =
  * new CSVParserBuilder()

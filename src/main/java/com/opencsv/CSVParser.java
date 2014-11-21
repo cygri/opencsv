@@ -60,7 +60,7 @@ public class CSVParser {
      */
     public static final boolean DEFAULT_IGNORE_LEADING_WHITESPACE = true;
     /**
-     * I.E. if the quote character is set to null then there is no quote character.
+     * If the quote character is set to null then there is no quote character.
      */
     public static final boolean DEFAULT_IGNORE_QUOTATIONS = false;
     /**
@@ -318,14 +318,12 @@ public class CSVParser {
 
             char c = nextLine.charAt(i);
             if (c == this.escape) {
-                if (isNextCharacterEscapable(nextLine, (inQuotes && !ignoreQuotations) || inField, i)) {
-                    sb.append(nextLine.charAt(i + 1));
-                    i++;
+                if (isNextCharacterEscapable(nextLine, inQuotes(inQuotes), i)) {
+                    i = appendNextCharacterAndAdvanceLoop(nextLine, sb, i);
                 }
             } else if (c == quotechar) {
-                if (isNextCharacterEscapedQuote(nextLine, (inQuotes && !ignoreQuotations) || inField, i)) {
-                    sb.append(nextLine.charAt(i + 1));
-                    i++;
+                if (isNextCharacterEscapedQuote(nextLine, inQuotes(inQuotes), i)) {
+                    i = appendNextCharacterAndAdvanceLoop(nextLine, sb, i);
                 } else {
                     inQuotes = !inQuotes;
 
@@ -338,7 +336,8 @@ public class CSVParser {
                                 ) {
 
                             if (ignoreLeadingWhiteSpace && sb.length() > 0 && isAllWhiteSpace(sb)) {
-                                sb = new StringBuilder(INITIAL_READ_SIZE);  //discard white space leading up to quote
+                                sb.setLength(0);
+                                sb.setLength(INITIAL_READ_SIZE);
                             } else {
                                 sb.append(c);
                             }
@@ -349,7 +348,8 @@ public class CSVParser {
                 inField = !inField;
             } else if (c == separator && !(inQuotes && !ignoreQuotations)) {
                 tokensOnThisLine.add(sb.toString());
-                sb = new StringBuilder(INITIAL_READ_SIZE); // start work on next token
+                sb.setLength(0);
+                sb.setLength(INITIAL_READ_SIZE);
                 inField = false;
             } else {
                 if (!strictQuotes || (inQuotes && !ignoreQuotations)) {
@@ -362,7 +362,7 @@ public class CSVParser {
         if ((inQuotes && !ignoreQuotations)) {
             if (multi) {
                 // continuing a quoted section, re-append newline
-                sb.append("\n");
+                sb.append('\n');
                 pending = sb.toString();
                 sb = null; // this partial content is not to be added to field list yet
             } else {
@@ -374,6 +374,16 @@ public class CSVParser {
         }
         return tokensOnThisLine.toArray(new String[tokensOnThisLine.size()]);
 
+    }
+
+    private int appendNextCharacterAndAdvanceLoop(String nextLine, StringBuilder sb, int i) {
+        sb.append(nextLine.charAt(i + 1));
+        i++;
+        return i;
+    }
+
+    private boolean inQuotes(boolean inQuotes) {
+        return (inQuotes && !ignoreQuotations) || inField;
     }
 
     /**
@@ -444,7 +454,7 @@ public class CSVParser {
     /**
      * Checks if every element is the character sequence is whitespace.
      *
-     * precondition: sb.length() > 0
+     * precondition: sb.length() is greater than 0
      *
      * @param sb A sequence of characters to examine
      * @return true if every character in the sequence is whitespace
