@@ -42,19 +42,24 @@ public class BeanToCsv<T> {
     }
 
     public boolean write(MappingStrategy<T> mapper, CSVWriter csv, List<?> objects) {
-        if (objects == null || objects.isEmpty())
+        if (objects == null || objects.isEmpty()) {
             return false;
+        }
 
         try {
             csv.writeNext(processHeader(mapper));
             List<Method> getters = findGetters(mapper);
-            for (Object obj : objects) {
-                String[] line = processObject(getters, obj);
-                csv.writeNext(line);
-            }
+            processAndWriteObjects(csv, objects, getters);
             return true;
         } catch (Exception e) {
             throw new RuntimeException("Error writing CSV !", e);
+        }
+    }
+
+    private void processAndWriteObjects(CSVWriter csv, List<?> objects, List<Method> getters) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+        for (Object obj : objects) {
+            String[] line = processObject(getters, obj);
+            csv.writeNext(line);
         }
     }
 

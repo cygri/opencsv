@@ -9,4 +9,5 @@
     <suppress files="." checks="FinalParameters"/>
     <suppress files="." checks="DesignForExtension"/>
     <suppress files="." checks="JavadocVariable"/>
+    <suppress files="." checks="AvoidInlineConditionals"/>
 </suppressions>

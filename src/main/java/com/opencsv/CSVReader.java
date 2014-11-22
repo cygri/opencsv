@@ -35,8 +35,8 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * The default line to start reading.
      */
     public static final int DEFAULT_SKIP_LINES = 0;
-    CSVParser parser;
-    int skipLines;
+    private CSVParser parser;
+    private int skipLines;
     private BufferedReader br;
     private boolean hasNext = true;
     private boolean linesSkiped;
@@ -171,6 +171,23 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     }
 
     /**
+     * @return the CSVParser used by the reader.
+     */
+    public CSVParser getParser() {
+        return parser;
+    }
+
+    /**
+     * Returns the number of lines in the csv file to skip before processing.  This is
+     * useful when there is miscellaneous data at the beginning of a file.
+     *
+     * @return the number of lines in the csv file to skip before processing.
+     */
+    public int getSkipLines() {
+        return skipLines;
+    }
+
+    /**
      * Reads the entire file into a List with each element being a String[] of
      * tokens.
      *
@@ -211,19 +228,25 @@ public class CSVReader implements Closeable, Iterable<String[]> {
                 if (result == null) {
                     result = r;
                 } else {
-                    result = getStrings(result, r);
+                    result = combineResultsFromMultipleReads(result, r);
                 }
             }
         } while (parser.isPending());
         return result;
     }
 
-    private String[] getStrings(String[] result, String[] r) {
-        String[] t = new String[result.length + r.length];
-        System.arraycopy(result, 0, t, 0, result.length);
-        System.arraycopy(r, 0, t, result.length, r.length);
-        result = t;
-        return result;
+    /**
+     * For multi line records this method combines the current result with the result from previous read(s).
+     * @param buffer - previous data read for this record
+     * @param lastRead - latest data read for this record.
+     * @return String array with union of the buffer and lastRead arrays.
+     */
+    private String[] combineResultsFromMultipleReads(String[] buffer, String[] lastRead) {
+        String[] t = new String[buffer.length + lastRead.length];
+        System.arraycopy(buffer, 0, t, 0, buffer.length);
+        System.arraycopy(lastRead, 0, t, buffer.length, lastRead.length);
+        buffer = t;
+        return buffer;
     }
 
     /**
@@ -251,6 +274,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         return hasNext ? nextLine : null;
     }
 
+    /**
+     * Checks to see if the file is closed.
+     * @return true if the reader can no longer be read from.
+     */
     private boolean isClosed() {
         try {
             return !br.ready();
@@ -268,6 +295,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         br.close();
     }
 
+    /**
+     * Creates an Iterator for processing the csv data.
+     * @return an String[] iterator.
+     */
     public Iterator<String[]> iterator() {
         try {
             return new CSVIterator(this);

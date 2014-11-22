@@ -376,12 +376,26 @@ public class CSVParser {
 
     }
 
-    private int appendNextCharacterAndAdvanceLoop(String nextLine, StringBuilder sb, int i) {
-        sb.append(nextLine.charAt(i + 1));
+    /**
+     * Appends the next character in the line to the stringbuffer.
+     *
+     * @param line - line to process
+     * @param sb   - contains the processed character
+     * @param i    - current position in the line.
+     * @return new position in the line.
+     */
+    private int appendNextCharacterAndAdvanceLoop(String line, StringBuilder sb, int i) {
+        sb.append(line.charAt(i + 1));
         i++;
         return i;
     }
 
+    /**
+     * Determines if we can process as if we were in quotes.
+     *
+     * @param inQuotes - are we currently in quotes.
+     * @return - true if we should process as if we are inside quotes.
+     */
     private boolean inQuotes(boolean inQuotes) {
         return (inQuotes && !ignoreQuotations) || inField;
     }

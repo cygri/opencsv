@@ -30,7 +30,7 @@ public class CSVReaderBuilderTest {
       final CSVReader csvReader = builder.build();
       assertSame(
             CSVReader.DEFAULT_SKIP_LINES,
-            csvReader.skipLines);
+              csvReader.getSkipLines());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -54,7 +54,7 @@ public class CSVReaderBuilderTest {
       assertSame(csvParser, builder.csvParser);
 
       final CSVReader actual = builder.build();
-      assertSame(csvParser, actual.parser);
+      assertSame(csvParser, actual.getParser());
    }
 
    @Test
@@ -64,7 +64,7 @@ public class CSVReaderBuilderTest {
       assertEquals(99, builder.skipLines);
 
       final CSVReader actual = builder.build();
-      assertSame(99, actual.skipLines);
+      assertSame(99, actual.getSkipLines());
    }
 
    @Test
@@ -74,7 +74,7 @@ public class CSVReaderBuilderTest {
       assertEquals(0, builder.skipLines);
 
       final CSVReader actual = builder.build();
-      assertSame(0, actual.skipLines);
+      assertSame(0, actual.getSkipLines());
    }
 
    @Test
@@ -84,6 +84,6 @@ public class CSVReaderBuilderTest {
       assertEquals(0, builder.skipLines);
 
       final CSVReader actual = builder.build();
-      assertSame(0, actual.skipLines);
+      assertSame(0, actual.getSkipLines());
    }
 }
