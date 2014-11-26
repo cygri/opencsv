@@ -245,8 +245,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         String[] t = new String[buffer.length + lastRead.length];
         System.arraycopy(buffer, 0, t, 0, buffer.length);
         System.arraycopy(lastRead, 0, t, buffer.length, lastRead.length);
-        buffer = t;
-        return buffer;
+        return t;
     }
 
     /**

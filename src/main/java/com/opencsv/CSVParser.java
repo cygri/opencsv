@@ -337,7 +337,6 @@ public class CSVParser {
 
                             if (ignoreLeadingWhiteSpace && sb.length() > 0 && isAllWhiteSpace(sb)) {
                                 sb.setLength(0);
-                                sb.setLength(INITIAL_READ_SIZE);
                             } else {
                                 sb.append(c);
                             }
@@ -349,7 +348,6 @@ public class CSVParser {
             } else if (c == separator && !(inQuotes && !ignoreQuotations)) {
                 tokensOnThisLine.add(sb.toString());
                 sb.setLength(0);
-                sb.setLength(INITIAL_READ_SIZE);
                 inField = false;
             } else {
                 if (!strictQuotes || (inQuotes && !ignoreQuotations)) {
@@ -368,7 +366,10 @@ public class CSVParser {
             } else {
                 throw new IOException("Un-terminated quoted field at end of CSV line");
             }
+        } else {
+            inField = false;
         }
+
         if (sb != null) {
             tokensOnThisLine.add(sb.toString());
         }

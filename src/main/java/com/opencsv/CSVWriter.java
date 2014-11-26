@@ -165,6 +165,12 @@ public class CSVWriter implements Closeable, Flushable {
       }
    }
 
+   /**
+    * Writes the column names.
+    *
+    * @param rs - ResultSet containing column names.
+    * @throws SQLException - thrown by ResultSet::getColumnNames
+    */
    protected void writeColumnNames(ResultSet rs)
          throws SQLException {
 
@@ -267,10 +273,20 @@ public class CSVWriter implements Closeable, Flushable {
       writeNext(nextLine, true);
    }
 
+   /**
+    * checks to see if the line contains special characters.
+    * @param line - element of data to check for special characters.
+    * @return true if the line contains the quote, escape, separator, newline or return.
+    */
    private boolean stringContainsSpecialCharacters(String line) {
       return line.indexOf(quotechar) != -1 || line.indexOf(escapechar) != -1 || line.indexOf(separator) != -1 || line.contains("\n") || line.contains("\r");
    }
 
+   /**
+    * Processes all the characters in a line.
+    * @param nextElement - element to process.
+    * @return a StringBuilder with the elements data.
+    */
    protected StringBuilder processLine(String nextElement) {
       StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
       for (int j = 0; j < nextElement.length(); j++) {
@@ -281,6 +297,11 @@ public class CSVWriter implements Closeable, Flushable {
       return sb;
    }
 
+   /**
+    * Appends the character to the StringBuilder adding the escape character if needed.
+    * @param sb - StringBuffer holding the processed character.
+    * @param nextChar - character to process
+    */
    private void processCharacter(StringBuilder sb, char nextChar) {
       if (escapechar != NO_ESCAPE_CHARACTER && (nextChar == quotechar || nextChar == escapechar)) {
          sb.append(escapechar).append(nextChar);
@@ -322,10 +343,17 @@ public class CSVWriter implements Closeable, Flushable {
       return pw.checkError();
    }
 
+   /**
+    * Sets the result service.
+    * @param resultService - the ResultSetHelper
+    */
    public void setResultService(ResultSetHelper resultService) {
       this.resultService = resultService;
    }
 
+   /**
+    * flushes the writer without throwing any exceptions.
+    */
    public void flushQuietly() {
       try {
          flush();

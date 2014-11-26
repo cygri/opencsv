@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * helper class for processing JDBC ResultSet objects
+ * helper class for processing JDBC ResultSet objects.
  */
 public class ResultSetHelperService implements ResultSetHelper {
    public static final int CLOBBUFFERSIZE = 2048;
@@ -110,15 +110,39 @@ public class ResultSetHelperService implements ResultSetHelper {
       return value;
    }
 
+   /**
+    * Return time read from ResultSet.
+    *
+    * @param time time read from ResultSet
+    * @return String version of time or null if time is null.
+    */
    protected String handleTime(Time time) {
       return time == null ? null : time.toString();
    }
 
+   /**
+    * The formatted timestamp.
+    * @param timestamp - timestamp read from resultset
+    * @param timestampFormatString - format string
+    * @return - formatted time stamp.
+    */
    protected String handleTimestamp(Timestamp timestamp, String timestampFormatString) {
       SimpleDateFormat timeFormat = new SimpleDateFormat(timestampFormatString);
       return timestamp == null ? null : timeFormat.format(timestamp);
    }
 
+   /**
+    * Retrieves the column value from the ResultSet.
+    * @param rs ResultSet
+    * @param colType Type of column (IE Boolean, clob, date, etc)
+    * @param colIndex index of column in the result set
+    * @param trim trim the result (if the column type is a string type (char, varchar, etc.).
+    * @param dateFormatString - format string for dates.
+    * @param timestampFormatString - format string for timestamps.
+    * @return - column value.
+    * @throws SQLException - thrown by result set
+    * @throws IOException - thrown by result set
+    */
    private String getColumnValue(ResultSet rs, int colType, int colIndex, boolean trim, String dateFormatString, String timestampFormatString)
          throws SQLException, IOException {
 

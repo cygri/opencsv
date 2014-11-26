@@ -38,9 +38,9 @@ import java.io.Reader;
  */
 public class CSVReaderBuilder {
 
-   final Reader reader;
-   int skipLines = CSVReader.DEFAULT_SKIP_LINES;
-   /*@Nullable*/ CSVParser csvParser = null;
+    private final Reader reader;
+    private int skipLines = CSVReader.DEFAULT_SKIP_LINES;
+    /*@Nullable*/private CSVParser csvParser = null;
 
    /**
     * Sets the reader to an underlying CSV source.
@@ -55,10 +55,38 @@ public class CSVReaderBuilder {
       this.reader = reader;
    }
 
-   /**
+    /**
+     * Used by unit tests.
+     *
+     * @return the reader.
+     */
+    protected Reader getReader() {
+        return reader;
+    }
+
+    /**
+     * used by unit tests.
+     *
+     * @return The set number of lines to skip
+     */
+    protected int getSkipLines() {
+        return skipLines;
+    }
+
+    /**
+     * used by unit tests.
+     *
+     * @return the csvParser used by the builder.
+     */
+    protected CSVParser getCsvParser() {
+        return csvParser;
+    }
+
+    /**
     * Sets the line number to skip for start reading.
-    *
-    * @param skipLines the line number to skip for start reading
+     *
+     * @param skipLines the line number to skip for start reading.
+     * @return the CSVReaderBuilder with skipLines set.
     */
    CSVReaderBuilder withSkipLines(
          final int skipLines) {
@@ -67,21 +95,23 @@ public class CSVReaderBuilder {
    }
 
 
-   /**
-    * Sets the parser to use to parse the input
-    *
-    * @param csvParser the parser to use to parse the input
+    /**
+     * Sets the parser to use to parse the input.
+     *
+     * @param csvParser the parser to use to parse the input.
+     * @return the CSVReaderBuilder with the CSVParser set.
     */
    CSVReaderBuilder withCSVParser(
          final /*@Nullable*/ CSVParser csvParser) {
       this.csvParser = csvParser;
-      return this;
+       return this;
    }
 
 
-   /**
-    * Constructs CSVReader
-    */
+    /**
+     * Creates the CSVParser.
+     * @return the CSVParser based on the set criteria.
+     */
    CSVReader build() {
       final CSVParser parser =
             (csvParser != null ? csvParser : new CSVParser());

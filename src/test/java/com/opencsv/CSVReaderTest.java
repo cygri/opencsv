@@ -495,4 +495,21 @@ public class CSVReaderTest {
       CSVReader csvReader = new CSVReader(bufferedReader);
       assertNull(csvReader.readNext());
    }
+
+   @Test
+   public void testIssue102() throws IOException {
+      CSVReader csvReader = new CSVReader(new StringReader("\"\",a\n\"\",b\n"));
+
+      String[] firstRow = csvReader.readNext();
+      assertEquals(2, firstRow.length);
+      assertTrue(firstRow[0].isEmpty());
+      assertEquals("a", firstRow[1]);
+
+      String[] secondRow = csvReader.readNext();
+      assertEquals(2, secondRow.length);
+      assertTrue(secondRow[0].isEmpty());
+      assertEquals("b", secondRow[1]);
+   }
+
+
 }

@@ -21,11 +21,11 @@ public class CSVReaderBuilderTest {
 
    @Test
    public void testDefaultBuilder() {
-      assertSame(reader, builder.reader);
-      assertNull(builder.csvParser);
+      assertSame(reader, builder.getReader());
+      assertNull(builder.getCsvParser());
       assertEquals(
             CSVReader.DEFAULT_SKIP_LINES,
-            builder.skipLines);
+              builder.getSkipLines());
 
       final CSVReader csvReader = builder.build();
       assertSame(
@@ -42,7 +42,7 @@ public class CSVReaderBuilderTest {
    public void testWithCSVParserNull() {
       builder.withCSVParser(mock(CSVParser.class));
       builder.withCSVParser(null);
-      assertNull(builder.csvParser);
+      assertNull(builder.getCsvParser());
    }
 
    @Test
@@ -51,7 +51,7 @@ public class CSVReaderBuilderTest {
 
       builder.withCSVParser(csvParser);
 
-      assertSame(csvParser, builder.csvParser);
+      assertSame(csvParser, builder.getCsvParser());
 
       final CSVReader actual = builder.build();
       assertSame(csvParser, actual.getParser());
@@ -61,7 +61,7 @@ public class CSVReaderBuilderTest {
    public void testWithSkipLines() {
       builder.withSkipLines(99);
 
-      assertEquals(99, builder.skipLines);
+      assertEquals(99, builder.getSkipLines());
 
       final CSVReader actual = builder.build();
       assertSame(99, actual.getSkipLines());
@@ -71,7 +71,7 @@ public class CSVReaderBuilderTest {
    public void testWithSkipLinesZero() {
       builder.withSkipLines(0);
 
-      assertEquals(0, builder.skipLines);
+      assertEquals(0, builder.getSkipLines());
 
       final CSVReader actual = builder.build();
       assertSame(0, actual.getSkipLines());
@@ -81,7 +81,7 @@ public class CSVReaderBuilderTest {
    public void testWithSkipLinesNegative() {
       builder.withSkipLines(-1);
 
-      assertEquals(0, builder.skipLines);
+      assertEquals(0, builder.getSkipLines());
 
       final CSVReader actual = builder.build();
       assertSame(0, actual.getSkipLines());
