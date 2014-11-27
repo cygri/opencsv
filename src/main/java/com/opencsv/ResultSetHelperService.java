@@ -39,6 +39,14 @@ public class ResultSetHelperService implements ResultSetHelper {
    static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
    static final String DEFAULT_TIMESTAMP_FORMAT = "dd-MMM-yyyy HH:mm:ss";
 
+   /**
+    * Reads data from a Clob.
+    *
+    * @param c - Clob
+    * @return - string value of the data in the clob.
+    * @throws SQLException - returned from the Clob.
+    * @throws IOException  - returned from the Clob.
+    */
    private static String read(Clob c) throws SQLException, IOException {
       StringBuilder sb = new StringBuilder((int) c.length());
       Reader r = c.getCharacterStream();
@@ -50,6 +58,12 @@ public class ResultSetHelperService implements ResultSetHelper {
       return sb.toString();
    }
 
+   /**
+    * Returns the column names from the result set.
+    * @param rs - ResultSet
+    * @return - a string array containing the column names.
+    * @throws SQLException - thrown by the result set.
+    */
    public String[] getColumnNames(ResultSet rs) throws SQLException {
       List<String> names = new ArrayList<>();
       ResultSetMetaData metadata = rs.getMetaData();
@@ -62,14 +76,39 @@ public class ResultSetHelperService implements ResultSetHelper {
       return names.toArray(nameArray);
    }
 
+   /**
+    * Get all the column values from the result set.
+    * @param rs - the ResultSet containing the values.
+    * @return - String array containing all the column values.
+    * @throws SQLException - thrown by the result set.
+    * @throws IOException - thrown by the result set.
+    */
    public String[] getColumnValues(ResultSet rs) throws SQLException, IOException {
       return this.getColumnValues(rs, false, DEFAULT_DATE_FORMAT, DEFAULT_TIMESTAMP_FORMAT);
    }
 
+   /**
+    * Get all the column values from the result set.
+    * @param rs - the ResultSet containing the values.
+    * @param trim - values should have white spaces trimmed.
+    * @return - String array containing all the column values.
+    * @throws SQLException - thrown by the result set.
+    * @throws IOException - thrown by the result set.
+    */
    public String[] getColumnValues(ResultSet rs, boolean trim) throws SQLException, IOException {
       return this.getColumnValues(rs, trim, DEFAULT_DATE_FORMAT, DEFAULT_TIMESTAMP_FORMAT);
    }
 
+   /**
+    * Get all the column values from the result set.
+    * @param rs - the ResultSet containing the values.
+    * @param trim - values should have white spaces trimmed.
+    * @param dateFormatString - format String for dates.
+    * @param timeFormatString - format String for timestamps.
+    * @return - String array containing all the column values.
+    * @throws SQLException - thrown by the result set.
+    * @throws IOException - thrown by the result set.
+    */
    public String[] getColumnValues(ResultSet rs, boolean trim, String dateFormatString, String timeFormatString) throws SQLException, IOException {
       List<String> values = new ArrayList<>();
       ResultSetMetaData metadata = rs.getMetaData();
@@ -82,24 +121,56 @@ public class ResultSetHelperService implements ResultSetHelper {
       return values.toArray(valueArray);
    }
 
+   /**
+    * changes an object to a String.
+    * @param obj - Object to format.
+    * @return - String value of an object or empty string if the object is null.
+    */
    protected String handleObject(Object obj) {
       return obj == null ? "" : String.valueOf(obj);
    }
 
+   /**
+    * changes a BigDecimal to String.
+    * @param decimal - BigDecimal to format
+    * @return String representation of a BigDecimal or empty string if null
+    */
    protected String handleBigDecimal(BigDecimal decimal) {
       return decimal == null ? "" : decimal.toString();
    }
 
+   /**
+    * Retrieves the string representation of an Long value from the result set.
+    * @param rs - Result set containing the data.
+    * @param columnIndex - index to the column of the long.
+    * @return - the string representation of the long
+    * @throws SQLException - thrown by the result set on error.
+    */
    protected String handleLong(ResultSet rs, int columnIndex) throws SQLException {
       long lv = rs.getLong(columnIndex);
       return rs.wasNull() ? "" : Long.toString(lv);
    }
 
+   /**
+    * Retrieves the string representation of an Integer value from the result set.
+    * @param rs - Result set containing the data.
+    * @param columnIndex - index to the column of the integer.
+    * @return - string representation of the Integer.
+    * @throws SQLException - returned from the result set on error.
+    */
    protected String handleInteger(ResultSet rs, int columnIndex) throws SQLException {
       int i = rs.getInt(columnIndex);
       return rs.wasNull() ? "" : Integer.toString(i);
    }
 
+   /**
+    * Retrieves a date from the result set.
+    * @param rs - Result set containing the data
+    * @param columnIndex - index to the column of the date
+    * @param dateFormatString - format for the date
+    * @return - formatted date.
+    * @throws SQLException - returned from the result set on error.
+    */
    protected String handleDate(ResultSet rs, int columnIndex, String dateFormatString) throws SQLException {
       java.sql.Date date = rs.getDate(columnIndex);
       String value = null;

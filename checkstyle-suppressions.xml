@@ -10,4 +10,7 @@
     <suppress files="." checks="DesignForExtension"/>
     <suppress files="." checks="JavadocVariable"/>
     <suppress files="." checks="AvoidInlineConditionals"/>
+    <suppress files="." checks="AvoidStarImport"/>
+    <suppress files="." checks="NewlineAtEndOfFile"/>
+    <suppress files="." checks="RegexpSingleline"/>
 </suppressions>

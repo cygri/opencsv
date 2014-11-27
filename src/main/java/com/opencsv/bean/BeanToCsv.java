@@ -75,7 +75,7 @@ public class BeanToCsv<T> {
         return values.toArray(new String[0]);
     }
 
-    protected String[] processObject(List<Method> getters, Object bean) throws IntrospectionException, IllegalArgumentException,
+    protected String[] processObject(List<Method> getters, Object bean) throws IntrospectionException,
             IllegalAccessException, InvocationTargetException {
         List<String> values = new ArrayList<>();
         // retrieve bean values
