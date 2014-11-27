@@ -40,19 +40,41 @@
             <email>glen_a_smith@users.sourceforge.net</email>
             <url>http://blogs.bytecode.com.au/glen</url>
             <timezone>+10</timezone>
+            <roles>
+                <role>Creator</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
         <developer>
             <id>sean-sullivan</id>
             <name>Sean Sullivan</name>
             <email>sullis@users.sourceforge.net</email>
+            <roles>
+                <role>developer</role>
+            </roles>
         </developer>
         <developer>
             <id>scott_conway</id>
             <name>Scott Conway</name>
             <email>sconway@users.sourceforge.net</email>
             <timezone>-6</timezone>
+            <roles>
+                <role>project keeper</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
     </developers>
+    <contributors>
+        <contributor>
+            <name>Maciek Opala</name>
+            <email>maciek.opala@gmail.com</email>
+            <roles>
+                <role>developer - version 3.0</role>
+            </roles>
+        </contributor>
+    </contributors>
     <issueManagement>
         <system>Sourceforge</system>
         <url>http://sourceforge.net/tracker/?group_id=148905</url>
@@ -156,7 +178,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
-                        <Export-Package>au.com.bytecode.opencsv.*;version="${project.version}"</Export-Package>
+                        <Export-Package>com.opencsv.*;version="${project.version}"</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

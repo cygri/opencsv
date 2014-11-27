@@ -206,7 +206,7 @@ limitations under the License.
     <target name="javadoc" depends="init"
             description="Generate javadoc for the package">
 
-        <javadoc packagenames="au.com.bytecode.opencsv.*" sourcepath="src"
+        <javadoc packagenames="com.opencsv.*" sourcepath="src"
                  defaultexcludes="yes" destdir="${doc.dir}/api" author="true" version="true"
                  use="true" windowtitle="opencsv API ${build.version.brief}">
             <doctitle><![CDATA[<h1>opencsv</h1>]]>
