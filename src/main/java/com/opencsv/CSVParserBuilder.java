@@ -40,6 +40,12 @@ public class CSVParserBuilder {
     private boolean ignoreQuotations = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
 
     /**
+     * Default constructor.
+     */
+    public CSVParserBuilder() {
+    }
+
+    /**
      * Sets the delimiter to use for separating entries.
      *
      * @param separator the delimiter to use for separating entries

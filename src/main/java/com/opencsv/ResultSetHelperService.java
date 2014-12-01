@@ -40,13 +40,11 @@ public class ResultSetHelperService implements ResultSetHelper {
    static final String DEFAULT_TIMESTAMP_FORMAT = "dd-MMM-yyyy HH:mm:ss";
 
    /**
-    * Reads data from a Clob.
-    *
-    * @param c - Clob
-    * @return - string value of the data in the clob.
-    * @throws SQLException - returned from the Clob.
-    * @throws IOException  - returned from the Clob.
+    * Default Constructor.
     */
+   public ResultSetHelperService() {
+   }
+
    private static String read(Clob c) throws SQLException, IOException {
       StringBuilder sb = new StringBuilder((int) c.length());
       Reader r = c.getCharacterStream();
@@ -202,18 +200,6 @@ public class ResultSetHelperService implements ResultSetHelper {
       return timestamp == null ? null : timeFormat.format(timestamp);
    }
 
-   /**
-    * Retrieves the column value from the ResultSet.
-    * @param rs ResultSet
-    * @param colType Type of column (IE Boolean, clob, date, etc)
-    * @param colIndex index of column in the result set
-    * @param trim trim the result (if the column type is a string type (char, varchar, etc.).
-    * @param dateFormatString - format string for dates.
-    * @param timestampFormatString - format string for timestamps.
-    * @return - column value.
-    * @throws SQLException - thrown by result set
-    * @throws IOException - thrown by result set
-    */
    private String getColumnValue(ResultSet rs, int colType, int colIndex, boolean trim, String dateFormatString, String timestampFormatString)
          throws SQLException, IOException {
 

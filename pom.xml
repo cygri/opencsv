@@ -252,6 +252,7 @@
                     <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                     <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
                     <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                    <configLocation>checkstyle.xml</configLocation>
                 </configuration>
                 <reportSets>
                     <reportSet>
