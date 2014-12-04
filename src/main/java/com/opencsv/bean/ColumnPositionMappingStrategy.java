@@ -48,7 +48,8 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
     * @param col - position of the column.
     * @return - column name or null if col > number of mappings.
     */
-   protected String getColumnName(int col) {
+   @Override
+   public String getColumnName(int col) {
       return col < columnMapping.length ? columnMapping[col] : null;
    }
 

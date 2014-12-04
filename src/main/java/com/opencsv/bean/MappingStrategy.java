@@ -36,7 +36,7 @@ public interface MappingStrategy<T> {
     *
     * @param col the column to find the description for
     * @return the related PropertyDescriptor
-    * @throws java.beans.IntrospectionException
+    * @throws IntrospectionException - thrown on error loading the property descriptors.
     */
    PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
 
@@ -44,8 +44,8 @@ public interface MappingStrategy<T> {
      * Implementation will return a bean of the type of object you are mapping.
      *
      * @return A new instance of the class being mapped.
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @throws InstantiationException - thrown on error creating object.
+     * @throws IllegalAccessException - thrown on error creating object.
      */
     T createBean() throws InstantiationException, IllegalAccessException;
 
