@@ -127,6 +127,15 @@ public class CSVParserTest {
    }
 
    @Test
+   public void parseMultiLinedQuotedwithCarriageReturns() throws IOException {
+       String[] nextLine = csvParser.parseLine("a,\"PO Box 123,\r\nKippax,ACT. 2615.\r\nAustralia\",d.\n");
+       assertEquals(3, nextLine.length);
+       assertEquals("a", nextLine[0]);
+       assertEquals("PO Box 123,\r\nKippax,ACT. 2615.\r\nAustralia", nextLine[1]);
+       assertEquals("d.\n", nextLine[2]);
+   }
+
+    @Test
    public void testADoubleQuoteAsDataElement() throws IOException {
 
       String[] nextLine = csvParser.parseLine("a,\"\"\"\",c");// a,"""",c

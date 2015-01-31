@@ -17,6 +17,7 @@ package com.opencsv;
  */
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Matchers;
 
@@ -397,7 +398,60 @@ public class CSVReaderTest {
       assertEquals("c", nextLine[2]);
    }
 
+    @Ignore
    @Test
+    public void bug106ParseLineWithCarriageReturnNewLineStrictQuotes() throws IOException {
+
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append("\"a\",\"123\r\n4567\",\"c\"").append("\n"); // "a","123\r\n4567","c"
+
+        CSVReader c = new CSVReader(new StringReader(sb.toString()), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, true);
+
+        String[] nextLine = c.readNext();
+        assertEquals(3, nextLine.length);
+
+        assertEquals("a", nextLine[0]);
+        assertEquals(1, nextLine[0].length());
+
+        assertEquals("123\r\n4567", nextLine[1]);
+        assertEquals("c", nextLine[2]);
+    }
+
+    @Ignore
+    @Test
+    public void bug106DoesStringReaderRemovesCarriageReturn() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append("\"a\",\"123\r\n4567\",\"c\"").append("\n"); // "a","123\r\n4567","c"
+        int tempLen = sb.length();
+
+        Reader reader = new StringReader(sb.toString());
+
+        char[] cbuf = new char[tempLen];
+        reader.read(cbuf, 0, tempLen);
+
+        String tempString = new String(cbuf);
+        assertTrue(tempString.contains("\r\n"));
+    }
+
+    @Ignore
+    @Test
+    public void bug106DoesBufferedStringReaderRemovesCarriageReturn() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append("\"a\",\"123\r\n4567\",\"c\"").append("\n"); // "a","123\r\n4567","c"
+
+        Reader reader = new StringReader(sb.toString());
+        BufferedReader bufferedReader = new BufferedReader(reader);
+
+
+        String tempString = bufferedReader.readLine();
+        //assertTrue(tempString.contains("\r\n"));
+        assertEquals(sb.toString(), tempString);
+    }
+
+    @Test
    public void testIssue2992134OutOfPlaceQuotes() throws IOException {
       StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
 
