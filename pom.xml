@@ -91,6 +91,11 @@
                             <artifactId>doxia-core</artifactId>
                             <version>1.6</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.doxia</groupId>
+                            <artifactId>doxia-module-twiki</artifactId>
+                            <version>1.6</version>
+                        </dependency>
                     </dependencies>
                 </plugin>
             </plugins>

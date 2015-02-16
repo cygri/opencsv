@@ -1,0 +1,129 @@
+---+General
+
+Opencsv is a very simple csv (comma-separated values) parser library for Java. It was developed because all of current csv parsers I've come across don't have commercial-friendly licenses.
+
+---+FAQ
+
+---+++Where can I get it?
+    Source and binaries are available from [[http://sourceforge.net/projects/opencsv/][SourceForge]]
+
+---+++What features does opencsv support?
+     opencsv supports all the basic csv-type things you're likely to want to do:
+         * Arbitrary numbers of values per line.
+         * Ignoring commas in quoted elements.
+         * Handling quoted entries with embedded carriage returns (ie entries that span multiple lines).
+         * Configurable separator and quote characters (or use sensible defaults).
+         * Read all the entries at once, or use an Iterator style modell
+         * Creating csv files from String[] (ie. automatic escaping of embedded quote chars).
+
+---+++How do I read and parse a CSV file?
+    If you want to use an Iterator style pattern, you might do something like this:
+   <verbatim>
+     CSVReader reader = new CSVReader(new FileReader("yourfile.csv"));
+     String [] nextLine;
+     while ((nextLine = reader.readNext()) != null) {
+        // nextLine[] is an array of values from the line
+        System.out.println(nextLine[0] + nextLine[1] + "etc...");
+     }
+   </verbatim>
+
+      Or, if you might just want to slurp the whole lot into a List, just call readAll()...
+
+   <verbatim>
+     CSVReader reader = new CSVReader(new FileReader("yourfile.csv"));
+     List myEntries = reader.readAll();
+   </verbatim>
+
+      which will give you a List of String[] that you can iterate over. If all else fails, check out the Javadocs.
+
+---+++Can I use my own separators and quote characters?
+    Yes. There are constructors that cater for supplying your own separator and quote characters. Say you're using a tab for your separator, you can do something like this:
+
+   <verbatim>
+     CSVReader reader = new CSVReader(new FileReader("yourfile.csv"), '\t');
+   </verbatim>
+
+      And if you single quoted your escaped characters rather than double quote them, you can use the three arg constructor:
+
+   <verbatim>
+     CSVReader reader = new CSVReader(new FileReader("yourfile.csv"), '\t', '\'');
+   </verbatim>
+
+      You may also skip the first few lines of the file if you know that the content doesn't start till later in the file. So, for example, you can skip the first two lines by doing:
+
+   <verbatim>
+     CSVReader reader = new CSVReader(new FileReader("yourfile.csv"), '\t', '\'', 2);
+   </verbatim>
+
+---+++Can I write csv files with opencsv?
+    Yes. There is a CSVWriter in the same package that follows the same semantics as the CSVReader. For example, to write a tab separated file:
+
+   <verbatim>
+     CSVWriter writer = new CSVWriter(new FileWriter("yourfile.csv"), '\t');
+     // feed in your array (or convert your data to an array)
+     String[] entries = "first#second#third".split("#");
+     writer.writeNext(entries);
+	 writer.close();
+   </verbatim>
+
+   If you'd prefer to use your own quote characters, you may use the three arg version of the constructor,  which takes a quote character (or feel free to pass in CSVWriter.NO_QUOTE_CHARACTER).
+
+   You can also customise the line terminators used in the generated file (which is handy when you're exporting from your Linux web application to Windows clients). There is a constructor argument for this purpose.
+
+---+++Can I dump out SQL tables to CSV?
+    Yes you can. Sean Sullivan added a neat feature to CSVWriter so you can pass writeAll() a ResultSet.
+
+   <verbatim>
+     java.sql.ResultSet myResultSet = ....
+     writer.writeAll(myResultSet, includeHeaders);
+   </verbatim>
+
+---+++Is there a way to bind my CSV file to a list of Javabeans?
+    Yes there is. Kyle Miller added a set of classes to allow you to bind a CSV file to a list of JavaBeans based on column name, column position, or a custom mapping strategy. You can find the new classes in the <code>com.opencsv.bean</code> package.  Here's how you can map to a java bean based on the field positions in your CSV file:
+
+   <verbatim>
+    ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
+    strat.setType(YourOrderBean.class);
+    String[] columns = new String[] {"name", "orderNumber", "id"}; // the fields to bind do in your JavaBean
+    strat.setColumnMapping(columns);
+
+    CsvToBean csv = new CsvToBean();
+    List list = csv.parse(strat, yourReader);
+   </verbatim>
+
+   For more detailed examples, check out the test cases for each of the available mapping strategies under the /test/java/com/opencsv/bean/.
+
+---+Other Stuff
+
+---+++Can I use opencsv in my commercial applications?
+
+Yes. opencsv is available under a commercial-friendly Apache 2.0 license.  You are free to include it in your commericial applications without any fee or charge, and you are free to modify it to suit your circumstances. To find out more details of the license, read the [[http://www.apache.org/licenses/LICENSE-2.0][Apache 2.0 license agreement]]
+
+---+++Can I get the source? More example code?
+
+You can view the source from the [[http://sourceforge.net/p/opencsv/source/ci/master/tree/][opencsv source section]].  The source section also gives you the url to the git repository so you can download source code.
+There is also a sample addressbook csv reader in the /examples directory.  And for extra marks, there's a JUnit test suite in the /test directory.
+
+---+++How can I use it in my Maven projects?
+
+Add a dependency element to your pom:
+<verbatim>
+  <dependency>
+     <groupId>com.opencsv</groupId>
+     <artifactId>opencsv</artifactId>
+     <version>3.2</version>
+  </dependency>
+</verbatim>
+
+---+++Who maintains opencsv?
+
+   * opencsv was developed in a couple of hours by Glen Smith. You can read his [[http://blogs.bytecode.com.au/glen][blog]] for more info and contact details.
+   * Kyle Miller contributed the bean binding work.
+   * Sean Sullivan contributed work and was maintainer for a time.
+   * Scott Conway has done tons of bug fixing including upgrading the source code to Java 5, and is the current (only) maintainer of the project.  Scott took a hiatus in 2013-2014 due to work/family demands but came back when Maciek Opala contacted him for fixes for issues the Groovy language was having using opencsv (that's right - you heard it!  Groovy uses opencsv!!).  But that was when he realized he was the only one still on the project because no one else stepped in to fix issues :(
+   * J.C. Romanda contributed several fixes.
+   * Maciek Opala contributed alot of his time modernizing opencsv.  He upgraded the code to Java 7, moved the repository to git and fixed several issues.
+
+
+---+++Reporting issues
+You can report it on the [[http://sourceforge.net/projects/opencsv/support][support page]] at Sourceforge. Please post a sample file that demonstrates your issue.  For bonus marks, post a patch too. :-)
