@@ -120,7 +120,7 @@ Add a dependency element to your pom:
    * opencsv was developed in a couple of hours by Glen Smith. You can read his [[http://blogs.bytecode.com.au/glen][blog]] for more info and contact details.
    * Kyle Miller contributed the bean binding work.
    * Sean Sullivan contributed work and was maintainer for a time.
-   * Scott Conway has done tons of bug fixing including upgrading the source code to Java 5, and is the current (only) maintainer of the project.  Scott took a hiatus in 2013-2014 due to work/family demands but came back when Maciek Opala contacted him for fixes for issues the Groovy language was having using opencsv (that's right - you heard it!  Groovy uses opencsv!!).  But that was when he realized he was the only one still on the project because no one else stepped in to fix issues :(
+   * Scott Conway has done tons of bug fixing including upgrading the source code to Java 5, and is the current (only) maintainer of the project.  Scott took a hiatus in 2012-2014 due to work/family demands but came back when Maciek Opala contacted him for fixes for issues the Groovy language was having using opencsv (that's right - you heard it!  Groovy uses opencsv!!).  But that was when he realized he was the only one still on the project because none of the other admins stepped in to fix issues :(
    * J.C. Romanda contributed several fixes.
    * Maciek Opala contributed alot of his time modernizing opencsv.  He upgraded the code to Java 7, moved the repository to git and fixed several issues.
 

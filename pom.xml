@@ -43,15 +43,6 @@
             <roles>
                 <role>Creator</role>
                 <role>architect</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>sean-sullivan</id>
-            <name>Sean Sullivan</name>
-            <email>sullis@users.sourceforge.net</email>
-            <roles>
-                <role>developer</role>
             </roles>
         </developer>
         <developer>
@@ -65,6 +56,14 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>sean-sullivan</id>
+            <name>Sean Sullivan</name>
+            <email>sullis@users.sourceforge.net</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -72,6 +71,13 @@
             <email>maciek.opala@gmail.com</email>
             <roles>
                 <role>developer - version 3.0</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>J.C. Romanda</name>
+            <email>j_hah@users.sf.net</email>
+            <roles>
+                <role>developer</role>
             </roles>
         </contributor>
     </contributors>
