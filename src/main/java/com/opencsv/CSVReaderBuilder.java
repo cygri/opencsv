@@ -41,6 +41,7 @@ public class CSVReaderBuilder {
     private final Reader reader;
     private int skipLines = CSVReader.DEFAULT_SKIP_LINES;
     /*@Nullable*/private CSVParser csvParser = null;
+    private boolean keepCR;
 
    /**
     * Sets the reader to an underlying CSV source.
@@ -115,6 +116,26 @@ public class CSVReaderBuilder {
    CSVReader build() {
       final CSVParser parser =
             (csvParser != null ? csvParser : new CSVParser());
-      return new CSVReader(reader, skipLines, parser);
+       return new CSVReader(reader, skipLines, parser, keepCR);
    }
+
+    /**
+     * Sets if the reader will keep or discard carriage returns.
+     *
+     * @param keepCR - true to keep carriage returns, false to discard.
+     * @return the CSVParser based on the set criteria.
+     */
+    public CSVReaderBuilder withKeepCarriageReturn(boolean keepCR) {
+        this.keepCR = keepCR;
+        return this;
+    }
+
+    /**
+     * Returns if the reader built will keep or discard carriage returns.
+     *
+     * @return true if the reader built will keep carriage returns, false otherwise.
+     */
+    public boolean keepCarriageReturn() {
+        return this.keepCR;
+    }
 }
