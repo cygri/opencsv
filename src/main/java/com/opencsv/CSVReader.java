@@ -34,6 +34,7 @@ import java.util.List;
 public class CSVReader implements Closeable, Iterable<String[]> {
 
     public static final boolean DEFAULT_KEEP_CR = false;
+    public static final boolean DEFAULT_VERIFY_READER = true;
     /**
      * The default line to start reading.
      */
@@ -45,6 +46,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     private boolean hasNext = true;
     private boolean linesSkiped;
     private boolean keepCR;
+    private boolean verifyReader;
 
     /**
      * Constructs CSVReader using a comma for the separator.
@@ -174,7 +176,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line, boolean strictQuotes,
                      boolean ignoreLeadingWhiteSpace, boolean keepCR) {
         this(reader, line,
-                new CSVParser(separator, quotechar, escape, strictQuotes, ignoreLeadingWhiteSpace), keepCR);
+                new CSVParser(separator, quotechar, escape, strictQuotes, ignoreLeadingWhiteSpace), keepCR, DEFAULT_VERIFY_READER);
     }
 
     /**
@@ -185,7 +187,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param csvParser the parser to use to parse input
      */
     public CSVReader(Reader reader, int line, CSVParser csvParser) {
-        this(reader, line, csvParser, DEFAULT_KEEP_CR);
+        this(reader, line, csvParser, DEFAULT_KEEP_CR, DEFAULT_VERIFY_READER);
     }
 
     /**
@@ -195,8 +197,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param line      the line number to skip for start reading
      * @param csvParser the parser to use to parse input
      * @param keepCR    true to keep carriage returns in data read, false otherwise
+     * @param verifyReader   true to verify reader before each read, false otherwise
      */
-    public CSVReader(Reader reader, int line, CSVParser csvParser, boolean keepCR) {
+    CSVReader(Reader reader, int line, CSVParser csvParser, boolean keepCR, boolean verifyReader) {
         this.br =
                 (reader instanceof BufferedReader ?
                         (BufferedReader) reader :
@@ -205,6 +208,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         this.skipLines = line;
         this.parser = csvParser;
         this.keepCR = keepCR;
+        this.verifyReader = verifyReader;
     }
     /**
      * @return the CSVParser used by the reader.
@@ -323,6 +327,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @return true if the reader can no longer be read from.
      */
     private boolean isClosed() {
+        if (!verifyReader) {
+            return false;
+        }
         try {
             return !br.ready();
         } catch (IOException e) {
@@ -349,5 +356,23 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Returns if the CSVReader will verify the reader before each read.
+     * <p/>
+     * By default the value is true which is the functionality for version 3.0.
+     * If set to false the reader is always assumed ready to read - this is the functionality
+     * for version 2.4 and before.
+     * <p/>
+     * The reason this method was needed was that certain types of Readers would return
+     * false for its ready() method until a read was done (namely readers created using Channels).
+     * This caused opencsv not to read from those readers.
+     *
+     * @return true if CSVReader will verify the reader before reads.  False otherwise.
+     * @link https://sourceforge.net/p/opencsv/bugs/108/
+     */
+    public boolean verifyReader() {
+        return this.verifyReader;
     }
 }

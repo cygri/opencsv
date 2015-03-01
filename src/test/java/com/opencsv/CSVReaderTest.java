@@ -20,11 +20,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.CharBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
@@ -533,5 +533,16 @@ public class CSVReaderTest {
         assertEquals("b", secondRow[1]);
     }
 
+    @Test
+    public void issue108ReaderPlaysWellWithChannels() throws IOException {
+        byte[] bytes = "name\r\nvalue\r\n".getBytes("UTF-8");
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        ReadableByteChannel ch = Channels.newChannel(bais);
+        InputStream in = Channels.newInputStream(ch);
+        InputStreamReader reader = new InputStreamReader(in, Charset.forName("UTF-8"));
+        CSVReaderBuilder builder = new CSVReaderBuilder(reader);
+        CSVReader csv = builder.withVerifyReader(false).build();
+        assertEquals(2, csv.readAll().size());
+    }
 
 }

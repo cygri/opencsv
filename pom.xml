@@ -56,14 +56,6 @@
                 <role>developer</role>
             </roles>
         </developer>
-        <developer>
-            <id>sean-sullivan</id>
-            <name>Sean Sullivan</name>
-            <email>sullis@users.sourceforge.net</email>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -78,6 +70,19 @@
             <email>j_hah@users.sf.net</email>
             <roles>
                 <role>developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Sean Sullivan</name>
+            <email>sullis@users.sourceforge.net</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Kyle Miller</name>
+            <roles>
+                <role>Developed bean logic.</role>
             </roles>
         </contributor>
     </contributors>

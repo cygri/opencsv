@@ -32,6 +32,7 @@ public class CSVReaderBuilderTest {
                CSVReader.DEFAULT_SKIP_LINES,
               csvReader.getSkipLines());
        assertEquals(CSVReader.DEFAULT_KEEP_CR, csvReader.keepCarriageReturns());
+       assertEquals(CSVReader.DEFAULT_VERIFY_READER, csvReader.verifyReader());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -96,4 +97,10 @@ public class CSVReaderBuilderTest {
       final CSVReader actual = builder.build();
       assertSame(0, actual.getSkipLines());
    }
+
+    @Test
+    public void testWithVerifyReader() {
+        final CSVReader reader = builder.withVerifyReader(false).build();
+        assertFalse(reader.verifyReader());
+    }
 }

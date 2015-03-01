@@ -19,7 +19,10 @@ package com.opencsv;
 import java.io.Reader;
 
 /**
- * Builder for creating a CSVReader.
+ * Builder for creating a CSVReader.  This should be the preferred method of
+ * creating a Reader as there are so many possible values to be set it is
+ * impossible to have constructors for all of them and keep backwards
+ * compatibility with previous constructors.
  *
  * <code>
  * final CSVParser parser =
@@ -42,6 +45,7 @@ public class CSVReaderBuilder {
     private int skipLines = CSVReader.DEFAULT_SKIP_LINES;
     /*@Nullable*/private CSVParser csvParser = null;
     private boolean keepCR;
+    private boolean verifyReader = CSVReader.DEFAULT_VERIFY_READER;
 
    /**
     * Sets the reader to an underlying CSV source.
@@ -116,7 +120,7 @@ public class CSVReaderBuilder {
    CSVReader build() {
       final CSVParser parser =
             (csvParser != null ? csvParser : new CSVParser());
-       return new CSVReader(reader, skipLines, parser, keepCR);
+       return new CSVReader(reader, skipLines, parser, keepCR, verifyReader);
    }
 
     /**
@@ -135,7 +139,18 @@ public class CSVReaderBuilder {
      *
      * @return true if the reader built will keep carriage returns, false otherwise.
      */
-    public boolean keepCarriageReturn() {
+    protected boolean keepCarriageReturn() {
         return this.keepCR;
+    }
+
+    /**
+     * Checks to see if the reader should verify the reader before reads or not.
+     *
+     * @param verifyReader true if CSVReader should verify reader before each read, false otherwise.
+     * @return The CSVParser based on this criteria.
+     */
+    public CSVReaderBuilder withVerifyReader(boolean verifyReader) {
+        this.verifyReader = verifyReader;
+        return this;
     }
 }
