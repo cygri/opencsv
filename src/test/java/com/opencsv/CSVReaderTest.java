@@ -94,6 +94,24 @@ public class CSVReaderTest {
     }
 
     @Test
+    public void readerCanHandleNullInString() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        sb.append("a,\0b,c");
+
+        StringReader reader = new StringReader(sb.toString());
+
+        CSVReaderBuilder builder = new CSVReaderBuilder(reader);
+        CSVReader defaultReader = builder.build();
+
+        String[] nextLine = defaultReader.readNext();
+        assertEquals(3, nextLine.length);
+        assertEquals("a", nextLine[0]);
+        assertEquals("\0b", nextLine[1]);
+        assertEquals(0, nextLine[1].charAt(0));
+        assertEquals("c", nextLine[2]);
+    }
+
+    @Test
     public void testParseLineStrictQuote() throws IOException {
         StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
         sb.append("a,b,c").append("\n");   // standard case
