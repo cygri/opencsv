@@ -52,7 +52,7 @@ public class CSVReaderBuilder {
     *
     * @param reader the reader to an underlying CSV source.
     */
-   CSVReaderBuilder(
+   public CSVReaderBuilder(
          final Reader reader) {
       if (reader == null) {
          throw new IllegalArgumentException("Reader may not be null");
@@ -93,7 +93,7 @@ public class CSVReaderBuilder {
      * @param skipLines the line number to skip for start reading.
      * @return the CSVReaderBuilder with skipLines set.
     */
-   CSVReaderBuilder withSkipLines(
+    public CSVReaderBuilder withSkipLines(
          final int skipLines) {
       this.skipLines = (skipLines <= 0 ? 0 : skipLines);
       return this;
@@ -106,7 +106,7 @@ public class CSVReaderBuilder {
      * @param csvParser the parser to use to parse the input.
      * @return the CSVReaderBuilder with the CSVParser set.
     */
-   CSVReaderBuilder withCSVParser(
+    public CSVReaderBuilder withCSVParser(
          final /*@Nullable*/ CSVParser csvParser) {
       this.csvParser = csvParser;
        return this;
@@ -117,7 +117,7 @@ public class CSVReaderBuilder {
      * Creates the CSVParser.
      * @return the CSVParser based on the set criteria.
      */
-   CSVReader build() {
+    public CSVReader build() {
       final CSVParser parser =
             (csvParser != null ? csvParser : new CSVParser());
        return new CSVReader(reader, skipLines, parser, keepCR, verifyReader);
@@ -144,7 +144,12 @@ public class CSVReaderBuilder {
     }
 
     /**
-     * Checks to see if the reader should verify the reader before reads or not.
+     * Checks to see if the CSVReader should verify the reader state before reads or not.
+     *
+     * This should be set to false if you are using some form of asynchronous reader (like readers created
+     * by the java.nio.* classes).
+     *
+     * The default value is true.
      *
      * @param verifyReader true if CSVReader should verify reader before each read, false otherwise.
      * @return The CSVParser based on this criteria.
