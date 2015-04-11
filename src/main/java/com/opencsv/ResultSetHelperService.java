@@ -67,7 +67,7 @@ public class ResultSetHelperService implements ResultSetHelper {
       ResultSetMetaData metadata = rs.getMetaData();
 
       for (int i = 0; i < metadata.getColumnCount(); i++) {
-         names.add(metadata.getColumnName(i + 1));
+         names.add(metadata.getColumnLabel(i + 1));
       }
 
       String[] nameArray = new String[names.size()];
