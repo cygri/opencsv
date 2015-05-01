@@ -8,13 +8,15 @@ Opencsv is a very simple csv (comma-separated values) parser library for Java. I
     Source and binaries are available from [[http://sourceforge.net/projects/opencsv/][SourceForge]]
 
 ---+++What features does opencsv support?
-     opencsv supports all the basic csv-type things you're likely to want to do:
-         * Arbitrary numbers of values per line.
-         * Ignoring commas in quoted elements.
-         * Handling quoted entries with embedded carriage returns (ie entries that span multiple lines).
-         * Configurable separator and quote characters (or use sensible defaults).
-         * Read all the entries at once, or use an Iterator style modell
-         * Creating csv files from String[] (ie. automatic escaping of embedded quote chars).
+
+    opencsv supports all the basic csv-type things you're likely to want to do:
+
+    * Arbitrary numbers of values per line.
+    * Ignoring commas in quoted elements.
+    * Handling quoted entries with embedded carriage returns (ie entries that span multiple lines).
+    * Configurable separator and quote characters (or use sensible defaults).
+    * Read all the entries at once, or use an Iterator style modell
+    * Creating csv files from String[] (ie. automatic escaping of embedded quote chars).
 
 ---+++How do I read and parse a CSV file?
     If you want to use an Iterator style pattern, you might do something like this:

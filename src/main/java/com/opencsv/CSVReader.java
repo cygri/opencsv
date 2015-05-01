@@ -331,7 +331,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
             return false;
         }
         try {
-            return !br.ready();
+            br.mark(1);
+            int nextByte = br.read();
+            br.reset(); // resets stream position, possible because its buffered
+            return nextByte == -1; // read() returns -1 at end of stream
         } catch (IOException e) {
             return true;
         }
