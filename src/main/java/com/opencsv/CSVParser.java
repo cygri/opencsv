@@ -543,6 +543,9 @@ public class CSVParser {
         return StringUtils.isWhitespace(sb);
     }
 
+    /**
+     * @return - the null field indicator.
+     */
     public CSVReaderNullFieldIndicator nullFieldIndicator() {
         return nullFieldIndicator;
     }

@@ -181,11 +181,20 @@ public class CSVParserBuilder {
         return ignoreQuotations;
     }
 
+    /**
+     * Sets the NullFieldIndicator.
+     *
+     * @param fieldIndicator - CSVReaderNullFieldIndicator set to what should be considered a null field.
+     * @return - The CSVParserBuilder
+     */
     public CSVParserBuilder withFieldAsNull(final CSVReaderNullFieldIndicator fieldIndicator) {
         this.nullFieldIndicator = fieldIndicator;
         return this;
     }
 
+    /**
+     * @return - the null field indicator.
+     */
     public CSVReaderNullFieldIndicator nullFieldIndicator() {
         return nullFieldIndicator;
     }
