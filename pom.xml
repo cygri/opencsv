@@ -88,7 +88,7 @@
     </contributors>
     <issueManagement>
         <system>Sourceforge</system>
-        <url>http://sourceforge.net/tracker/?group_id=148905</url>
+        <url>https://sourceforge.net/p/opencsv/_list/tickets</url>
     </issueManagement>
     <build>
         <pluginManagement>
