@@ -16,6 +16,7 @@
 package com.opencsv;
 
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
 /**
  * Builder for creating a CSVParser.
@@ -38,6 +39,7 @@ public class CSVParserBuilder {
     private boolean strictQuotes = CSVParser.DEFAULT_STRICT_QUOTES;
     private boolean ignoreLeadingWhiteSpace = CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
     private boolean ignoreQuotations = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
+    private CSVReaderNullFieldIndicator nullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER;
 
     /**
      * Default constructor.
@@ -133,7 +135,8 @@ public class CSVParserBuilder {
                 escapeChar,
                 strictQuotes,
                 ignoreLeadingWhiteSpace,
-                ignoreQuotations);
+                ignoreQuotations,
+                nullFieldIndicator);
     }
 
     /**
@@ -176,5 +179,14 @@ public class CSVParserBuilder {
      */
     public boolean isIgnoreQuotations() {
         return ignoreQuotations;
+    }
+
+    public CSVParserBuilder withFieldAsNull(final CSVReaderNullFieldIndicator fieldIndicator) {
+        this.nullFieldIndicator = fieldIndicator;
+        return this;
+    }
+
+    public CSVReaderNullFieldIndicator nullFieldIndicator() {
+        return nullFieldIndicator;
     }
 }

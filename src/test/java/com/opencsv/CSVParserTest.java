@@ -1,5 +1,6 @@
 package com.opencsv;
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -548,5 +549,85 @@ public class CSVParserTest {
 
         assertEquals(1, nextLine.length);
         assertEquals("because we are using\0 parseLineMulti.", nextLine[0]);
+    }
+
+    @Test
+    public void featureRequest60ByDefaultEmptyFieldsAreBlank() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.build();
+
+        String item[] = parser.parseLine(sb.toString());
+
+        assertEquals(5, item.length);
+        assertEquals("", item[0]);
+        assertEquals("", item[1]);
+        assertEquals("", item[2]);
+        assertEquals("", item[3]);
+        assertEquals("", item[4]);
+    }
+
+    @Test
+    public void featureRequest60TreatEmptyFieldsAsNull() throws IOException {
+
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY).build();
+
+        String item[] = parser.parseLine(sb.toString());
+
+        assertEquals(5, item.length);
+        assertNull(item[0]);
+        assertNull(item[1]);
+        assertNull(item[2]);
+        assertEquals("", item[3]);
+        assertNull(item[4]);
+
+    }
+
+    @Test
+    public void featureRequest60TreatEmptyDelimitedFieldsAsNull() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_DELIMITED).build();
+
+        String item[] = parser.parseLine(sb.toString());
+
+        assertEquals(5, item.length);
+        assertEquals("", item[0]);
+        assertEquals("", item[1]);
+        assertEquals("", item[2]);
+        assertNull(item[3]);
+        assertEquals("", item[4]);
+    }
+
+    @Test
+    public void featureRequest60TreatEmptyFieldsDelimitedOrNotAsNull() throws IOException {
+
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.BOTH).build();
+
+        String item[] = parser.parseLine(sb.toString());
+
+        assertEquals(5, item.length);
+        assertNull(item[0]);
+        assertNull(item[1]);
+        assertNull(item[2]);
+        assertNull(item[3]);
+        assertNull(item[4]);
+
     }
 }

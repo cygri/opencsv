@@ -16,11 +16,14 @@ package com.opencsv;
  limitations under the License.
  */
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.opencsv.enums.CSVReaderNullFieldIndicator.NEITHER;
 
 /**
  * A very simple CSV parser released under a commercial-friendly license.
@@ -68,6 +71,11 @@ public class CSVParser {
      */
     public static final char NULL_CHARACTER = '\0';
     /**
+     * Denotes what field contents will cause the parser to return null:  EMPTY, EMPTY_DELIMITED, BOTH, NEITHER (default)
+     */
+    public static final CSVReaderNullFieldIndicator DEFAULT_NULL_FIELD_INDICATOR = NEITHER;
+
+    /**
      * This is the character that the CSVParser will treat as the separator.
      */
     private final char separator;
@@ -91,6 +99,7 @@ public class CSVParser {
      * Skip over quotation characters when parsing.
      */
     private final boolean ignoreQuotations;
+    private final CSVReaderNullFieldIndicator nullFieldIndicator;
     private String pending;
     private boolean inField = false;
 
@@ -172,6 +181,24 @@ public class CSVParser {
      */
     public CSVParser(char separator, char quotechar, char escape, boolean strictQuotes, boolean ignoreLeadingWhiteSpace,
                      boolean ignoreQuotations) {
+        this(separator, quotechar, escape, strictQuotes, ignoreLeadingWhiteSpace, ignoreQuotations, DEFAULT_NULL_FIELD_INDICATOR);
+    }
+
+    /**
+     * Constructs CSVParser with supplied separator and quote char.
+     * Allows setting the "strict quotes" and "ignore leading whitespace" flags
+     *
+     * @param separator               the delimiter to use for separating entries
+     * @param quotechar               the character to use for quoted elements
+     * @param escape                  the character to use for escaping a separator or quote
+     * @param strictQuotes            if true, characters outside the quotes are ignored
+     * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
+     * @param ignoreQuotations        if true, treat quotations like any other character.
+     * @param nullFieldIndicator      which field content will be returned as null: EMPTY, EMPTY_DELIMITED,
+     *                                BOTH, NEITHER (default)
+     */
+    CSVParser(char separator, char quotechar, char escape, boolean strictQuotes, boolean ignoreLeadingWhiteSpace,
+              boolean ignoreQuotations, CSVReaderNullFieldIndicator nullFieldIndicator) {
         if (anyCharactersAreTheSame(separator, quotechar, escape)) {
             throw new UnsupportedOperationException("The separator, quote, and escape characters must be different!");
         }
@@ -184,7 +211,9 @@ public class CSVParser {
         this.strictQuotes = strictQuotes;
         this.ignoreLeadingWhiteSpace = ignoreLeadingWhiteSpace;
         this.ignoreQuotations = ignoreQuotations;
+        this.nullFieldIndicator = nullFieldIndicator;
     }
+
 
     /**
      * @return The default separator for this parser.
@@ -309,6 +338,7 @@ public class CSVParser {
         List<String> tokensOnThisLine = new ArrayList<>();
         StringBuilder sb = new StringBuilder(INITIAL_READ_SIZE);
         boolean inQuotes = false;
+        boolean fromQuotedField = false;
         if (pending != null) {
             sb.append(pending);
             pending = null;
@@ -325,7 +355,11 @@ public class CSVParser {
                 if (isNextCharacterEscapedQuote(nextLine, inQuotes(inQuotes), i)) {
                     i = appendNextCharacterAndAdvanceLoop(nextLine, sb, i);
                 } else {
+
                     inQuotes = !inQuotes;
+                    if (atStartOfField(sb)) {
+                        fromQuotedField = true;
+                    }
 
                     // the tricky case of an embedded quote in the middle: a,bc"d"ef,g
                     if (!strictQuotes) {
@@ -346,15 +380,18 @@ public class CSVParser {
                 }
                 inField = !inField;
             } else if (c == separator && !(inQuotes && !ignoreQuotations)) {
-                tokensOnThisLine.add(sb.toString());
+                tokensOnThisLine.add(convertEmptyToNullIfNeeded(sb.toString(), fromQuotedField));
+                fromQuotedField = false;
                 sb.setLength(0);
                 inField = false;
             } else {
                 if (!strictQuotes || (inQuotes && !ignoreQuotations)) {
                     sb.append(c);
                     inField = true;
+                    fromQuotedField = true;
                 }
             }
+
         }
         // line is done - check status
         if ((inQuotes && !ignoreQuotations)) {
@@ -366,15 +403,43 @@ public class CSVParser {
             } else {
                 throw new IOException("Un-terminated quoted field at end of CSV line");
             }
+            if (inField) {
+                fromQuotedField = true;
+            }
         } else {
             inField = false;
         }
 
         if (sb != null) {
-            tokensOnThisLine.add(sb.toString());
+            tokensOnThisLine.add(convertEmptyToNullIfNeeded(sb.toString(), fromQuotedField));
+            fromQuotedField = false;
         }
         return tokensOnThisLine.toArray(new String[tokensOnThisLine.size()]);
 
+    }
+
+    private boolean atStartOfField(StringBuilder sb) {
+        return sb.length() == 0;
+    }
+
+    private String convertEmptyToNullIfNeeded(String s, boolean fromQuotedField) {
+        if (s.isEmpty() && shouldConvertEmptyToNull(fromQuotedField)) {
+            return null;
+        }
+        return s;
+    }
+
+    private boolean shouldConvertEmptyToNull(boolean fromQuotedField) {
+        switch (nullFieldIndicator) {
+            case BOTH:
+                return true;
+            case EMPTY:
+                return !fromQuotedField;
+            case EMPTY_DELIMITED:
+                return fromQuotedField;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -476,5 +541,9 @@ public class CSVParser {
      */
     protected boolean isAllWhiteSpace(CharSequence sb) {
         return StringUtils.isWhitespace(sb);
+    }
+
+    public CSVReaderNullFieldIndicator nullFieldIndicator() {
+        return nullFieldIndicator;
     }
 }

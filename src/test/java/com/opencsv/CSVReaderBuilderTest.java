@@ -1,5 +1,6 @@
 package com.opencsv;
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -102,5 +103,12 @@ public class CSVReaderBuilderTest {
     public void testWithVerifyReader() {
         final CSVReader reader = builder.withVerifyReader(false).build();
         assertFalse(reader.verifyReader());
+    }
+
+    @Test
+    public void builderWithNullFieldIndicator() {
+        final CSVReader reader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY).build();
+
+        assertEquals(CSVReaderNullFieldIndicator.EMPTY, reader.getParser().nullFieldIndicator());
     }
 }

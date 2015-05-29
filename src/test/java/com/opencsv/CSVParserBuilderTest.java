@@ -1,5 +1,6 @@
 package com.opencsv;
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +35,7 @@ public class CSVParserBuilderTest {
       assertEquals(
             CSVParser.DEFAULT_IGNORE_QUOTATIONS,
               builder.isIgnoreQuotations());
+       assertEquals(CSVReaderNullFieldIndicator.NEITHER, builder.nullFieldIndicator());
 
       CSVParser parser = builder.build();
       assertEquals(
@@ -54,6 +56,7 @@ public class CSVParserBuilderTest {
       assertEquals(
             CSVParser.DEFAULT_IGNORE_QUOTATIONS,
               parser.isIgnoreQuotations());
+       assertEquals(CSVReaderNullFieldIndicator.NEITHER, parser.nullFieldIndicator());
    }
 
    @Test

@@ -16,6 +16,8 @@
 package com.opencsv;
 
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
+
 import java.io.Reader;
 
 /**
@@ -41,11 +43,13 @@ import java.io.Reader;
  */
 public class CSVReaderBuilder {
 
+    private final CSVParserBuilder parserBuilder = new CSVParserBuilder();
     private final Reader reader;
     private int skipLines = CSVReader.DEFAULT_SKIP_LINES;
     /*@Nullable*/private CSVParser csvParser = null;
     private boolean keepCR;
     private boolean verifyReader = CSVReader.DEFAULT_VERIFY_READER;
+    private CSVReaderNullFieldIndicator nullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER;
 
    /**
     * Sets the reader to an underlying CSV source.
@@ -114,12 +118,12 @@ public class CSVReaderBuilder {
 
 
     /**
-     * Creates the CSVParser.
-     * @return the CSVParser based on the set criteria.
+     * Creates the CSVReader.
+     * @return the CSVReader based on the set criteria.
      */
     public CSVReader build() {
       final CSVParser parser =
-            (csvParser != null ? csvParser : new CSVParser());
+              (csvParser != null ? csvParser : parserBuilder.withFieldAsNull(nullFieldIndicator).build());
        return new CSVReader(reader, skipLines, parser, keepCR, verifyReader);
    }
 
@@ -127,7 +131,7 @@ public class CSVReaderBuilder {
      * Sets if the reader will keep or discard carriage returns.
      *
      * @param keepCR - true to keep carriage returns, false to discard.
-     * @return the CSVParser based on the set criteria.
+     * @return the CSVReaderBuilder based on the set criteria.
      */
     public CSVReaderBuilder withKeepCarriageReturn(boolean keepCR) {
         this.keepCR = keepCR;
@@ -152,10 +156,21 @@ public class CSVReaderBuilder {
      * The default value is true.
      *
      * @param verifyReader true if CSVReader should verify reader before each read, false otherwise.
-     * @return The CSVParser based on this criteria.
+     * @return The CSVReaderBuilder based on this criteria.
      */
     public CSVReaderBuilder withVerifyReader(boolean verifyReader) {
         this.verifyReader = verifyReader;
+        return this;
+    }
+
+    /**
+     * Checks to see if it should treat an field with two separators, two quotes, or both as a null field.
+     *
+     * @param indicator - CSVReaderNullFieldIndicator set to what should be considered a null field.
+     * @return The CSVReaderBuilder based on this criteria.
+     */
+    public CSVReaderBuilder withFieldAsNull(CSVReaderNullFieldIndicator indicator) {
+        this.nullFieldIndicator = indicator;
         return this;
     }
 }

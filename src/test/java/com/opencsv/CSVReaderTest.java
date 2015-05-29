@@ -16,6 +16,7 @@ package com.opencsv;
  limitations under the License.
  */
 
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -561,6 +562,94 @@ public class CSVReaderTest {
         CSVReaderBuilder builder = new CSVReaderBuilder(reader);
         CSVReader csv = builder.withVerifyReader(false).build();
         assertEquals(2, csv.readAll().size());
+    }
+
+    @Test
+    public void featureRequest60ByDefaultEmptyFieldsAreBlank() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        StringReader stringReader = new StringReader(sb.toString());
+
+        CSVReaderBuilder builder = new CSVReaderBuilder(stringReader);
+        CSVReader csvReader = builder.build();
+
+        String[] row = csvReader.readNext();
+
+        assertEquals(5, row.length);
+        assertEquals("", row[0]);
+        assertEquals("", row[1]);
+        assertEquals("", row[2]);
+        assertEquals("", row[3]);
+        assertEquals("", row[4]);
+    }
+
+    @Test
+    public void featureRequest60TreatEmptyFieldsAsNull() throws IOException {
+
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        StringReader stringReader = new StringReader(sb.toString());
+
+        CSVReaderBuilder builder = new CSVReaderBuilder(stringReader);
+
+        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY).build();
+
+        String item[] = csvReader.readNext();
+
+        assertEquals(5, item.length);
+        assertNull(item[0]);
+        assertNull(item[1]);
+        assertNull(item[2]);
+        assertEquals("", item[3]);
+        assertNull(item[4]);
+
+    }
+
+    @Test
+    public void featureRequest60TreatEmptyDelimitedFieldsAsNull() throws IOException {
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        StringReader stringReader = new StringReader(sb.toString());
+
+        CSVReaderBuilder builder = new CSVReaderBuilder(stringReader);
+        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_DELIMITED).build();
+
+        String item[] = csvReader.readNext();
+
+        assertEquals(5, item.length);
+        assertEquals("", item[0]);
+        assertEquals("", item[1]);
+        assertEquals("", item[2]);
+        assertNull(item[3]);
+        assertEquals("", item[4]);
+    }
+
+    @Test
+    public void featureRequest60TreatEmptyFieldsDelimitedOrNotAsNull() throws IOException {
+
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+
+        sb.append(",,,\"\",");
+
+        StringReader stringReader = new StringReader(sb.toString());
+
+        CSVReaderBuilder builder = new CSVReaderBuilder(stringReader);
+        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.BOTH).build();
+
+        String item[] = csvReader.readNext();
+
+        assertEquals(5, item.length);
+        assertNull(item[0]);
+        assertNull(item[1]);
+        assertNull(item[2]);
+        assertNull(item[3]);
+        assertNull(item[4]);
     }
 
 }
