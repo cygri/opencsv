@@ -575,16 +575,16 @@ public class CSVParserTest {
 
         StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
 
-        sb.append(",,,\"\",");
+        sb.append(", ,,\"\",");
 
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY).build();
+        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS).build();
 
         String item[] = parser.parseLine(sb.toString());
 
         assertEquals(5, item.length);
         assertNull(item[0]);
-        assertNull(item[1]);
+        assertEquals(" ", item[1]);
         assertNull(item[2]);
         assertEquals("", item[3]);
         assertNull(item[4]);
@@ -595,16 +595,16 @@ public class CSVParserTest {
     public void featureRequest60TreatEmptyDelimitedFieldsAsNull() throws IOException {
         StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
 
-        sb.append(",,,\"\",");
+        sb.append(",\" \",,\"\",");
 
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_DELIMITED).build();
+        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
 
         String item[] = parser.parseLine(sb.toString());
 
         assertEquals(5, item.length);
         assertEquals("", item[0]);
-        assertEquals("", item[1]);
+        assertEquals(" ", item[1]);
         assertEquals("", item[2]);
         assertNull(item[3]);
         assertEquals("", item[4]);

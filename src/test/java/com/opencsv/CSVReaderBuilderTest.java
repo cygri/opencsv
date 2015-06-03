@@ -107,8 +107,8 @@ public class CSVReaderBuilderTest {
 
     @Test
     public void builderWithNullFieldIndicator() {
-        final CSVReader reader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY).build();
+        final CSVReader reader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS).build();
 
-        assertEquals(CSVReaderNullFieldIndicator.EMPTY, reader.getParser().nullFieldIndicator());
+        assertEquals(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS, reader.getParser().nullFieldIndicator());
     }
 }

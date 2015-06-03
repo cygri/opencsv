@@ -71,7 +71,7 @@ public class CSVParser {
      */
     public static final char NULL_CHARACTER = '\0';
     /**
-     * Denotes what field contents will cause the parser to return null:  EMPTY, EMPTY_DELIMITED, BOTH, NEITHER (default)
+     * Denotes what field contents will cause the parser to return null:  EMPTY_SEPARATORS, EMPTY_QUOTES, BOTH, NEITHER (default)
      */
     public static final CSVReaderNullFieldIndicator DEFAULT_NULL_FIELD_INDICATOR = NEITHER;
 
@@ -194,7 +194,7 @@ public class CSVParser {
      * @param strictQuotes            if true, characters outside the quotes are ignored
      * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
      * @param ignoreQuotations        if true, treat quotations like any other character.
-     * @param nullFieldIndicator      which field content will be returned as null: EMPTY, EMPTY_DELIMITED,
+     * @param nullFieldIndicator      which field content will be returned as null: EMPTY_SEPARATORS, EMPTY_QUOTES,
      *                                BOTH, NEITHER (default)
      */
     CSVParser(char separator, char quotechar, char escape, boolean strictQuotes, boolean ignoreLeadingWhiteSpace,
@@ -433,9 +433,9 @@ public class CSVParser {
         switch (nullFieldIndicator) {
             case BOTH:
                 return true;
-            case EMPTY:
+            case EMPTY_SEPARATORS:
                 return !fromQuotedField;
-            case EMPTY_DELIMITED:
+            case EMPTY_QUOTES:
                 return fromQuotedField;
             default:
                 return false;

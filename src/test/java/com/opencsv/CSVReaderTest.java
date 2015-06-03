@@ -596,7 +596,7 @@ public class CSVReaderTest {
 
         CSVReaderBuilder builder = new CSVReaderBuilder(stringReader);
 
-        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY).build();
+        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS).build();
 
         String item[] = csvReader.readNext();
 
@@ -618,7 +618,7 @@ public class CSVReaderTest {
         StringReader stringReader = new StringReader(sb.toString());
 
         CSVReaderBuilder builder = new CSVReaderBuilder(stringReader);
-        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_DELIMITED).build();
+        CSVReader csvReader = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
 
         String item[] = csvReader.readNext();
 
