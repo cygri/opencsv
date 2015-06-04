@@ -4,7 +4,7 @@
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
     <packaging>bundle</packaging>
-    <version>3.4-SNAPSHOT</version>
+    <version>3.5-SNAPSHOT</version>
     <name>opencsv</name>
     <description>A simple library for reading and writing CSV in Java</description>
     <url>http://opencsv.sf.net</url>
@@ -29,9 +29,8 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://opencsv.svn.sourceforge.net/svnroot/opencsv/trunk</connection>
-        <developerConnection>scm:svn:https://opencsv.svn.sourceforge.net/svnroot/opencsv/trunk</developerConnection>
-        <url>http://opencsv.svn.sourceforge.net/viewvc/opencsv/</url>
+        <connection>scm:git:ssh://git.code.sf.net/p/opencsv/source</connection>
+        <developerConnection>scm:git:ssh://git.code.sf.net/p/opencsv/source</developerConnection>
     </scm>
     <developers>
         <developer>
@@ -365,7 +364,7 @@
         -->
         <site>
             <id>opencsv.sf.net</id>
-            <url>scp://web.sourceforge.net/home/project-web/opencsv/htdocs/</url>
+            <url>scp://shell.sourceforge.net/home/project-web/opencsv/htdocs/</url>
         </site>
     </distributionManagement>
 </project>
