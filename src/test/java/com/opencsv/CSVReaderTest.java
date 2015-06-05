@@ -245,6 +245,7 @@ public class CSVReaderTest {
         assertEquals(3, nextLine.length);
 
         assertEquals("a", nextLine[0]);
+        assertEquals("b\tb\tb", nextLine[1]);
         assertEquals("c", nextLine[2]);
     }
 

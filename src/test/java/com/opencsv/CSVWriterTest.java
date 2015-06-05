@@ -319,6 +319,15 @@ public class CSVWriterTest {
    }
 
    @Test
+   public void embeddedQuoteInString() {
+      String[] line = {"Foo", "I choose a \\\"hero\\\" for this adventure"};
+      StringWriter sw = new StringWriter();
+      CSVWriter csvw = new CSVWriter(sw, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER);
+      csvw.writeNext(line);
+      assertEquals("\"Foo\",\"I choose a \\\"hero\\\" for this adventure\"\n", sw.toString());
+   }
+
+   @Test
    public void testNoQuotingNoEscaping() {
       String[] line = {"\"Foo\",\"Bar\""};
       StringWriter sw = new StringWriter();
