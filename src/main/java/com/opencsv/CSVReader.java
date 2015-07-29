@@ -39,6 +39,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * The default line to start reading.
      */
     public static final int DEFAULT_SKIP_LINES = 0;
+    public static final int READ_AHEAD_LIMIT = Character.SIZE / Byte.SIZE;
     private CSVParser parser;
     private int skipLines;
     private BufferedReader br;
@@ -331,11 +332,12 @@ public class CSVReader implements Closeable, Iterable<String[]> {
             return false;
         }
         try {
-            br.mark(1);
+            br.mark(READ_AHEAD_LIMIT);
             int nextByte = br.read();
             br.reset(); // resets stream position, possible because its buffered
             return nextByte == -1; // read() returns -1 at end of stream
         } catch (IOException e) {
+            System.err.println(e);
             return true;
         }
     }
