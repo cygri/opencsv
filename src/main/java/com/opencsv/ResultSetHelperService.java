@@ -63,7 +63,7 @@ public class ResultSetHelperService implements ResultSetHelper {
     * @throws SQLException - thrown by the result set.
     */
    public String[] getColumnNames(ResultSet rs) throws SQLException {
-      List<String> names = new ArrayList<>();
+      List<String> names = new ArrayList<String>();
       ResultSetMetaData metadata = rs.getMetaData();
 
       for (int i = 0; i < metadata.getColumnCount(); i++) {
@@ -108,7 +108,7 @@ public class ResultSetHelperService implements ResultSetHelper {
     * @throws IOException - thrown by the result set.
     */
    public String[] getColumnValues(ResultSet rs, boolean trim, String dateFormatString, String timeFormatString) throws SQLException, IOException {
-      List<String> values = new ArrayList<>();
+      List<String> values = new ArrayList<String>();
       ResultSetMetaData metadata = rs.getMetaData();
 
       for (int i = 0; i < metadata.getColumnCount(); i++) {

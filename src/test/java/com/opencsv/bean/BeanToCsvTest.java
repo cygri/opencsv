@@ -30,12 +30,12 @@ public class BeanToCsvTest {
 
    @Before
    public void setUp() {
-      bean = new BeanToCsv<>();
+      bean = new BeanToCsv<MockBean>();
    }
 
    @Before
    public void setTestData() {
-      testData = new ArrayList<>();
+      testData = new ArrayList<MockBean>();
       MockBean mb = new MockBean();
       mb.setName("kyle");
       mb.setOrderNumber("abc123456");
@@ -50,7 +50,7 @@ public class BeanToCsvTest {
 
    @Before
    public void setNullData() {
-      nullData = new ArrayList<>();
+      nullData = new ArrayList<MockBean>();
       MockBean mb = new MockBean();
       mb.setName(null);
       mb.setOrderNumber(null);
@@ -94,19 +94,19 @@ public class BeanToCsvTest {
 
    @Test
    public void beanReturnsFalseOnEmptyList() {
-      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
+      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
       strat.setColumnMapping(columns);
 
       StringWriter sw = new StringWriter();
 
-      assertFalse(bean.write(strat, sw, new ArrayList<>()));
+      assertFalse(bean.write(strat, sw, new ArrayList<MockBean>()));
    }
 
    @Test
    public void beanReturnsFalseOnNull() {
-      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
+      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
       strat.setColumnMapping(columns);
@@ -118,7 +118,7 @@ public class BeanToCsvTest {
 
    @Test
    public void testWriteQuotes() throws IOException {
-      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
+      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
       strat.setColumnMapping(columns);
@@ -136,7 +136,7 @@ public class BeanToCsvTest {
 
    @Test
    public void testWriteNulls() throws IOException {
-      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
+      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
       strat.setColumnMapping(columns);

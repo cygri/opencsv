@@ -41,12 +41,12 @@ public class HeaderColumnNameMappingStrategyTest {
 
    @Before
    public void setUp() {
-      strat = new HeaderColumnNameMappingStrategy<>();
+      strat = new HeaderColumnNameMappingStrategy<MockBean>();
    }
 
    private List<MockBean> createTestParseResult(String parseString) {
       strat.setType(MockBean.class);
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       return csv.parse(strat, new StringReader(parseString));
    }
 
@@ -99,7 +99,7 @@ public class HeaderColumnNameMappingStrategyTest {
 
    @Test
    public void verifyColumnNames() throws IOException, IntrospectionException {
-      HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<>();
+      HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
       assertNull(strat.getColumnName(0));
       assertNull(strat.findDescriptor(0));

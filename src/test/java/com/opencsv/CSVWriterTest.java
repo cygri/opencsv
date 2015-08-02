@@ -161,7 +161,7 @@ public class CSVWriterTest {
    @Test
    public void testWriteAll() throws IOException {
 
-      List<String[]> allElements = new ArrayList<>();
+      List<String[]> allElements = new ArrayList<String[]>();
       String[] line1 = "Name#Phone#Email".split("#");
       String[] line2 = "Glen#1234#glen@abcd.com".split("#");
       String[] line3 = "John#5678#john@efgh.com".split("#");
@@ -187,7 +187,7 @@ public class CSVWriterTest {
    @Test
    public void testWriteAllObjects() throws IOException {
 
-      List<String[]> allElements = new ArrayList<>(3);
+      List<String[]> allElements = new ArrayList<String[]>(3);
       String[] line1 = "Name#Phone#Email".split("#");
       String[] line2 = "Glen#1234#glen@abcd.com".split("#");
       String[] line3 = "John#5678#john@efgh.com".split("#");

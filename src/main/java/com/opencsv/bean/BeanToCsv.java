@@ -98,7 +98,7 @@ public class BeanToCsv<T> {
      * @throws IntrospectionException -  thrown if there is an failure in Introspection.
      */
     protected String[] processHeader(MappingStrategy<T> mapper) throws IntrospectionException {
-        List<String> values = new ArrayList<>();
+        List<String> values = new ArrayList<String>();
         int i = 0;
         PropertyDescriptor prop = mapper.findDescriptor(i);
         while (prop != null) {
@@ -120,7 +120,7 @@ public class BeanToCsv<T> {
      */
     protected String[] processObject(List<Method> getters, Object bean) throws IntrospectionException,
             IllegalAccessException, InvocationTargetException {
-        List<String> values = new ArrayList<>();
+        List<String> values = new ArrayList<String>();
         // retrieve bean values
         for (Method getter : getters) {
             Object value = getter.invoke(bean, (Object[]) null);
@@ -144,7 +144,7 @@ public class BeanToCsv<T> {
         int i = 0;
         PropertyDescriptor prop = mapper.findDescriptor(i);
         // build getters methods list
-        List<Method> readers = new ArrayList<>();
+        List<Method> readers = new ArrayList<Method>();
         while (prop != null) {
             readers.add(prop.getReadMethod());
             i++;

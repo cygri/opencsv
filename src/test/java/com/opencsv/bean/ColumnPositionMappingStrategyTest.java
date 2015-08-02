@@ -29,7 +29,7 @@ public class ColumnPositionMappingStrategyTest {
 
    @Before
    public void setUp() throws Exception {
-      strat = new ColumnPositionMappingStrategy<>();
+      strat = new ColumnPositionMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
    }
 
@@ -65,7 +65,7 @@ public class ColumnPositionMappingStrategyTest {
 
       strat.setColumnMapping("name", "orderNumber", "id", "num");
 
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       List<MockBean> list = csv.parse(strat, new StringReader(s));
       assertNotNull(list);
       assertTrue(list.size() == 2);
@@ -85,7 +85,7 @@ public class ColumnPositionMappingStrategyTest {
       String[] columns = new String[]{"name", "orderNumber", "id", "num"};
       strat.setColumnMapping(columns);
 
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       List<MockBean> list = csv.parse(strat, new StringReader(s));
       assertNotNull(list);
       assertTrue(list.size() == 2);

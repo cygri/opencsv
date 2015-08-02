@@ -138,7 +138,7 @@ public class IterableCSVToBean<T> implements Iterable<T> {
 
     private PropertyEditor getPropertyEditorValue(Class<?> cls) {
         if (editorMap == null) {
-            editorMap = new HashMap<>();
+            editorMap = new HashMap<Class<?>, PropertyEditor>();
         }
 
         PropertyEditor editor = editorMap.get(cls);
