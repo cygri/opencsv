@@ -41,6 +41,13 @@ public class IterableCSVToBean<T> implements Iterable<T> {
     private Map<Class<?>, PropertyEditor> editorMap = null;
     private boolean hasHeader;
 
+    /**
+     * IterableCSVToBean constructor
+     *
+     * @param csvReader - CSVReader.  Should not be null.
+     * @param strategy  - MappingStrategy used to map csv data to the bean.  Should not be null.
+     * @param filter    - Optional CsvToBeanFilter used remove unwanted data from reads.
+     */
     public IterableCSVToBean(CSVReader csvReader, MappingStrategy<T> strategy, CsvToBeanFilter filter) {
         this.csvReader = csvReader;
         this.strategy = strategy;
@@ -48,26 +55,39 @@ public class IterableCSVToBean<T> implements Iterable<T> {
         this.hasHeader = false;
     }
 
+    /**
+     * retrieves the MappingStrategy.
+     * @return - the MappingStrategy being used by the IterableCSVToBean.
+     */
     protected MappingStrategy<T> getStrategy() {
         return strategy;
     }
 
+    /**
+     * retrieves the CSVReader.
+     * @return - the CSVReader being used by the IterableCSVToBean.
+     */
     protected CSVReader getCSVReader() {
         return csvReader;
     }
 
-    public CsvToBeanFilter getFilter() {
+    /**
+     * retrieves the CsvToBeanFilter
+     *
+     * @return - the CsvToBeanFilter being used by the IterableCSVToBean.
+     */
+    protected CsvToBeanFilter getFilter() {
         return filter;
     }
 
     /**
      * Reads and processes a single line.
      * @return Object of type T with the requested information or null if there is no more lines to process.
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws IOException
-     * @throws IntrospectionException
-     * @throws InvocationTargetException
+     * @throws IllegalAccessException -  thrown if there is an failure in Introspection.
+     * @throws InstantiationException - thrown when getting the PropertyDescriptor for the class.
+     * @throws IOException - thrown when there is an unexpected error reading the file.
+     * @throws IntrospectionException -  thrown if there is an failure in Introspection.
+     * @throws InvocationTargetException  -  thrown if there is an failure in Introspection.
      */
     public T nextLine() throws IllegalAccessException, InstantiationException, IOException, IntrospectionException, InvocationTargetException {
         if (!hasHeader) {
@@ -157,13 +177,12 @@ public class IterableCSVToBean<T> implements Iterable<T> {
         }
     }
 
-
     @Override
     public Iterator<T> iterator() {
         return iterator(this);
     }
 
-    public Iterator<T> iterator(final IterableCSVToBean<T> bean) {
+    private Iterator<T> iterator(final IterableCSVToBean<T> bean) {
         return new Iterator<T>() {
             private T nextBean;
 

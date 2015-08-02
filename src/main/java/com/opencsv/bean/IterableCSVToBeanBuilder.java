@@ -19,7 +19,21 @@ package com.opencsv.bean;
 import com.opencsv.CSVReader;
 
 /**
- * Created by scott on 7/28/15.
+ * Builder for creating a IterableCSVToBean.  This should be the preferred method of
+ * creating a IterableCSVToBean to keep the number of constructors to a minimum.
+ *
+ * <code>
+ * IterableCSVToBean bean =
+ * new IterableCSVToBean()
+ * .withReader(csvReader)
+ * .withMapper(mappingStrategy)
+ * .withFilter(csvToBeanFilter)
+ * .build();
+ * </code>
+ *
+ * @see IterableCSVToBean
+ *
+ * @param <T>
  */
 public class IterableCSVToBeanBuilder<T> {
 
@@ -31,7 +45,15 @@ public class IterableCSVToBeanBuilder<T> {
     private CsvToBeanFilter filter;
 
     /**
+     * default constructor
+     */
+    public IterableCSVToBeanBuilder() {
+    }
+
+    /**
      * Creates the IterableCSVToBean.
+     *
+     * Will throw an run time exception if the MappingStrategy or CSVReader is not set.
      *
      * @return an instance of IterableCSVToBean with
      */
@@ -45,28 +67,57 @@ public class IterableCSVToBeanBuilder<T> {
         return new IterableCSVToBean<T>(csvReader, mapper, filter);
     }
 
+    /**
+     * Sets the mappingStrategy to be used by the builder.
+     *
+     * @param mappingStrategy - an class extending MappingStrategy
+     * @return the builder with the MappingStrategy set
+     */
     public IterableCSVToBeanBuilder<T> withMapper(final MappingStrategy<T> mappingStrategy) {
         this.mapper = mappingStrategy;
         return this;
     }
 
+    /**
+     * Sets the reader to be used by the builder.
+     * @param reader - CSVReader be be incorporated in the builder.
+     * @return the builder with the CSVReader set
+     */
     public IterableCSVToBeanBuilder<T> withReader(final CSVReader reader) {
         this.csvReader = reader;
         return this;
     }
 
+    /**
+     * used by unit tests
+     * @return - the MappingStrategy to be used by the builder.
+     */
     protected MappingStrategy getStrategy() {
         return mapper;
     }
 
+    /**
+     * used by unit tests
+     * @return - the csvReader to be used by the builder.
+     */
     protected CSVReader getCsvReader() {
         return csvReader;
     }
 
-    public Object getFilter() {
+    /**
+     * used by unit tests
+     *
+     * @return - filter to be used by the builder.
+     */
+    protected Object getFilter() {
         return filter;
     }
 
+    /**
+     * Sets the filter used to remove unwanted data from csv file
+     * @param filter - an class extending CsvToBeanFilter
+     * @return the builder with the filter set
+     */
     public IterableCSVToBeanBuilder<T> withFilter(final CsvToBeanFilter filter) {
         this.filter = filter;
         return this;
