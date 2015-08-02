@@ -337,7 +337,6 @@ public class CSVReader implements Closeable, Iterable<String[]> {
             br.reset(); // resets stream position, possible because its buffered
             return nextByte == -1; // read() returns -1 at end of stream
         } catch (IOException e) {
-            System.err.println(e);
             return true;
         }
     }

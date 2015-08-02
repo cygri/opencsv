@@ -7,6 +7,9 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class CsvToBeanTest {
 
@@ -44,5 +47,15 @@ public class CsvToBeanTest {
    public void throwRuntimeExceptionWhenExceptionIsThrown() {
       CsvToBean bean = new CsvToBean();
       bean.parse(createErrorMappingStrategy(), createReader());
+   }
+
+   @Test
+   public void parse() {
+      HeaderColumnNameMappingStrategy<MockBean> strategy = new HeaderColumnNameMappingStrategy<MockBean>();
+      strategy.setType(MockBean.class);
+      CsvToBean<MockBean> bean = new CsvToBean<MockBean>();
+
+      List<MockBean> beanList = bean.parse(strategy, createReader());
+      assertEquals(2, beanList.size());
    }
 }
