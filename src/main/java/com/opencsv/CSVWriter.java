@@ -54,6 +54,11 @@ public class CSVWriter implements Closeable, Flushable {
     * Default line terminator.
     */
    public static final String DEFAULT_LINE_END = "\n";
+   /**
+    * RFC 4180 compliant line terminator.
+    */
+   public static final String RFC4810_LINE_END = "\r\n";
+
    private Writer rawWriter;
    private PrintWriter pw;
    private char separator;
