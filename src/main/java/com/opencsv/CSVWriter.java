@@ -51,7 +51,7 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public static final char NO_ESCAPE_CHARACTER = '\u0000';
    /**
-    * Default line terminator uses platform encoding.
+    * Default line terminator.
     */
    public static final String DEFAULT_LINE_END = "\n";
    private Writer rawWriter;
