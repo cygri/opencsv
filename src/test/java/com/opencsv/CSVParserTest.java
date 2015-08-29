@@ -630,4 +630,60 @@ public class CSVParserTest {
         assertNull(item[4]);
 
     }
+
+    @Test
+    public void testStrictQuotesEndsFieldAtQuote() throws IOException {
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withStrictQuotes(true).build();
+        // "one","t"wo,"three"
+        String[] nextLine = parser.parseLineMulti("\"one\",\"t\"wo,\"three\"");
+
+        assertEquals(3, nextLine.length);
+
+        assertEquals("one", nextLine[0]);
+        assertEquals("t", nextLine[1]);
+        assertEquals("three", nextLine[2]);
+    }
+
+    @Test
+    public void testStrictQuotesEndsFieldAtQuoteWithEscapedQuoteInMiddle() throws IOException {
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withStrictQuotes(true).build();
+        // "one","t""w"o,"three"
+        String[] nextLine = parser.parseLineMulti("\"one\",\"t\"\"w\"o,\"three\"");
+
+        assertEquals(3, nextLine.length);
+
+        assertEquals("one", nextLine[0]);
+        assertEquals("t\"w", nextLine[1]);
+        assertEquals("three", nextLine[2]);
+    }
+
+    @Test
+    public void testNotStrictQuotesAllowsEmbeddedEscapedQuote() throws IOException {
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withStrictQuotes(false).build();
+        // "one","t"wo","three"
+        String[] nextLine = parser.parseLineMulti("\"one\",\"t\"\"wo\",\"three\"");
+
+        assertEquals(3, nextLine.length);
+
+        assertEquals("one", nextLine[0]);
+        assertEquals("t\"wo", nextLine[1]);
+        assertEquals("three", nextLine[2]);
+    }
+
+    @Test
+    public void testNotStrictQuotesAllowsEmbeddedQuote() throws IOException {
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withStrictQuotes(false).build();
+        // "one",t""wo,"three"
+        String[] nextLine = parser.parseLineMulti("\"one\",t\"\"wo,\"three\"");
+
+        assertEquals(3, nextLine.length);
+
+        assertEquals("one", nextLine[0]);
+        assertEquals("t\"wo", nextLine[1]);
+        assertEquals("three", nextLine[2]);
+    }
 }

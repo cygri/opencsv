@@ -39,10 +39,31 @@ public class ResultSetHelperService implements ResultSetHelper {
    static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
    static final String DEFAULT_TIMESTAMP_FORMAT = "dd-MMM-yyyy HH:mm:ss";
 
+   private String dateFormat = DEFAULT_DATE_FORMAT;
+   private String dateTimeFormat = DEFAULT_TIMESTAMP_FORMAT;
+
    /**
     * Default Constructor.
     */
    public ResultSetHelperService() {
+   }
+
+   /**
+    * Set a default date format pattern that will be used by the service.
+    *
+    * @param dateFormat
+    */
+   public void setDateFormat(String dateFormat) {
+      this.dateFormat = dateFormat;
+   }
+
+   /**
+    * Set a default date time format pattern that will be used by the service.
+    *
+    * @param dateTimeFormat
+    */
+   public void setDateTimeFormat(String dateTimeFormat) {
+      this.dateTimeFormat = dateTimeFormat;
    }
 
    private static String read(Clob c) throws SQLException, IOException {
@@ -82,7 +103,7 @@ public class ResultSetHelperService implements ResultSetHelper {
     * @throws IOException - thrown by the result set.
     */
    public String[] getColumnValues(ResultSet rs) throws SQLException, IOException {
-      return this.getColumnValues(rs, false, DEFAULT_DATE_FORMAT, DEFAULT_TIMESTAMP_FORMAT);
+      return this.getColumnValues(rs, false, dateFormat, dateTimeFormat);
    }
 
    /**
@@ -94,7 +115,7 @@ public class ResultSetHelperService implements ResultSetHelper {
     * @throws IOException - thrown by the result set.
     */
    public String[] getColumnValues(ResultSet rs, boolean trim) throws SQLException, IOException {
-      return this.getColumnValues(rs, trim, DEFAULT_DATE_FORMAT, DEFAULT_TIMESTAMP_FORMAT);
+      return this.getColumnValues(rs, trim, dateFormat, dateTimeFormat);
    }
 
    /**
