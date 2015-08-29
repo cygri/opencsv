@@ -1,6 +1,6 @@
 package com.opencsv;
 /**
- Copyright 2005 Bytecode Pty Ltd.
+ Copyright 2015 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -242,6 +242,29 @@ public class ResultSetHelperServiceTest {
    }
 
    @Test
+   public void setDateFormat() throws SQLException, IOException {
+
+      String customDateFormat = "mm/dd/yy";
+      Date date = new Date(new GregorianCalendar(2009, 11, 15).getTimeInMillis());
+      long dateInMilliSeconds = date.getTime();
+      SimpleDateFormat dateFormat = new SimpleDateFormat(customDateFormat);
+
+      String[] expectedNames = {"Date", "Null"};
+      String[] realValues = {Long.toString(dateInMilliSeconds), null};
+      String[] expectedValues = {dateFormat.format(date), ""};
+      int[] expectedTypes = {Types.DATE, Types.DATE};
+
+      ResultSetMetaData metaData = MockResultSetMetaDataBuilder.buildMetaData(expectedNames, expectedTypes);
+      ResultSet resultSet = MockResultSetBuilder.buildResultSet(metaData, realValues, expectedTypes);
+
+      ResultSetHelperService service = new ResultSetHelperService();
+      service.setDateFormat(customDateFormat);
+
+      String[] columnValues = service.getColumnValues(resultSet, false);
+      assertArrayEquals(expectedValues, columnValues);
+   }
+
+   @Test
    public void getTimeFromResultSet() throws SQLException, IOException {
 
 
@@ -300,6 +323,28 @@ public class ResultSetHelperServiceTest {
       ResultSetHelperService service = new ResultSetHelperService();
 
       String[] columnValues = service.getColumnValues(resultSet, false, null, customFormat);
+      assertArrayEquals(expectedValues, columnValues);
+   }
+
+   @Test
+   public void setDateTimeFormat() throws SQLException, IOException {
+      Timestamp date = new Timestamp(new GregorianCalendar(2009, 11, 15, 12, 0, 0).getTimeInMillis());
+      long dateInMilliSeconds = date.getTime();
+      String customFormat = "mm/dd/yy HH:mm:ss";
+      SimpleDateFormat timeFormat = new SimpleDateFormat(customFormat);
+
+      String[] expectedNames = {"Timestamp", "Null"};
+      String[] realValues = {Long.toString(dateInMilliSeconds), null};
+      String[] expectedValues = {timeFormat.format(date), ""};
+      int[] expectedTypes = {Types.TIMESTAMP, Types.TIMESTAMP};
+
+      ResultSetMetaData metaData = MockResultSetMetaDataBuilder.buildMetaData(expectedNames, expectedTypes);
+      ResultSet resultSet = MockResultSetBuilder.buildResultSet(metaData, realValues, expectedTypes);
+
+      ResultSetHelperService service = new ResultSetHelperService();
+      service.setDateTimeFormat(customFormat);
+
+      String[] columnValues = service.getColumnValues(resultSet, false);
       assertArrayEquals(expectedValues, columnValues);
    }
 
