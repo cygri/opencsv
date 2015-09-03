@@ -172,21 +172,17 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
 
    /**
     * get the class type that the Strategy is mapping.
-    * This method is deprecated as the user should use the Java 5 conventions.
     * @return Class of the object that mapper will create.
     */
-   @Deprecated
    public Class<T> getType() {
       return type;
    }
 
    /**
     * Sets the class type that is being mapped.
-    * This method is deprecated as the user should use the Java 5 conventions.
     *
     * @param type Class type.
     */
-   @Deprecated
    public void setType(Class<T> type) {
       this.type = type;
    }
