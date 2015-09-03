@@ -1,7 +1,7 @@
 package com.opencsv;
 
 /**
- Copyright 2005 Bytecode Pty Ltd.
+ Copyright 2015 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -191,9 +191,11 @@ public class CSVWriter implements Closeable, Flushable {
     * @param includeColumnNames true if you want column names in the output, false otherwise
     * @throws java.io.IOException   thrown by getColumnValue
     * @throws java.sql.SQLException thrown by getColumnValue
+    *
+    * @return number of lines written.
     */
-   public void writeAll(java.sql.ResultSet rs, boolean includeColumnNames) throws SQLException, IOException {
-      writeAll(rs, includeColumnNames, false);
+   public int writeAll(ResultSet rs, boolean includeColumnNames) throws SQLException, IOException {
+      return writeAll(rs, includeColumnNames, false);
    }
 
    /**
@@ -207,17 +209,23 @@ public class CSVWriter implements Closeable, Flushable {
     *
     * @throws java.io.IOException   thrown by getColumnValue
     * @throws java.sql.SQLException thrown by getColumnValue
+    *
+    * @return number of lines written - including header.
     */
-   public void writeAll(java.sql.ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
-
+   public int writeAll(java.sql.ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
+      int linesWritten = 0;
 
       if (includeColumnNames) {
          writeColumnNames(rs);
+         linesWritten++;
       }
 
       while (rs.next()) {
          writeNext(resultService.getColumnValues(rs, trim));
+         linesWritten++;
       }
+
+      return linesWritten;
    }
 
    /**

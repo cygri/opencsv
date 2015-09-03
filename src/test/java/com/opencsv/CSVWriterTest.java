@@ -1,6 +1,6 @@
 package com.opencsv;
 /**
- Copyright 2005 Bytecode Pty Ltd.
+ Copyright 2015 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -415,12 +415,13 @@ public class CSVWriterTest {
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 1);
 
-      csvw.writeAll(rs, true); // don't need a result set since I am mocking the result.
+      int linesWritten = csvw.writeAll(rs, true); // don't need a result set since I am mocking the result.
       assertFalse(csvw.checkError());
       String result = sw.toString();
 
       assertNotNull(result);
       assertEquals("\"Foo\",\"Bar\",\"baz\"\n\"v1\",\"v2\",\"v3\"\n", result);
+      assertEquals(2, linesWritten);
    }
 
    @Test
@@ -434,12 +435,13 @@ public class CSVWriterTest {
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 3);
 
-      csvw.writeAll(rs, true); // don't need a result set since I am mocking the result.
+      int linesWritten = csvw.writeAll(rs, true); // don't need a result set since I am mocking the result.
       assertFalse(csvw.checkError());
       String result = sw.toString();
 
       assertNotNull(result);
       assertEquals("\"Foo\",\"Bar\",\"baz\"\n\"v1\",\"v2\",\"v3\"\n\"v1\",\"v2\",\"v3\"\n\"v1\",\"v2\",\"v3\"\n", result);
+      assertEquals(4, linesWritten);
    }
 
    @Test
@@ -453,12 +455,13 @@ public class CSVWriterTest {
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 1);
 
-      csvw.writeAll(rs, false); // don't need a result set since I am mocking the result.
+      int linesWritten = csvw.writeAll(rs, false); // don't need a result set since I am mocking the result.
       assertFalse(csvw.checkError());
       String result = sw.toString();
 
       assertNotNull(result);
       assertEquals("\"v1\",\"v2\",\"v3\"\n", result);
+      assertEquals(1, linesWritten);
    }
 
    @Test
@@ -472,13 +475,14 @@ public class CSVWriterTest {
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 3);
 
-      csvw.writeAll(rs, false); // don't need a result set since I am mocking the result.
+      int linesWritten = csvw.writeAll(rs, false); // don't need a result set since I am mocking the result.
 
       assertFalse(csvw.checkError());
       String result = sw.toString();
 
       assertNotNull(result);
       assertEquals("\"v1\",\"v2\",\"v3\"\n\"v1\",\"v2\",\"v3\"\n\"v1\",\"v2\",\"v3\"\n", result);
+      assertEquals(3, linesWritten);
    }
 
    @Test
@@ -492,12 +496,13 @@ public class CSVWriterTest {
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 1);
 
-      csvw.writeAll(rs, true, true); // don't need a result set since I am mocking the result.
+      int linesWritten = csvw.writeAll(rs, true, true); // don't need a result set since I am mocking the result.
       assertFalse(csvw.checkError());
       String result = sw.toString();
 
       assertNotNull(result);
       assertEquals("\"Foo\",\"Bar\",\"baz\"\n\"v1\",\"v2\",\"v3\"\n", result);
+      assertEquals(2, linesWritten);
    }
 
    @Test
@@ -511,11 +516,12 @@ public class CSVWriterTest {
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 1);
 
-      csvw.writeAll(rs, true, true); // don't need a result set since I am mocking the result.
+      int linesWritten = csvw.writeAll(rs, true, true); // don't need a result set since I am mocking the result.
       assertFalse(csvw.checkError());
       String result = sw.toString();
 
       assertNotNull(result);
       assertEquals("'Foo','Bar','baz'\n'v1','v2''v2a','v3'\n", result);
+      assertEquals(2, linesWritten);
    }
 }
