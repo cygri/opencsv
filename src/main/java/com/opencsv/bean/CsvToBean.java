@@ -24,10 +24,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Converts CSV data to objects.
@@ -83,16 +80,24 @@ public class CsvToBean<T> {
     * @return List of Objects.
     */
    public List<T> parse(MappingStrategy<T> mapper, CSVReader csv, CsvToBeanFilter filter) {
+      long lineProcessed = 0;
+      String[] line = null;
+
       try {
          mapper.captureHeader(csv);
-         String[] line;
+      } catch (Exception e) {
+         throw new RuntimeException("Error capturing CSV header!", e);
+      }
+
+      try {
          List<T> list = new ArrayList<T>();
          while (null != (line = csv.readNext())) {
+            lineProcessed++;
             processLine(mapper, filter, line, list);
          }
          return list;
       } catch (Exception e) {
-         throw new RuntimeException("Error parsing CSV!", e);
+         throw new RuntimeException("Error parsing CSV line: " + lineProcessed + " values: " + Arrays.toString(line), e);
       }
    }
 

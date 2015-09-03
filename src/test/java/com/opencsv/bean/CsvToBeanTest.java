@@ -22,7 +22,7 @@ public class CsvToBeanTest {
       return new CSVReader(reader);
    }
 
-   private MappingStrategy createErrorMappingStrategy() {
+   private MappingStrategy createErrorHeaderMappingStrategy() {
       return new MappingStrategy() {
 
          public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
@@ -43,10 +43,36 @@ public class CsvToBeanTest {
       };
    }
 
+   private MappingStrategy createErrorLineMappingStrategy() {
+      return new MappingStrategy() {
+
+         public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
+            return null;
+         }
+
+         public Object createBean() throws InstantiationException, IllegalAccessException {
+            throw new InstantiationException("this is a test Exception");
+         }
+
+         public void captureHeader(CSVReader reader) throws IOException {
+         }
+
+         public Integer getColumnIndex(String name) {
+            return null;
+         }
+      };
+   }
+
    @Test(expected = RuntimeException.class)
    public void throwRuntimeExceptionWhenExceptionIsThrown() {
       CsvToBean bean = new CsvToBean();
-      bean.parse(createErrorMappingStrategy(), createReader());
+      bean.parse(createErrorHeaderMappingStrategy(), createReader());
+   }
+
+   @Test(expected = RuntimeException.class)
+   public void throwRuntimeExceptionLineWhenExceptionIsThrown() {
+      CsvToBean bean = new CsvToBean();
+      bean.parse(createErrorLineMappingStrategy(), createReader());
    }
 
    @Test
