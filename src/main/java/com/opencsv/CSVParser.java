@@ -41,7 +41,12 @@ public class CSVParser {
     /**
      * The average size of a line read by openCSV (used for setting the size of StringBuilders).
      */
-    public static final int INITIAL_READ_SIZE = 128;
+    public static final int INITIAL_READ_SIZE = 1024;
+    /**
+     * In most cases we know the size of the line we want to read.  In that case we will set the initial read
+     * to that plus an buffer size.
+     */
+    public static final int READ_BUFFER_SIZE = 128;
     /**
      * The default quote character to use if none is supplied to the
      * constructor.
@@ -336,7 +341,7 @@ public class CSVParser {
         }
 
         List<String> tokensOnThisLine = new ArrayList<String>();
-        StringBuilder sb = new StringBuilder(INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(nextLine.length() + READ_BUFFER_SIZE);
         boolean inQuotes = false;
         boolean fromQuotedField = false;
         if (pending != null) {

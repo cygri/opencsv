@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class CSVWriter implements Closeable, Flushable {
 
-   public static final int INITIAL_STRING_SIZE = 128;
+   public static final int INITIAL_STRING_SIZE = 1024;
    /**
     * The character used for escaping quotes.
     */
@@ -242,7 +242,7 @@ public class CSVWriter implements Closeable, Flushable {
          return;
       }
 
-      StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
+      StringBuilder sb = new StringBuilder(nextLine.length * 2); // This is for the worse case where all elements have to be escaped.
       for (int i = 0; i < nextLine.length; i++) {
 
          if (i != 0) {
@@ -301,7 +301,7 @@ public class CSVWriter implements Closeable, Flushable {
     * @return a StringBuilder with the elements data.
     */
    protected StringBuilder processLine(String nextElement) {
-      StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
+      StringBuilder sb = new StringBuilder(nextElement.length() * 2); // this is for the worse case where all elements have to be escaped.
       for (int j = 0; j < nextElement.length(); j++) {
          char nextChar = nextElement.charAt(j);
          processCharacter(sb, nextChar);
