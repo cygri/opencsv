@@ -16,6 +16,7 @@ package com.opencsv.bean;
  limitations under the License.
  */
 
+import com.opencsv.bean.mocks.MockBean;
 import org.junit.Test;
 
 import java.io.StringReader;

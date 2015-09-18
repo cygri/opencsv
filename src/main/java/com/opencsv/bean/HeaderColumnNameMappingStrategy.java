@@ -2,13 +2,18 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -38,7 +43,10 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
    protected String[] header;
    protected Map<String, Integer> indexLookup = new HashMap<String, Integer>();
    protected Map<String, PropertyDescriptor> descriptorMap = null;
+   protected Map<String, Pair<Field, Boolean>> fieldMap = null;
    protected Class<T> type;
+   protected boolean annotationDriven;
+   protected boolean determinedIfAnnotationDriven;
 
    /**
     * Default constructor.
@@ -52,6 +60,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     * @param reader the CSVReader to use for header parsing
     * @throws IOException - thrown on error reading from the CSVReader.
     */
+   @Override
    public void captureHeader(CSVReader reader) throws IOException {
       header = reader.readNext();
    }
@@ -83,6 +92,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     * @param name the column name
     * @return the column index, or null if the name doesn't exist
     */
+   @Override
    public Integer getColumnIndex(String name) {
       if (null == header) {
          throw new IllegalStateException("The header row hasn't been read yet.");
@@ -99,9 +109,23 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     * @return - the property descriptor for the column position or null if one could not be found.
     * @throws IntrospectionException - thrown on error retrieving the property description.
     */
+   @Override
    public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
       String columnName = getColumnName(col);
       return (StringUtils.isNotBlank(columnName)) ? findDescriptor(columnName) : null;
+   }
+
+   /**
+    * Gets the field - and whether it is mandatory - for a given column position.
+    *
+    * @param col the column to find the field for
+    * @return - Pair containing the field - and whether it is mandatory - for a given column position, or null if
+    * one could not be found
+    */
+   @Override
+   public Pair<Field, Boolean> findField(int col) {
+      String columnName = getColumnName(col);
+      return (StringUtils.isNotBlank(columnName)) ? findField(columnName) : null;
    }
 
    /**
@@ -125,6 +149,19 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
          descriptorMap = loadDescriptorMap(); //lazy load descriptors
       }
       return descriptorMap.get(name.toUpperCase().trim());
+   }
+
+   /**
+    * Find the field - and whether it is mandatory - for a given column.
+    *
+    * @param name - the column name to look up.
+    * @return - Pair containing the field - and whether it is mandatory - for the column.
+    */
+   protected Pair<Field, Boolean> findField(String name) {
+      if (null == fieldMap) {
+         fieldMap = loadFieldMap(); //lazy load fields
+      }
+      return fieldMap.get(name.toUpperCase().trim());
    }
 
    /**
@@ -155,9 +192,36 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
       return map;
    }
 
+   /**
+    * Builds a map of fields (and whether they're mandatory) for the Bean.
+    *
+    * @return - a map of fields (and whether they're mandatory)
+    */
+   protected Map<String, Pair<Field, Boolean>> loadFieldMap() {
+      Map<String, Pair<Field, Boolean>> map = new HashMap<>();
+
+      //TODO refactor this class to use T instead of getType.
+      for (Field field : loadFields(getType())) {
+         boolean required = field.getAnnotation(CsvBind.class).required();
+         map.put(field.getName().toUpperCase().trim(), new ImmutablePair<Field, Boolean>(field, required));
+      }
+
+      return map;
+   }
+
    private PropertyDescriptor[] loadDescriptors(Class<T> cls) throws IntrospectionException {
       BeanInfo beanInfo = Introspector.getBeanInfo(cls);
       return beanInfo.getPropertyDescriptors();
+   }
+
+   private List<Field> loadFields(Class<T> cls) {
+      List<Field> fields = new ArrayList<>();
+      for (Field field : cls.getDeclaredFields()) {
+         if (field.isAnnotationPresent(CsvBind.class)) {
+            fields.add(field);
+         }
+      }
+      return fields;
    }
 
    /**
@@ -166,6 +230,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     * @throws InstantiationException - thrown on error creating object.
     * @throws IllegalAccessException - thrown on error creating object.
     */
+   @Override
    public T createBean() throws InstantiationException, IllegalAccessException {
       return type.newInstance();
    }
@@ -185,5 +250,24 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     */
    public void setType(Class<T> type) {
       this.type = type;
+   }
+
+   /**
+    * Determines whether the mapping strategy is driven by {@link com.opencsv.bean.CsvBind} annotations.
+    *
+    * @return whether the mapping strategy is driven by annotations
+    */
+   @Override
+   public boolean isAnnotationDriven() {
+      if (!determinedIfAnnotationDriven) { // lazy load this, and only calculate it once
+         for (Field field : type.getDeclaredFields()) {
+            if (field.isAnnotationPresent(CsvBind.class)) {
+               annotationDriven = true;
+               break;
+            }
+         }
+         determinedIfAnnotationDriven = true;
+      }
+      return annotationDriven;
    }
 }

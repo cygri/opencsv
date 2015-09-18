@@ -1,6 +1,7 @@
 package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
+import com.opencsv.bean.mocks.MockBean;
 import org.junit.Before;
 import org.junit.Test;
 

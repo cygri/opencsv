@@ -18,10 +18,12 @@ package com.opencsv.bean;
  */
 
 import com.opencsv.CSVReader;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * The interface for the classes that handle translating between the columns in the csv file
@@ -39,6 +41,15 @@ public interface MappingStrategy<T> {
     * @throws IntrospectionException - thrown on error loading the property descriptors.
     */
    PropertyDescriptor findDescriptor(int col) throws IntrospectionException;
+
+   /**
+    * Implementation will have to return - based on the current column - a Pair containing
+    * the {@link java.lang.reflect.Field} and a boolean representing whether the field is required (mandatory) or not.
+    *
+    * @param col the column to find the field for
+    * @return Pair containing Field and whether it is required
+    */
+   Pair<Field, Boolean> findField(int col);
 
     /**
      * Implementation will return a bean of the type of object you are mapping.
@@ -67,4 +78,11 @@ public interface MappingStrategy<T> {
     * @return the column index, or null if the name doesn't exist
     */
    Integer getColumnIndex(String name);
+
+   /**
+    * Determines whether the mapping strategy is driven by {@link com.opencsv.bean.CsvBind} annotations.
+    *
+    * @return whether the mapping strategy is driven by annotations
+    */
+   boolean isAnnotationDriven();
 }

@@ -1,4 +1,4 @@
-package com.opencsv.bean;
+package com.opencsv.bean.mocks;
 
 /**
  * Copyright 2007 Kyle Miller.
@@ -51,5 +51,27 @@ public class MockBean {
 
    public void setNum(int num) {
       this.num = num;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      MockBean mockBean = (MockBean) o;
+
+      if (num != mockBean.num) return false;
+      if (name != null ? !name.equals(mockBean.name) : mockBean.name != null) return false;
+      if (id != null ? !id.equals(mockBean.id) : mockBean.id != null) return false;
+      return !(orderNumber != null ? !orderNumber.equals(mockBean.orderNumber) : mockBean.orderNumber != null);
+   }
+
+   @Override
+   public int hashCode() {
+      int result = name != null ? name.hashCode() : 0;
+      result = 31 * result + (id != null ? id.hashCode() : 0);
+      result = 31 * result + (orderNumber != null ? orderNumber.hashCode() : 0);
+      result = 31 * result + num;
+      return result;
    }
 }
