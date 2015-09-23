@@ -4,7 +4,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.mocks.MockBean;
 import com.opencsv.bean.mocks.SimpleAnnotatedMockBean;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +11,6 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +156,7 @@ public class BeanToCsvTest {
          }
 
          @Override
-         public Pair<Field, Boolean> findField(int col) {
+         public BeanField findField(int col) {
             return null;
          }
 

@@ -17,15 +17,12 @@ package com.opencsv.bean;
  */
 
 import com.opencsv.CSVReader;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -143,44 +140,10 @@ public class CsvToBean<T> {
    }
 
    private void processField(MappingStrategy<T> mapper, String[] line, T bean, int col) throws IllegalAccessException {
-      Pair<Field, Boolean> field = mapper.findField(col);
-      if (field != null) {
+      BeanField beanField = mapper.findField(col);
+      if (beanField != null) {
          String value = line[col];
-         setFieldValue(bean, field, value);
-      }
-   }
-
-   private void setFieldValue(T bean, Pair<Field, Boolean> fieldPair, String value) throws IllegalAccessException {
-      Field field = fieldPair.getLeft();
-      if (fieldPair.getRight() && StringUtils.isBlank(value)) {
-         throw new IllegalStateException(String.format("Field '%s' is mandatory but no value was provided.", field.getName()));
-      }
-
-      if (StringUtils.isNotBlank(value)) {
-         field.setAccessible(true);
-         Class<?> fieldType = field.getType();
-         if (fieldType.equals(Boolean.TYPE)) {
-            field.setBoolean(bean, Boolean.valueOf(value.trim()));
-         } else if (fieldType.equals(Byte.TYPE)) {
-            field.setByte(bean, Byte.valueOf(value.trim()));
-         } else if (fieldType.equals(Double.TYPE)) {
-            field.setDouble(bean, Double.valueOf(value.trim()));
-         } else if (fieldType.equals(Float.TYPE)) {
-            field.setFloat(bean, Float.valueOf(value.trim()));
-         } else if (fieldType.equals(Integer.TYPE)) {
-            field.setInt(bean, Integer.valueOf(value.trim()));
-         } else if (fieldType.equals(Long.TYPE)) {
-            field.setLong(bean, Long.valueOf(value.trim()));
-         } else if (fieldType.equals(Short.TYPE)) {
-            field.setShort(bean, Short.valueOf(value.trim()));
-         } else if (fieldType.equals(Character.TYPE)) {
-            field.setChar(bean, value.charAt(0));
-         } else if (fieldType.isAssignableFrom(String.class)) {
-            field.set(bean, value);
-         } else {
-            throw new IllegalStateException(String.format("Unable to set field value for field '%s' with value '%s' " +
-                    "- type is unsupported. Use primitive and String types only.", fieldType, value));
-         }
+         beanField.setFieldValue(bean, value);
       }
    }
 

@@ -2,8 +2,6 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -43,7 +41,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
    protected String[] header;
    protected Map<String, Integer> indexLookup = new HashMap<String, Integer>();
    protected Map<String, PropertyDescriptor> descriptorMap = null;
-   protected Map<String, Pair<Field, Boolean>> fieldMap = null;
+   protected Map<String, BeanField> fieldMap = null;
    protected Class<T> type;
    protected boolean annotationDriven;
    protected boolean determinedIfAnnotationDriven;
@@ -116,14 +114,14 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
    }
 
    /**
-    * Gets the field - and whether it is mandatory - for a given column position.
+    * Gets the field for a given column position.
     *
     * @param col the column to find the field for
-    * @return - Pair containing the field - and whether it is mandatory - for a given column position, or null if
+    * @return - BeanField containing the field - and whether it is mandatory - for a given column position, or null if
     * one could not be found
     */
    @Override
-   public Pair<Field, Boolean> findField(int col) {
+   public BeanField findField(int col) {
       String columnName = getColumnName(col);
       return (StringUtils.isNotBlank(columnName)) ? findField(columnName) : null;
    }
@@ -152,12 +150,12 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
    }
 
    /**
-    * Find the field - and whether it is mandatory - for a given column.
+    * Find the field for a given column.
     *
     * @param name - the column name to look up.
-    * @return - Pair containing the field - and whether it is mandatory - for the column.
+    * @return - BeanField containing the field - and whether it is mandatory - for the column.
     */
-   protected Pair<Field, Boolean> findField(String name) {
+   protected BeanField findField(String name) {
       if (null == fieldMap) {
          fieldMap = loadFieldMap(); //lazy load fields
       }
@@ -197,13 +195,13 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     *
     * @return - a map of fields (and whether they're mandatory)
     */
-   protected Map<String, Pair<Field, Boolean>> loadFieldMap() {
-      Map<String, Pair<Field, Boolean>> map = new HashMap<>();
+   protected Map<String, BeanField> loadFieldMap() {
+      Map<String, BeanField> map = new HashMap<>();
 
       //TODO refactor this class to use T instead of getType.
       for (Field field : loadFields(getType())) {
          boolean required = field.getAnnotation(CsvBind.class).required();
-         map.put(field.getName().toUpperCase().trim(), new ImmutablePair<Field, Boolean>(field, required));
+         map.put(field.getName().toUpperCase().trim(), new BeanField(field, required));
       }
 
       return map;

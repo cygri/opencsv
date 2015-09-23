@@ -2,14 +2,12 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.*;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +29,12 @@ public class CsvToBeanTest {
            "882101432432123445,,3,38.48347628462843,74200.73912766,0,3,Z,false\n" +
            "619364584659026342,Woods,4,17.12739636774893,48612.12395295,1,,M,true";
 
+   private static final String TEST_STRING_PRIVATE_FIELDS = "privateField1,privateField2\n" +
+           "firstValue,secondValue";
+
+   private static final String TEST_STRING_ALL_MODIFIER_TYPES = "publicField,privateField,protectedField,packagePrivateField\n" +
+           "firstValue,secondValue,thirdValue,fourthValue";
+
    private static final String TEST_STRING_UNBINDABLE_TYPE = "date\n" +
            "\"Sat, 12 Aug 1995 13:30:00 GMT+0430\"";
 
@@ -51,7 +55,7 @@ public class CsvToBeanTest {
          }
 
          @Override
-         public Pair<Field, Boolean> findField(int col) {
+         public BeanField findField(int col) {
             return null;
          }
 
@@ -82,7 +86,7 @@ public class CsvToBeanTest {
          }
 
          @Override
-         public Pair<Field, Boolean> findField(int col) {
+         public BeanField findField(int col) {
             return null;
          }
 
@@ -191,7 +195,37 @@ public class CsvToBeanTest {
       assertTrue(bean.getNumberOfPets() == 1);
       assertTrue(bean.getNumberOfBedrooms() == 4);
       assertTrue(bean.getZipcodePrefix() == 'Z');
-      assertTrue(bean.isHasBeenContacted() == true);
+      assertTrue(bean.isHasBeenContacted());
+   }
+
+   @Test
+   public void parseAnnotatedBeanWithPrivateField() {
+      HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBeanPrivateFields> strategy = new HeaderColumnNameMappingStrategy<>();
+      strategy.setType(SimpleAnnotatedMockBeanPrivateFields.class);
+      CsvToBean<SimpleAnnotatedMockBeanPrivateFields> csvToBean = new CsvToBean<>();
+
+      List<SimpleAnnotatedMockBeanPrivateFields> beanList = csvToBean.parse(strategy, createReader(TEST_STRING_PRIVATE_FIELDS));
+      assertEquals(1, beanList.size());
+
+      SimpleAnnotatedMockBeanPrivateFields bean = beanList.get(0);
+      assertTrue("firstValue".equals(bean.getPrivateField1()));
+      assertTrue("secondValue".equals(bean.getPrivateField2()));
+   }
+
+   @Test
+   public void parseAnnotatedBeanWithFieldsOfAllAccessModifierTypes() {
+      HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBeanAllModifierTypes> strategy = new HeaderColumnNameMappingStrategy<>();
+      strategy.setType(SimpleAnnotatedMockBeanAllModifierTypes.class);
+      CsvToBean<SimpleAnnotatedMockBeanAllModifierTypes> csvToBean = new CsvToBean<>();
+
+      List<SimpleAnnotatedMockBeanAllModifierTypes> beanList = csvToBean.parse(strategy, createReader(TEST_STRING_ALL_MODIFIER_TYPES));
+      assertEquals(1, beanList.size());
+
+      SimpleAnnotatedMockBeanAllModifierTypes bean = beanList.get(0);
+      assertTrue("firstValue".equals(bean.getPublicField()));
+      assertTrue("secondValue".equals(bean.getPrivateField()));
+      assertTrue("thirdValue".equals(bean.getProtectedField()));
+      assertTrue("fourthValue".equals(bean.getPackagePrivateField()));
    }
 
    @Test(expected = RuntimeException.class)
