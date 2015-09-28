@@ -51,7 +51,7 @@ public class ResultSetHelperService implements ResultSetHelper {
    /**
     * Set a default date format pattern that will be used by the service.
     *
-    * @param dateFormat
+    * @param dateFormat - desired date format
     */
    public void setDateFormat(String dateFormat) {
       this.dateFormat = dateFormat;
@@ -60,7 +60,7 @@ public class ResultSetHelperService implements ResultSetHelper {
    /**
     * Set a default date time format pattern that will be used by the service.
     *
-    * @param dateTimeFormat
+    * @param dateTimeFormat - desired date time format
     */
    public void setDateTimeFormat(String dateTimeFormat) {
       this.dateTimeFormat = dateTimeFormat;
