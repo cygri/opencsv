@@ -34,7 +34,7 @@ import java.util.Map;
  * @param <T> - class to convert the objects to.
  */
 
-public class IterableCSVToBean<T> implements Iterable<T> {
+public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<T> {
     private MappingStrategy<T> strategy;
     private CSVReader csvReader;
     private CsvToBeanFilter filter;
@@ -111,33 +111,6 @@ public class IterableCSVToBean<T> implements Iterable<T> {
             }
         }
         return bean;
-    }
-
-    private String checkForTrim(String s, PropertyDescriptor prop) {
-        return trimmableProperty(prop) ? s.trim() : s;
-    }
-
-    private boolean trimmableProperty(PropertyDescriptor prop) {
-        return !prop.getPropertyType().getName().contains("String");
-    }
-
-    /**
-     * Convert a string value to its Object value.
-     *
-     * @param value - String value
-     * @param prop  - PropertyDescriptor
-     * @return The object set to value (i.e. Integer).  Will return String if no PropertyEditor is found.
-     * @throws InstantiationException - Thrown on error getting the property editor from the property descriptor.
-     * @throws IllegalAccessException - Thrown on error getting the property editor from the property descriptor.
-     */
-    protected Object convertValue(String value, PropertyDescriptor prop) throws InstantiationException, IllegalAccessException {
-        PropertyEditor editor = getPropertyEditor(prop);
-        Object obj = value;
-        if (null != editor) {
-            editor.setAsText(value);
-            obj = editor.getValue();
-        }
-        return obj;
     }
 
     /**
