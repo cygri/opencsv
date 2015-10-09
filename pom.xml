@@ -53,6 +53,13 @@
     </developers>
     <contributors>
         <contributor>
+            <name>Tom Squires</name>
+            <email>tom.squires@mendeley.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Maciek Opala</name>
             <email>maciek.opala@gmail.com</email>
             <roles>
