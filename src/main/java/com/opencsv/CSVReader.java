@@ -49,6 +49,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     private boolean keepCR;
     private boolean verifyReader;
 
+    private long linesRead = 0;
+    private long recordsRead = 0;
+
     /**
      * Constructs CSVReader using a comma for the separator.
      *
@@ -271,7 +274,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         do {
             String nextLine = getNextLine();
             if (!hasNext) {
-                return result; // should throw if still pending?
+                return validateResult(result);
             }
             String[] r = parser.parseLineMulti(nextLine);
             if (r.length > 0) {
@@ -282,6 +285,13 @@ public class CSVReader implements Closeable, Iterable<String[]> {
                 }
             }
         } while (parser.isPending());
+        return validateResult(result);
+    }
+
+    private String[] validateResult(String[] result) {
+        if (result != null) {
+            recordsRead++;
+        }
         return result;
     }
 
@@ -313,13 +323,17 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         if (!this.linesSkiped) {
             for (int i = 0; i < skipLines; i++) {
                 lineReader.readLine();
+                linesRead++;
             }
             this.linesSkiped = true;
         }
         String nextLine = lineReader.readLine();
         if (nextLine == null) {
             hasNext = false;
+        } else {
+            linesRead++;
         }
+
         return hasNext ? nextLine : null;
     }
 
@@ -375,8 +389,83 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      *
      * @return true if CSVReader will verify the reader before reads.  False otherwise.
      * @link https://sourceforge.net/p/opencsv/bugs/108/
+     * @since 3.3
      */
     public boolean verifyReader() {
         return this.verifyReader;
+    }
+
+    /**
+     * Used for debugging purposes this method returns the number of lines that has been read from
+     * the reader passed into the CSVReader.
+     * <p/>
+     * Given the following data.
+     * <code>
+     * <pre>
+     * First line in the file
+     * some other descriptive line
+     * a,b,c
+     *
+     * a,"b\nb",c
+     * </pre>
+     * </code>
+     * With a CSVReader constructed like so
+     * <code>
+     * <pre>
+     * CSVReader c = builder.withCSVParser(new CSVParser())
+     *                      .withSkipLines(2)
+     *                      .build();
+     * </pre>
+     * </code>
+     * The initial call to getLinesRead will be 0.<br>
+     * After the first call to readNext() then getLinesRead will return 3 (because header was read).<br>
+     * After the second call to read the blank line then getLinesRead will return 4 (still a read).<br>
+     * After third call to readNext getLinesRead will return 6 because it took two line reads to retrieve this record.<br>
+     * Subsequent calls to readNext (since we are out of data) will not increment the number of lines read.<br>
+     * <p/>
+     * An example of this is in the linesAndRecordsRead() test in CSVReaderTest.
+     *
+     * @return the number of lines read by the reader (including skip lines).
+     * @link https://sourceforge.net/p/opencsv/feature-requests/73/
+     * @since 3.6
+     */
+    public long getLinesRead() {
+        return linesRead;
+    }
+
+    /**
+     * Used for debugging purposes this method returns the number of records that has been read from
+     * the CSVReader.
+     * <p/>
+     * Given the following data.
+     * <code><pre>
+     * First line in the file
+     * some other descriptive line
+     * a,b,c
+     * <p/>
+     * a,"b\nb",c
+     * </pre></code>
+     * With a CSVReader constructed like so
+     * <code><pre>
+     * CSVReader c = builder.withCSVParser(new CSVParser())
+     *                      .withSkipLines(2)
+     *                      .build();
+     * </pre></code>
+     * The initial call to getRecordsRead will be 0.<br>
+     * After the first call to readNext() then getRecordsRead will return 1.<br>
+     * After the second call to read the blank line then getRecordsRead will return 2
+     * (a blank line is considered a record with one empty field).<br>
+     * After third call to readNext getRecordsRead will return 3 because even though
+     * reads to retrieve this record it is still a single record read.<br>
+     * Subsequent calls to readNext (since we are out of data) will not increment the number of records read.<br>
+     * <p/>
+     * An example of this is in the linesAndRecordsRead() test in CSVReaderTest.
+     *
+     * @return the number of records (Array of Strings[]) read by the reader.
+     * @link https://sourceforge.net/p/opencsv/feature-requests/73/
+     * @since 3.6
+     */
+    public long getRecordsRead() {
+        return recordsRead;
     }
 }

@@ -225,6 +225,54 @@ public class CSVReaderTest {
         assertEquals("a", nextLine[0]);
     }
 
+    /**
+     * Tests methods to get the number of lines and records read.
+     *
+     * @throws IOException if bad things happen
+     */
+    @Test
+    public void linesAndRecordsRead() throws IOException {
+
+        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        sb.append("Skip this line\t with tab").append("\n");   // should skip this
+        sb.append("And this line too").append("\n");   // and this
+        sb.append("a,b,c").append("\n");  // second line
+        sb.append("\n");                  // no data here just a blank line
+        sb.append("a,\"b\nb\",c");
+
+        CSVReaderBuilder builder = new CSVReaderBuilder(new StringReader(sb.toString()));
+        CSVReader c = builder.withCSVParser(new CSVParser())
+                .withSkipLines(2)
+                .build();
+
+        assertEquals(0, c.getLinesRead());
+        assertEquals(0, c.getRecordsRead());
+
+        String[] nextLine = c.readNext();
+        assertEquals(3, nextLine.length);
+
+        assertEquals(3, c.getLinesRead());
+        assertEquals(1, c.getRecordsRead());
+
+        nextLine = c.readNext();
+        assertEquals(1, nextLine.length);
+        assertEquals(0, nextLine[0].length());
+
+        assertEquals(4, c.getLinesRead());
+        assertEquals(2, c.getRecordsRead());  // A blank line is considered a record with a single element
+
+        nextLine = c.readNext();
+        assertEquals(3, nextLine.length);
+
+        assertEquals(6, c.getLinesRead());
+        assertEquals(3, c.getRecordsRead());  // two lines read to get a single record.
+
+        nextLine = c.readNext();  // reading after all the data has been read.
+        assertNull(nextLine);
+
+        assertEquals(6, c.getLinesRead());
+        assertEquals(3, c.getRecordsRead());
+    }
 
     /**
      * Tests option to skip the first few lines of a file.

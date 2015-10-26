@@ -182,7 +182,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
       Map<String, PropertyDescriptor> map = new HashMap<>();
 
       PropertyDescriptor[] descriptors;
-      descriptors = loadDescriptors(getType());  //TODO refactor this class to use T instead of getType.
+      descriptors = loadDescriptors(getType());
       for (PropertyDescriptor descriptor : descriptors) {
          map.put(descriptor.getName().toUpperCase().trim(), descriptor);
       }
@@ -198,7 +198,6 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
    protected Map<String, BeanField> loadFieldMap() {
       Map<String, BeanField> map = new HashMap<>();
 
-      //TODO refactor this class to use T instead of getType.
       for (Field field : loadFields(getType())) {
          boolean required = field.getAnnotation(CsvBind.class).required();
          map.put(field.getName().toUpperCase().trim(), new BeanField(field, required));

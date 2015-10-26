@@ -21,7 +21,7 @@
     </rule>
     <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
         <properties>
-            <property name="reportLevel" value="5"/>
+            <property name="reportLevel" value="10"/>
         </properties>
     </rule>
 </ruleset>

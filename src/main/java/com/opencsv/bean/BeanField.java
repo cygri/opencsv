@@ -61,9 +61,9 @@ public class BeanField {
          } else if (fieldType.equals(Float.TYPE)) {
             field.setFloat(bean, Float.valueOf(value.trim()));
          } else if (fieldType.equals(Integer.TYPE)) {
-            field.setInt(bean, Integer.valueOf(value.trim()));
+            field.setInt(bean, Integer.parseInt(value.trim()));
          } else if (fieldType.equals(Long.TYPE)) {
-            field.setLong(bean, Long.valueOf(value.trim()));
+            field.setLong(bean, Long.parseLong(value.trim()));
          } else if (fieldType.equals(Short.TYPE)) {
             field.setShort(bean, Short.valueOf(value.trim()));
          } else if (fieldType.equals(Character.TYPE)) {
