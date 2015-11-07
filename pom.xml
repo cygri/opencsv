@@ -4,7 +4,7 @@
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
     <packaging>bundle</packaging>
-    <version>3.6-SNAPSHOT</version>
+    <version>3.7-SNAPSHOT</version>
     <name>opencsv</name>
     <description>A simple library for reading and writing CSV in Java</description>
     <url>http://opencsv.sf.net</url>
@@ -124,6 +124,9 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <useIncrementalCompilation>true</useIncrementalCompilation>
+                    <fork>true</fork>
+                    <meminitial>256m</meminitial>
+                    <maxmem>768m</maxmem>
                 </configuration>
             </plugin>
             <plugin>
