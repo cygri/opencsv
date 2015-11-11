@@ -93,6 +93,49 @@ Opencsv is a very simple csv (comma-separated values) parser library for Java. I
     List list = csv.parse(strat, yourReader);
    </verbatim>
 
+    Tom Squires extended this feature to allow annotation-based binding of CSV file to Java Beans. Consider the following Bean:
+
+     <verbatim>
+         import com.opencsv.bean.CsvBind;
+         import java.util.Date;
+
+         public class SimpleAnnotatedMockBean {
+               @CsvBind
+               private String name;
+               @CsvBind
+               private String orderNumber;
+               @CsvBind(required = true)
+               private int num;
+               private Date someOtherField;
+
+               public String getName() {
+                   return name;
+               }
+
+               public String getOrderNumber() {
+                   return orderNumber;
+               }
+
+               public int getNum() {
+                   return num;
+               }
+         }
+     </verbatim>
+
+     And the following code:
+
+     <verbatim>
+         HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBean> strategy = new HeaderColumnNameMappingStrategy<>();
+         strategy.setType(SimpleAnnotatedMockBean.class);
+         CsvToBean<SimpleAnnotatedMockBean> csvToBean = new CsvToBean<>();
+         List<SimpleAnnotatedMockBean> beanList = csvToBean.parse(strategy, createReader());
+     </verbatim>
+
+   The resulting <code>beanList</code> variable will contain a <code>List</code> of <code>SimpleAnnotatedMockBean</code>
+      objects with the <code>name</code>, <code>orderNumber</code> and <code>num</code> fields populated.
+
+   The <code>someOtherField</code> property will not have been populated, because it was not annotated with <code>@CsvBind</code>.
+
    For more detailed examples, check out the test cases for each of the available mapping strategies under the /test/java/com/opencsv/bean/.
 
 ---+Other Stuff
@@ -113,7 +156,7 @@ Add a dependency element to your pom:
   <dependency>
      <groupId>com.opencsv</groupId>
      <artifactId>opencsv</artifactId>
-     <version>3.4</version>
+     <version>3.7</version>
   </dependency>
 </verbatim>
 
@@ -125,7 +168,7 @@ Add a dependency element to your pom:
    * Scott Conway has done tons of bug fixing including upgrading the source code to Java 5, and is the current (only) maintainer of the project.  Scott took a hiatus in 2012-2014 due to work/family demands but came back when Maciek Opala contacted him for fixes for issues the Groovy language was having using opencsv (that's right - you heard it!  Groovy uses opencsv!!).  But that was when he realized he was the only one still on the project because none of the other admins stepped in to fix issues :(
    * J.C. Romanda contributed several fixes.
    * Maciek Opala contributed alot of his time modernizing opencsv.  He upgraded the code to Java 7, moved the repository to git and fixed several issues.
-
+   * Tom Squires has expanded on the bean work done by Kyle Miller to add annotations.
 
 ---+++Reporting issues
 You can report it on the [[http://sourceforge.net/projects/opencsv/support][support page]] at Sourceforge. Please post a sample file that demonstrates your issue.  For bonus marks, post a patch too. :-)
