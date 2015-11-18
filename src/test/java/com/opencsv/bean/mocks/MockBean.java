@@ -20,6 +20,7 @@ public class MockBean {
    private String id;
    private String orderNumber;
    private int num;
+   private double doubleNum;
 
    public String getId() {
       return id;
@@ -53,25 +54,39 @@ public class MockBean {
       this.num = num;
    }
 
+   public double getDoubleNum() {
+      return doubleNum;
+   }
+
+   public void setDoubleNum(double doubleNum) {
+      this.doubleNum = doubleNum;
+   }
+
    @Override
    public boolean equals(Object o) {
       if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (!(o instanceof MockBean)) return false;
 
       MockBean mockBean = (MockBean) o;
 
-      if (num != mockBean.num) return false;
-      if (name != null ? !name.equals(mockBean.name) : mockBean.name != null) return false;
-      if (id != null ? !id.equals(mockBean.id) : mockBean.id != null) return false;
-      return !(orderNumber != null ? !orderNumber.equals(mockBean.orderNumber) : mockBean.orderNumber != null);
+      if (getNum() != mockBean.getNum()) return false;
+      if (Double.compare(mockBean.getDoubleNum(), getDoubleNum()) != 0) return false;
+      if (getName() != null ? !getName().equals(mockBean.getName()) : mockBean.getName() != null) return false;
+      if (getId() != null ? !getId().equals(mockBean.getId()) : mockBean.getId() != null) return false;
+      return !(getOrderNumber() != null ? !getOrderNumber().equals(mockBean.getOrderNumber()) : mockBean.getOrderNumber() != null);
+
    }
 
    @Override
    public int hashCode() {
-      int result = name != null ? name.hashCode() : 0;
-      result = 31 * result + (id != null ? id.hashCode() : 0);
-      result = 31 * result + (orderNumber != null ? orderNumber.hashCode() : 0);
-      result = 31 * result + num;
+      int result;
+      long temp;
+      result = getName() != null ? getName().hashCode() : 0;
+      result = 31 * result + (getId() != null ? getId().hashCode() : 0);
+      result = 31 * result + (getOrderNumber() != null ? getOrderNumber().hashCode() : 0);
+      result = 31 * result + getNum();
+      temp = Double.doubleToLongBits(getDoubleNum());
+      result = 31 * result + (int) (temp ^ (temp >>> 32));
       return result;
    }
 }
