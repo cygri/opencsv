@@ -59,11 +59,15 @@ public class MockResultSetBuilder {
             wnrl.add(value == null);
             break;
          case Types.DECIMAL:
-         case Types.DOUBLE:
-         case Types.FLOAT:
          case Types.REAL:
          case Types.NUMERIC:
             when(rs.getBigDecimal(index)).thenReturn(value != null ? new BigDecimal(value) : null);
+            break;
+         case Types.DOUBLE:
+            when(rs.getDouble(index)).thenReturn(value != null ? new Double(value) : null);
+            break;
+         case Types.FLOAT:
+            when(rs.getFloat(index)).thenReturn(value != null ? new Float(value) : null);
             break;
          case Types.INTEGER:
          case Types.TINYINT:

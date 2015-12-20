@@ -159,6 +159,26 @@ public class ResultSetHelperService implements ResultSetHelper {
    }
 
    /**
+    * changes a Double to String.
+    *
+    * @param decimal - Double to format
+    * @return String representation of a BigDecimal or empty string if null
+    */
+   protected String handleDouble(Double decimal) {
+      return decimal == null ? "" : decimal.toString();
+   }
+
+   /**
+    * changes a Float to String.
+    *
+    * @param decimal - Float to format
+    * @return String representation of a BigDecimal or empty string if null
+    */
+   protected String handleFloat(Float decimal) {
+      return decimal == null ? "" : decimal.toString();
+   }
+
+   /**
     * Retrieves the string representation of an Long value from the result set.
     * @param rs - Result set containing the data.
     * @param columnIndex - index to the column of the long.
@@ -246,11 +266,15 @@ public class ResultSetHelperService implements ResultSetHelper {
             value = handleLong(rs, colIndex);
             break;
          case Types.DECIMAL:
-         case Types.DOUBLE:
-         case Types.FLOAT:
          case Types.REAL:
          case Types.NUMERIC:
             value = handleBigDecimal(rs.getBigDecimal(colIndex));
+            break;
+         case Types.DOUBLE:
+            value = handleDouble(rs.getDouble(colIndex));
+            break;
+         case Types.FLOAT:
+            value = handleFloat(rs.getFloat(colIndex));
             break;
          case Types.INTEGER:
          case Types.TINYINT:

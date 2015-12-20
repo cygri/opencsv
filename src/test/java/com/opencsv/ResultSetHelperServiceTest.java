@@ -132,6 +132,55 @@ public class ResultSetHelperServiceTest {
    }
 
    @Test
+   public void issue121ConvertingNaNForDoubleOrFloat() throws SQLException, IOException {
+      String[] expectedNames = {"Decimal", "double", "float", "real", "numeric", "Null"};
+      String[] realValues = {"1.1", Double.toString(Double.NaN), Float.toString(Float.NaN), "4.4", "5.5", null};
+      String[] expectedValues = {"1.1", "NaN", "NaN", "4.4", "5.5", ""};
+      int[] expectedTypes = {Types.DECIMAL, Types.DOUBLE, Types.FLOAT, Types.REAL, Types.NUMERIC, Types.DECIMAL};
+
+      ResultSetMetaData metaData = MockResultSetMetaDataBuilder.buildMetaData(expectedNames, expectedTypes);
+      ResultSet resultSet = MockResultSetBuilder.buildResultSet(metaData, realValues, expectedTypes);
+
+      ResultSetHelperService service = new ResultSetHelperService();
+
+      String[] columnValues = service.getColumnValues(resultSet);
+      assertArrayEquals(expectedValues, columnValues);
+   }
+
+   @Test
+   public void issue121ConvertingPositiveInfinityForDoubleOrFloat() throws SQLException, IOException {
+      String[] expectedNames = {"Decimal", "double", "float", "real", "numeric", "Null"};
+      String[] realValues = {"1.1", Double.toString(Double.POSITIVE_INFINITY), Float.toString(Float.POSITIVE_INFINITY), "4.4", "5.5", null};
+      String[] expectedValues = {"1.1", "Infinity", "Infinity", "4.4", "5.5", ""};
+      int[] expectedTypes = {Types.DECIMAL, Types.DOUBLE, Types.FLOAT, Types.REAL, Types.NUMERIC, Types.DECIMAL};
+
+      ResultSetMetaData metaData = MockResultSetMetaDataBuilder.buildMetaData(expectedNames, expectedTypes);
+      ResultSet resultSet = MockResultSetBuilder.buildResultSet(metaData, realValues, expectedTypes);
+
+      ResultSetHelperService service = new ResultSetHelperService();
+
+      String[] columnValues = service.getColumnValues(resultSet);
+      assertArrayEquals(expectedValues, columnValues);
+   }
+
+   @Test
+   public void issue121ConvertingNegativeInfinityForDoubleOrFloat() throws SQLException, IOException {
+      String[] expectedNames = {"Decimal", "double", "float", "real", "numeric", "Null"};
+      String[] realValues = {"1.1", Double.toString(Double.NEGATIVE_INFINITY), Float.toString(Float.NEGATIVE_INFINITY), "4.4", "5.5", null};
+      String[] expectedValues = {"1.1", "-Infinity", "-Infinity", "4.4", "5.5", ""};
+      int[] expectedTypes = {Types.DECIMAL, Types.DOUBLE, Types.FLOAT, Types.REAL, Types.NUMERIC, Types.DECIMAL};
+
+      System.out.println(realValues[1]);
+      ResultSetMetaData metaData = MockResultSetMetaDataBuilder.buildMetaData(expectedNames, expectedTypes);
+      ResultSet resultSet = MockResultSetBuilder.buildResultSet(metaData, realValues, expectedTypes);
+
+      ResultSetHelperService service = new ResultSetHelperService();
+
+      String[] columnValues = service.getColumnValues(resultSet);
+      assertArrayEquals(expectedValues, columnValues);
+   }
+
+   @Test
    public void getIntegerFromResultSet() throws SQLException, IOException {
       String[] expectedNames = {"Integer", "tinyint", "smallint", "Null"};
       String[] realValues = {"1", "2", "3", null};
