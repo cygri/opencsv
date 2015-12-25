@@ -524,4 +524,39 @@ public class CSVWriterTest {
       assertEquals("'Foo','Bar','baz'\n'v1','v2''v2a','v3'\n", result);
       assertEquals(2, linesWritten);
    }
+
+   @Test
+   public void issue123SeparatorEscapedWhenQuoteIsNoQuoteChar() {
+      String[] header = {"Foo", "Bar", "baz"};
+      String[] value = {"v1", "v2" + CSVWriter.DEFAULT_ESCAPE_CHARACTER + "v2a", "v3"};
+
+      List<String[]> lines = new ArrayList<String[]>();
+      lines.add(header);
+      lines.add(value);
+      StringWriter sw = new StringWriter();
+      CSVWriter writer = new CSVWriter(sw, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER);
+      writer.writeAll(lines);
+
+      String result = sw.toString();
+      assertNotNull(result);
+      assertEquals("Foo,Bar,baz\nv1,v2" + CSVWriter.DEFAULT_ESCAPE_CHARACTER + CSVWriter.DEFAULT_ESCAPE_CHARACTER + "v2a,v3\n", result);
+   }
+
+   @Test
+   public void issue123SeparatorEscapedWhenQuoteIsNoQuoteCharSpecifingNoneDefaultEscapeChar() {
+      String[] header = {"Foo", "Bar", "baz"};
+      char escapeCharacter = '\\';
+      String[] value = {"v1", "v2" + escapeCharacter + "v2a" + CSVWriter.DEFAULT_SEPARATOR + "v2b", "v3"};
+      List<String[]> lines = new ArrayList<String[]>();
+      lines.add(header);
+      lines.add(value);
+      StringWriter sw = new StringWriter();
+      CSVWriter writer = new CSVWriter(sw, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, escapeCharacter);
+      writer.writeAll(lines);
+
+      String result = sw.toString();
+      assertNotNull(result);
+      assertEquals("Foo,Bar,baz\nv1,v2" + escapeCharacter + escapeCharacter + "v2a" + escapeCharacter + CSVWriter.DEFAULT_SEPARATOR + "v2b,v3\n", result);
+   }
+
 }

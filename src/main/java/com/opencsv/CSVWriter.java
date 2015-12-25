@@ -316,11 +316,17 @@ public class CSVWriter implements Closeable, Flushable {
     * @param nextChar - character to process
     */
    private void processCharacter(StringBuilder sb, char nextChar) {
-      if (escapechar != NO_ESCAPE_CHARACTER && (nextChar == quotechar || nextChar == escapechar)) {
+      if (escapechar != NO_ESCAPE_CHARACTER && checkCharactersToEscape(nextChar)) {
          sb.append(escapechar).append(nextChar);
       } else {
          sb.append(nextChar);
       }
+   }
+
+   private boolean checkCharactersToEscape(char nextChar) {
+      return quotechar == NO_QUOTE_CHARACTER ?
+              (nextChar == quotechar || nextChar == escapechar || nextChar == separator)
+              : (nextChar == quotechar || nextChar == escapechar);
    }
 
    /**
