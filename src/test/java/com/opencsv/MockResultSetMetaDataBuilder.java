@@ -30,6 +30,7 @@ public class MockResultSetMetaDataBuilder {
       when(metaData.getColumnCount()).thenReturn(columnNames.length);
       for (int i = 0; i < columnNames.length; i++) {
          when(metaData.getColumnName(i + 1)).thenReturn(columnNames[i]);
+         when(metaData.getColumnLabel(i + 1)).thenReturn(columnNames[i]);
          when(metaData.getColumnType(i + 1)).thenReturn(columnTypes[i]);
       }
 
