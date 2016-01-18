@@ -686,4 +686,17 @@ public class CSVParserTest {
         assertEquals("t\"wo", nextLine[1]);
         assertEquals("three", nextLine[2]);
     }
+
+    @Test
+    public void issue93ParsingEmptyDoubleQuoteField() throws IOException {
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withStrictQuotes(false).build();
+        // "",2
+        String[] nextLine = parser.parseLineMulti("\"\",2");
+
+        assertEquals(2, nextLine.length);
+
+        assertTrue(nextLine[0].isEmpty());
+        assertEquals("2", nextLine[1]);
+    }
 }

@@ -324,7 +324,7 @@ public class CSVParser {
      * @return the comma-tokenized list of elements, or null if nextLine is null
      * @throws IOException if bad things happen during the read
      */
-    private String[] parseLine(String nextLine, boolean multi) throws IOException {
+    protected String[] parseLine(String nextLine, boolean multi) throws IOException {
 
         if (!multi && pending != null) {
             pending = null;

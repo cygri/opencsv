@@ -291,7 +291,7 @@ public class CSVWriter implements Closeable, Flushable {
     * @param line - element of data to check for special characters.
     * @return true if the line contains the quote, escape, separator, newline or return.
     */
-   private boolean stringContainsSpecialCharacters(String line) {
+   protected boolean stringContainsSpecialCharacters(String line) {
       return line.indexOf(quotechar) != -1 || line.indexOf(escapechar) != -1 || line.indexOf(separator) != -1 || line.contains(DEFAULT_LINE_END) || line.contains("\r");
    }
 

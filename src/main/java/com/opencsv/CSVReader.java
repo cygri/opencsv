@@ -288,7 +288,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         return validateResult(result);
     }
 
-    private String[] validateResult(String[] result) {
+    protected String[] validateResult(String[] result) {
         if (result != null) {
             recordsRead++;
         }
@@ -301,7 +301,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param lastRead - latest data read for this record.
      * @return String array with union of the buffer and lastRead arrays.
      */
-    private String[] combineResultsFromMultipleReads(String[] buffer, String[] lastRead) {
+    protected String[] combineResultsFromMultipleReads(String[] buffer, String[] lastRead) {
         String[] t = new String[buffer.length + lastRead.length];
         System.arraycopy(buffer, 0, t, 0, buffer.length);
         System.arraycopy(lastRead, 0, t, buffer.length, lastRead.length);
@@ -314,7 +314,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @return the next line from the file without trailing newline
      * @throws IOException if bad things happen during the read
      */
-    private String getNextLine() throws IOException {
+    protected String getNextLine() throws IOException {
         if (isClosed()) {
             hasNext = false;
             return null;
