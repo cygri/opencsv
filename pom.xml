@@ -12,6 +12,7 @@
     <properties>
         <maven.surefire.version>2.19</maven.surefire.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <jacoco.datafile>${project.build.directory}/jacoco-it.exec</jacoco.datafile>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
     </properties>
 
@@ -225,16 +226,24 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <dataFile>${jacoco.datafile}</dataFile>
+                    <destFile>${jacoco.datafile}</destFile>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>default-prepare-agent</id>
+                        <id>jacoco-initialize</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <propertyName>jacoco.agent.argLine</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>default-report</id>
-                        <phase>prepare-package</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -327,7 +336,7 @@
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
                 <configuration>
-                    <goal>report-only</goal>
+                    <argLine>${jacoco.agent.argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>

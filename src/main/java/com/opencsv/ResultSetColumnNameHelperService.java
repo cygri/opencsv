@@ -74,7 +74,7 @@ public class ResultSetColumnNameHelperService extends ResultSetHelperService imp
         if (columnNamePositionMap.isEmpty()) {
             populateColumnData(rs);
         }
-        return columnHeaders;
+        return Arrays.copyOf(columnHeaders, columnHeaders.length);
     }
 
     private void populateColumnData(ResultSet rs) throws SQLException {

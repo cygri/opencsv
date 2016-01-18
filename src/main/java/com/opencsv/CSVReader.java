@@ -288,6 +288,12 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         return validateResult(result);
     }
 
+    /**
+     * Increments the number of records read if the result passed in is not null.
+     *
+     * @param result
+     * @return result that was passed in.
+     */
     protected String[] validateResult(String[] result) {
         if (result != null) {
             recordsRead++;
