@@ -2,6 +2,7 @@ package com.opencsv;
 
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -698,5 +699,17 @@ public class CSVParserTest {
 
         assertTrue(nextLine[0].isEmpty());
         assertEquals("2", nextLine[1]);
+    }
+
+    @Ignore("Use this test for an Excel CSV Parser")
+    @Test
+    public void tryAndParseExcelGeneratedString() throws IOException {
+        CSVParserBuilder builder = new CSVParserBuilder();
+        CSVParser parser = builder.withStrictQuotes(true).build();
+
+        // \" \ \ " ",
+        String[] nextLine = parser.parseLineMulti("\"\\\"\"\",\\,\\,\"\"\"\",\"\"\",\"");
+
+        assertEquals("\\\"", nextLine[0]);
     }
 }
