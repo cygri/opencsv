@@ -4,7 +4,7 @@
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
     <packaging>bundle</packaging>
-    <version>3.7-SNAPSHOT</version>
+    <version>3.7</version>
     <name>opencsv</name>
     <description>A simple library for reading and writing CSV in Java</description>
     <url>http://opencsv.sf.net</url>
@@ -12,7 +12,6 @@
     <properties>
         <maven.surefire.version>2.19</maven.surefire.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
-        <jacoco.datafile>${project.build.directory}/jacoco-it.exec</jacoco.datafile>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
     </properties>
 
@@ -226,24 +225,16 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
-                <configuration>
-                    <dataFile>${jacoco.datafile}</dataFile>
-                    <destFile>${jacoco.datafile}</destFile>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>jacoco-initialize</id>
-                        <phase>initialize</phase>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <propertyName>jacoco.agent.argLine</propertyName>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>default-report</id>
-                        <phase>verify</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -336,7 +327,7 @@
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
                 <configuration>
-                    <argLine>${jacoco.agent.argLine}</argLine>
+                    <goal>report-only</goal>
                 </configuration>
             </plugin>
             <plugin>
