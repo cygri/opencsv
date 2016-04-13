@@ -59,13 +59,13 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public static final String RFC4180_LINE_END = "\r\n";
 
-   private Writer rawWriter;
-   private PrintWriter pw;
-   private char separator;
-   private char quotechar;
-   private char escapechar;
-   private String lineEnd;
-   private ResultSetHelper resultService = new ResultSetHelperService();
+   protected Writer rawWriter;
+   protected PrintWriter pw;
+   protected char separator;
+   protected char quotechar;
+   protected char escapechar;
+   protected String lineEnd;
+   protected ResultSetHelper resultService;
 
    /**
     * Constructs CSVWriter using a comma for the separator.
@@ -202,7 +202,7 @@ public class CSVWriter implements Closeable, Flushable {
    protected void writeColumnNames(ResultSet rs)
          throws SQLException {
 
-      writeNext(resultService.getColumnNames(rs));
+      writeNext(resultService().getColumnNames(rs));
    }
 
    /**
@@ -235,7 +235,7 @@ public class CSVWriter implements Closeable, Flushable {
     *
     * @return number of lines written - including header.
     */
-   public int writeAll(java.sql.ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
+   public int writeAll(ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
       int linesWritten = 0;
 
       if (includeColumnNames) {
@@ -244,7 +244,7 @@ public class CSVWriter implements Closeable, Flushable {
       }
 
       while (rs.next()) {
-         writeNext(resultService.getColumnValues(rs, trim));
+         writeNext(resultService().getColumnValues(rs, trim));
          linesWritten++;
       }
 
@@ -338,7 +338,7 @@ public class CSVWriter implements Closeable, Flushable {
     * @param sb - StringBuffer holding the processed character.
     * @param nextChar - character to process
     */
-   private void processCharacter(StringBuilder sb, char nextChar) {
+   protected void processCharacter(StringBuilder sb, char nextChar) {
       if (escapechar != NO_ESCAPE_CHARACTER && checkCharactersToEscape(nextChar)) {
          sb.append(escapechar).append(nextChar);
       } else {
@@ -346,7 +346,7 @@ public class CSVWriter implements Closeable, Flushable {
       }
    }
 
-   private boolean checkCharactersToEscape(char nextChar) {
+   protected boolean checkCharactersToEscape(char nextChar) {
       return quotechar == NO_QUOTE_CHARACTER ?
               (nextChar == quotechar || nextChar == escapechar || nextChar == separator)
               : (nextChar == quotechar || nextChar == escapechar);
@@ -391,6 +391,17 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public void setResultService(ResultSetHelper resultService) {
       this.resultService = resultService;
+   }
+
+    /**
+     * lazy resultSetHelper creation
+     * @return instance of resultSetHelper
+     */
+   protected ResultSetHelper resultService(){
+      if (resultService == null){
+         resultService = new ResultSetHelperService();
+      }
+      return resultService;
    }
 
    /**
