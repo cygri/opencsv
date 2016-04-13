@@ -142,6 +142,21 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
    /**
+    * Writes iterable to a CSV file. The list is assumed to be a String[]
+    *
+    * @param allLines         an Iterable of String[], with each String[] representing a line of
+    *                         the file.
+    * @param applyQuotesToAll true if all values are to be quoted.  false if quotes only
+    *                         to be applied to values which contain the separator, escape,
+    *                         quote or new line characters.
+    */
+   public void writeAll(Iterable<String[]> allLines, boolean applyQuotesToAll) {
+      for (String[] line : allLines) {
+         writeNext(line, applyQuotesToAll);
+      }
+   }
+
+   /**
     * Writes the entire list to a CSV file. The list is assumed to be a
     * String[]
     *
@@ -152,8 +167,18 @@ public class CSVWriter implements Closeable, Flushable {
     *                         quote or new line characters.
     */
    public void writeAll(List<String[]> allLines, boolean applyQuotesToAll) {
+      writeAll((Iterable<String[]>)allLines, applyQuotesToAll);
+   }
+
+   /**
+    * Writes iterable to a CSV file. The list is assumed to be a String[]
+    *
+    * @param allLines an Iterable of String[], with each String[] representing a line of
+    *                 the file.
+    */
+   public void writeAll(Iterable<String[]> allLines) {
       for (String[] line : allLines) {
-         writeNext(line, applyQuotesToAll);
+         writeNext(line);
       }
    }
 
@@ -165,9 +190,7 @@ public class CSVWriter implements Closeable, Flushable {
     *                 the file.
     */
    public void writeAll(List<String[]> allLines) {
-      for (String[] line : allLines) {
-         writeNext(line);
-      }
+      writeAll((Iterable<String[]>)allLines);
    }
 
    /**
