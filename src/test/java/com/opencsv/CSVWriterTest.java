@@ -16,14 +16,23 @@ package com.opencsv;
  */
 
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CSVWriterTest {
 
@@ -34,14 +43,14 @@ public class CSVWriterTest {
     * @return a String version
     * @throws IOException if there are problems writing
     */
-   private String invokeWriter(String[] args) throws IOException {
+   private String invokeWriter(String ... args) throws IOException {
       StringWriter sw = new StringWriter();
       CSVWriter csvw = new CSVWriter(sw, ',', '\'');
       csvw.writeNext(args);
       return sw.toString();
    }
 
-   private String invokeNoEscapeWriter(String[] args) throws IOException {
+   private String invokeNoEscapeWriter(String ... args) throws IOException {
       StringWriter sw = new StringWriter();
       CSVWriter csvw = new CSVWriter(sw, CSVWriter.DEFAULT_SEPARATOR, '\'', CSVWriter.NO_ESCAPE_CHARACTER);
       csvw.writeNext(args);
@@ -103,16 +112,14 @@ public class CSVWriterTest {
    @Test
    public void testSpecialCharacters() throws IOException {
       // test quoted line
-      String[] quoteLine = {"This is a \r multiline entry", "so is \n this"};
-      String output = invokeWriter(quoteLine);
+      String output = invokeWriter("This is a \r multiline entry", "so is \n this");
       assertEquals("'This is a \r multiline entry','so is \n this'\n", output);
    }
 
    @Test
    public void parseLineWithBothEscapeAndQuoteChar() throws IOException {
       // test quoted line
-      String[] quoteLine = {"This is a 'multiline' entry", "so is \n this"};
-      String output = invokeWriter(quoteLine);
+      String output = invokeWriter("This is a 'multiline' entry", "so is \n this");
       assertEquals("'This is a \"'multiline\"' entry','so is \n this'\n", output);
    }
 
@@ -147,8 +154,7 @@ public class CSVWriterTest {
 
    @Test
    public void parseLineWithNoEscapeCharAndQuotes() throws IOException {
-      String[] quoteLine = {"This is a \" 'multiline' entry", "so is \n this"};
-      String output = invokeNoEscapeWriter(quoteLine);
+      String output = invokeNoEscapeWriter("This is a \" 'multiline' entry", "so is \n this");
       assertEquals("'This is a \" 'multiline' entry','so is \n this'\n", output);
    }
 
@@ -159,7 +165,7 @@ public class CSVWriterTest {
     * @throws IOException if the reader fails.
     */
    @Test
-   public void testWriteAll() throws IOException {
+   public void testWriteAllAsList() throws IOException {
 
       List<String[]> allElements = new ArrayList<String[]>();
       String[] line1 = "Name#Phone#Email".split("#");
@@ -173,10 +179,57 @@ public class CSVWriterTest {
       CSVWriter csvw = new CSVWriter(sw);
       csvw.writeAll(allElements);
 
+      csvw.close();
+      assertFalse(csvw.checkError());
       String result = sw.toString();
       String[] lines = result.split("\n");
 
       assertEquals(3, lines.length);
+      assertEquals("\"Name\",\"Phone\",\"Email\"", lines[0]);
+      assertEquals("\"Glen\",\"1234\",\"glen@abcd.com\"", lines[1]);
+      assertEquals("\"John\",\"5678\",\"john@efgh.com\"", lines[2]);
+   }
+
+   /**
+    * Test writing to an iterator.
+    *
+    * @throws IOException if the reader fails.
+    */
+   @Test
+   public void testWriteAllAsIterable() throws IOException {
+      final String[] line1 = "Name#Phone#Email".split("#");
+      final String[] line2 = "Glen#1234#glen@abcd.com".split("#");
+      final String[] line3 = "John#5678#john@efgh.com".split("#");
+
+      Iterable iterable = mock(Iterable.class);
+
+      Answer<Iterator> iteratorAnswer = new Answer<Iterator>() {
+         @Override
+         public Iterator answer(InvocationOnMock invocationOnMock) throws Throwable {
+            Iterator<String[]> iterator = mock(Iterator.class);
+            when(iterator.hasNext()).thenReturn(true).thenReturn(true).thenReturn(true)
+                    .thenReturn(false);
+            when(iterator.next()).thenReturn(line1).thenReturn(line2).thenReturn(line3)
+                    .thenThrow(NoSuchElementException.class);
+            return iterator;
+         }
+      };
+      when(iterable.iterator()).then(iteratorAnswer);
+
+      StringWriter sw = new StringWriter();
+      CSVWriter csvw = new CSVWriter(sw);
+      csvw.writeAll(iterable);
+
+      csvw.close();
+      assertFalse(csvw.checkError());
+
+      String result = sw.toString();
+      String[] lines = result.split("\n");
+
+      assertEquals(3, lines.length);
+      assertEquals("\"Name\",\"Phone\",\"Email\"", lines[0]);
+      assertEquals("\"Glen\",\"1234\",\"glen@abcd.com\"", lines[1]);
+      assertEquals("\"John\",\"5678\",\"john@efgh.com\"", lines[2]);
    }
 
    /**
@@ -308,7 +361,6 @@ public class CSVWriterTest {
       csvw.flushQuietly();
    }
 
-
    @Test
    public void testAlternateEscapeChar() {
       String[] line = {"Foo", "bar's"};
@@ -411,7 +463,6 @@ public class CSVWriterTest {
 
       StringWriter sw = new StringWriter();
       CSVWriter csvw = new CSVWriter(sw);
-      csvw.setResultService(new ResultSetHelperService());
 
       ResultSet rs = MockResultSetBuilder.buildResultSet(header, value, 1);
 
@@ -557,6 +608,19 @@ public class CSVWriterTest {
       String result = sw.toString();
       assertNotNull(result);
       assertEquals("Foo,Bar,baz\nv1,v2" + escapeCharacter + escapeCharacter + "v2a" + escapeCharacter + CSVWriter.DEFAULT_SEPARATOR + "v2b,v3\n", result);
+   }
+
+   @Test
+   public void testIOException() throws IOException {
+      Writer writer = mock(Writer.class);
+      doThrow(IOException.class).when(writer).write(anyString());
+      CSVWriter csvWriter = new CSVWriter(writer);
+
+      csvWriter.writeNext(new String[]{"XXX"});
+
+      csvWriter.close();
+
+      assertTrue(csvWriter.checkError());
    }
 
 }
