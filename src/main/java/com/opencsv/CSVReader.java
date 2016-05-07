@@ -40,17 +40,17 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      */
     public static final int DEFAULT_SKIP_LINES = 0;
     public static final int READ_AHEAD_LIMIT = Character.SIZE / Byte.SIZE;
-    private CSVParser parser;
-    private int skipLines;
-    private BufferedReader br;
-    private LineReader lineReader;
-    private boolean hasNext = true;
-    private boolean linesSkiped;
-    private boolean keepCR;
-    private boolean verifyReader;
+    protected CSVParser parser;
+    protected int skipLines;
+    protected BufferedReader br;
+    protected LineReader lineReader;
+    protected boolean hasNext = true;
+    protected boolean linesSkiped;
+    protected boolean keepCR;
+    protected boolean verifyReader;
 
-    private long linesRead = 0;
-    private long recordsRead = 0;
+    protected long linesRead = 0;
+    protected long recordsRead = 0;
 
     /**
      * Constructs CSVReader using a comma for the separator.
@@ -347,7 +347,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * Checks to see if the file is closed.
      * @return true if the reader can no longer be read from.
      */
-    private boolean isClosed() {
+    protected boolean isClosed() {
         if (!verifyReader) {
             return false;
         }

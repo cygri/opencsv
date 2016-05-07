@@ -59,13 +59,13 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public static final String RFC4180_LINE_END = "\r\n";
 
-   private Writer rawWriter;
-   private PrintWriter pw;
-   private char separator;
-   private char quotechar;
-   private char escapechar;
-   private String lineEnd;
-   private ResultSetHelper resultService = new ResultSetHelperService();
+   protected final Writer writer;
+   protected final char separator;
+   protected final char quotechar;
+   protected final char escapechar;
+   protected String lineEnd;
+   protected ResultSetHelper resultService;
+   protected volatile IOException exception;
 
    /**
     * Constructs CSVWriter using a comma for the separator.
@@ -133,12 +133,32 @@ public class CSVWriter implements Closeable, Flushable {
     * @param lineEnd    the line feed terminator to use
     */
    public CSVWriter(Writer writer, char separator, char quotechar, char escapechar, String lineEnd) {
-      this.rawWriter = writer;
-      this.pw = new PrintWriter(writer);
+      this.writer = writer;
       this.separator = separator;
       this.quotechar = quotechar;
       this.escapechar = escapechar;
       this.lineEnd = lineEnd;
+   }
+
+   /**
+    * Writes iterable to a CSV file. The list is assumed to be a String[]
+    *
+    * @param allLines         an Iterable of String[], with each String[] representing a line of
+    *                         the file.
+    * @param applyQuotesToAll true if all values are to be quoted.  false if quotes only
+    *                         to be applied to values which contain the separator, escape,
+    *                         quote or new line characters.
+    */
+   public void writeAll(Iterable<String[]> allLines, boolean applyQuotesToAll) {
+      StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
+      try {
+         for (String[] line : allLines) {
+            writeNext(line, applyQuotesToAll, sb);
+            sb.setLength(0);
+         }
+      } catch (IOException e){
+         exception = e;
+      }
    }
 
    /**
@@ -152,8 +172,24 @@ public class CSVWriter implements Closeable, Flushable {
     *                         quote or new line characters.
     */
    public void writeAll(List<String[]> allLines, boolean applyQuotesToAll) {
-      for (String[] line : allLines) {
-         writeNext(line, applyQuotesToAll);
+      writeAll((Iterable<String[]>)allLines, applyQuotesToAll);
+   }
+
+   /**
+    * Writes iterable to a CSV file. The list is assumed to be a String[]
+    *
+    * @param allLines an Iterable of String[], with each String[] representing a line of
+    *                 the file.
+    */
+   public void writeAll(Iterable<String[]> allLines) {
+      StringBuilder sb = new StringBuilder(INITIAL_STRING_SIZE);
+      try {
+         for (String[] line : allLines) {
+            writeNext(line, true, sb);
+            sb.setLength(0);
+         }
+      } catch (IOException e){
+         exception = e;
       }
    }
 
@@ -165,9 +201,7 @@ public class CSVWriter implements Closeable, Flushable {
     *                 the file.
     */
    public void writeAll(List<String[]> allLines) {
-      for (String[] line : allLines) {
-         writeNext(line);
-      }
+      writeAll((Iterable<String[]>)allLines);
    }
 
    /**
@@ -176,10 +210,8 @@ public class CSVWriter implements Closeable, Flushable {
     * @param rs - ResultSet containing column names.
     * @throws SQLException - thrown by ResultSet::getColumnNames
     */
-   protected void writeColumnNames(ResultSet rs)
-         throws SQLException {
-
-      writeNext(resultService.getColumnNames(rs));
+   protected void writeColumnNames(ResultSet rs) throws SQLException {
+      writeNext(resultService().getColumnNames(rs));
    }
 
    /**
@@ -212,7 +244,7 @@ public class CSVWriter implements Closeable, Flushable {
     *
     * @return number of lines written - including header.
     */
-   public int writeAll(java.sql.ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
+   public int writeAll(ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
       int linesWritten = 0;
 
       if (includeColumnNames) {
@@ -221,7 +253,7 @@ public class CSVWriter implements Closeable, Flushable {
       }
 
       while (rs.next()) {
-         writeNext(resultService.getColumnValues(rs, trim));
+         writeNext(resultService().getColumnValues(rs, trim));
          linesWritten++;
       }
 
@@ -237,16 +269,31 @@ public class CSVWriter implements Closeable, Flushable {
     *                         to values which contain the separator, escape, quote or new line characters.
     */
    public void writeNext(String[] nextLine, boolean applyQuotesToAll) {
+      try {
+         writeNext(nextLine, applyQuotesToAll, new StringBuilder(INITIAL_STRING_SIZE));
+      } catch (IOException e) {
+         exception = e;
+      }
+   }
 
+   /**
+    * Writes the next line to the file.
+    *
+    * @param nextLine         a string array with each comma-separated element as a separate
+    *                         entry.
+    * @param applyQuotesToAll true if all values are to be quoted.  false applies quotes only
+    *                         to values which contain the separator, escape, quote or new line characters.
+    * @param appendable       Appendable used as buffer
+    */
+   protected void writeNext(String[] nextLine, boolean applyQuotesToAll, Appendable appendable) throws IOException {
       if (nextLine == null) {
          return;
       }
 
-      StringBuilder sb = new StringBuilder(nextLine.length * 2); // This is for the worse case where all elements have to be escaped.
       for (int i = 0; i < nextLine.length; i++) {
 
          if (i != 0) {
-            sb.append(separator);
+            appendable.append(separator);
          }
 
          String nextElement = nextLine[i];
@@ -258,22 +305,22 @@ public class CSVWriter implements Closeable, Flushable {
          Boolean stringContainsSpecialCharacters = stringContainsSpecialCharacters(nextElement);
 
          if ((applyQuotesToAll || stringContainsSpecialCharacters) && quotechar != NO_QUOTE_CHARACTER) {
-            sb.append(quotechar);
+            appendable.append(quotechar);
          }
 
          if (stringContainsSpecialCharacters) {
-            sb.append(processLine(nextElement));
+            processLine(nextElement, appendable);
          } else {
-            sb.append(nextElement);
+            appendable.append(nextElement);
          }
 
          if ((applyQuotesToAll || stringContainsSpecialCharacters) && quotechar != NO_QUOTE_CHARACTER) {
-            sb.append(quotechar);
+            appendable.append(quotechar);
          }
       }
 
-      sb.append(lineEnd);
-      pw.write(sb.toString());
+      appendable.append(lineEnd);
+      writer.write(appendable.toString());
    }
 
    /**
@@ -292,40 +339,40 @@ public class CSVWriter implements Closeable, Flushable {
     * @return true if the line contains the quote, escape, separator, newline or return.
     */
    protected boolean stringContainsSpecialCharacters(String line) {
-      return line.indexOf(quotechar) != -1 || line.indexOf(escapechar) != -1 || line.indexOf(separator) != -1 || line.contains(DEFAULT_LINE_END) || line.contains("\r");
+      return line.indexOf(quotechar) != -1
+              || line.indexOf(escapechar) != -1
+              || line.indexOf(separator) != -1
+              || line.contains(DEFAULT_LINE_END)
+              || line.contains("\r");
    }
 
    /**
     * Processes all the characters in a line.
     * @param nextElement - element to process.
-    * @return a StringBuilder with the elements data.
+    * @param appendable - Appendable holding the processed data.
     */
-   protected StringBuilder processLine(String nextElement) {
-      StringBuilder sb = new StringBuilder(nextElement.length() * 2); // this is for the worse case where all elements have to be escaped.
+   protected void processLine(String nextElement, Appendable appendable) throws IOException {
       for (int j = 0; j < nextElement.length(); j++) {
          char nextChar = nextElement.charAt(j);
-         processCharacter(sb, nextChar);
+         processCharacter(appendable, nextChar);
       }
-
-      return sb;
    }
 
    /**
     * Appends the character to the StringBuilder adding the escape character if needed.
-    * @param sb - StringBuffer holding the processed character.
+    * @param appendable - Appendable holding the processed data.
     * @param nextChar - character to process
     */
-   private void processCharacter(StringBuilder sb, char nextChar) {
+   protected void processCharacter(Appendable appendable, char nextChar) throws IOException {
       if (escapechar != NO_ESCAPE_CHARACTER && checkCharactersToEscape(nextChar)) {
-         sb.append(escapechar).append(nextChar);
-      } else {
-         sb.append(nextChar);
+         appendable.append(escapechar);
       }
+      appendable.append(nextChar);
    }
 
-   private boolean checkCharactersToEscape(char nextChar) {
-      return quotechar == NO_QUOTE_CHARACTER ?
-              (nextChar == quotechar || nextChar == escapechar || nextChar == separator)
+   protected boolean checkCharactersToEscape(char nextChar) {
+      return quotechar == NO_QUOTE_CHARACTER
+              ? (nextChar == quotechar || nextChar == escapechar || nextChar == separator)
               : (nextChar == quotechar || nextChar == escapechar);
    }
 
@@ -335,9 +382,7 @@ public class CSVWriter implements Closeable, Flushable {
     * @throws IOException if bad things happen
     */
    public void flush() throws IOException {
-
-      pw.flush();
-
+      writer.flush();
    }
 
    /**
@@ -347,8 +392,7 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public void close() throws IOException {
       flush();
-      pw.close();
-      rawWriter.close();
+      writer.close();
    }
 
    /**
@@ -359,7 +403,7 @@ public class CSVWriter implements Closeable, Flushable {
     *          conversion.
     */
    public boolean checkError() {
-      return pw.checkError();
+      return exception != null;
    }
 
    /**
@@ -368,6 +412,17 @@ public class CSVWriter implements Closeable, Flushable {
     */
    public void setResultService(ResultSetHelper resultService) {
       this.resultService = resultService;
+   }
+
+    /**
+     * lazy resultSetHelper creation
+     * @return instance of resultSetHelper
+     */
+   protected ResultSetHelper resultService(){
+      if (resultService == null){
+         resultService = new ResultSetHelperService();
+      }
+      return resultService;
    }
 
    /**
