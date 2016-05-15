@@ -28,13 +28,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CSVWriterTest {
+
+   private static final String SIMPLE_STRING = "XXX";
+   private static final String[] SIMPLE_STRING_ARRAY = new String[]{SIMPLE_STRING};
 
    /**
     * Test routine for converting output to a string.
@@ -616,11 +617,26 @@ public class CSVWriterTest {
       doThrow(IOException.class).when(writer).write(anyString());
       CSVWriter csvWriter = new CSVWriter(writer);
 
-      csvWriter.writeNext(new String[]{"XXX"});
+      csvWriter.writeNext(SIMPLE_STRING_ARRAY);
 
       csvWriter.close();
 
       assertTrue(csvWriter.checkError());
    }
 
+   @Test
+   public void checkErrorReturnsTrueWhenPassedInPrintWriter() throws IOException {
+      Writer writer = mock(Writer.class);
+      doThrow(IOException.class).when(writer).write(anyString(), anyInt(), anyInt());
+
+      PrintWriter printWriter = new PrintWriter(writer);
+
+      CSVWriter csvWriter = new CSVWriter(printWriter);
+
+      csvWriter.writeNext(SIMPLE_STRING_ARRAY);
+
+      csvWriter.close();
+
+      assertTrue(csvWriter.checkError());
+   }
 }

@@ -276,14 +276,18 @@ public class CSVWriter implements Closeable, Flushable {
       }
    }
 
+
    /**
-    * Writes the next line to the file.
+    * Writes the next line to the file.  This method is a fail-fast method that will throw the
+    * IOException of the writer supplied to the CSVWriter (if the Writer does not handle the exceptions itself like
+    * the PrintWriter class).
     *
     * @param nextLine         a string array with each comma-separated element as a separate
     *                         entry.
     * @param applyQuotesToAll true if all values are to be quoted.  false applies quotes only
     *                         to values which contain the separator, escape, quote or new line characters.
-    * @param appendable       Appendable used as buffer
+    * @param appendable       Appendable used as buffer.
+    * @throws IOException Exceptions thrown by the writer supplied to CSVWriter.
     */
    protected void writeNext(String[] nextLine, boolean applyQuotesToAll, Appendable appendable) throws IOException {
       if (nextLine == null) {
@@ -350,6 +354,7 @@ public class CSVWriter implements Closeable, Flushable {
     * Processes all the characters in a line.
     * @param nextElement - element to process.
     * @param appendable - Appendable holding the processed data.
+    * @throws IOException - IOException thrown by the writer supplied to the CSVWriter
     */
    protected void processLine(String nextElement, Appendable appendable) throws IOException {
       for (int j = 0; j < nextElement.length(); j++) {
@@ -362,6 +367,7 @@ public class CSVWriter implements Closeable, Flushable {
     * Appends the character to the StringBuilder adding the escape character if needed.
     * @param appendable - Appendable holding the processed data.
     * @param nextChar - character to process
+    * @throws IOException - IOException thrown by the writer supplied to the CSVWriter.
     */
    protected void processCharacter(Appendable appendable, char nextChar) throws IOException {
       if (escapechar != NO_ESCAPE_CHARACTER && checkCharactersToEscape(nextChar)) {
@@ -396,13 +402,20 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
    /**
-    * Checks to see if the there has been an error in the printstream.
+    * Flushes the buffer and checks to see if the there has been an error in the printstream.
     *
     * @return <code>true</code> if the print stream has encountered an error,
     *          either on the underlying output stream or during a format
     *          conversion.
     */
    public boolean checkError() {
+
+      if (writer instanceof PrintWriter) {
+         PrintWriter pw = (PrintWriter) writer;
+         return pw.checkError();
+      }
+
+      flushQuietly();  // checkError in the PrintWriter class flushes the buffer so we shall too.
       return exception != null;
    }
 
