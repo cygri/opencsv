@@ -93,6 +93,12 @@
                 <role>Expanded on annotated beans.</role>
             </roles>
         </contributor>
+        <contributor>
+            <name>Vladimir Dolzhenko</name>
+            <roles>
+                <role>Work to make CSVReader and CSVWriter easier to extend.</role>
+            </roles>
+        </contributor>
     </contributors>
     <issueManagement>
         <system>Sourceforge</system>
