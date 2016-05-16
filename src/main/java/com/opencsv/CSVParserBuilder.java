@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +20,14 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
 /**
  * Builder for creating a CSVParser.
- *
+ *<p>Example code for using this class:<br><br>
  * <code>
- * final CSVParser parser =
- * new CSVParserBuilder()
- * .withSeparator('\t')
- * .withIgnoreQuotations(true)
- * .build();
- * </code>
+ * final CSVParser parser =<br>
+ * new CSVParserBuilder()<br>
+ * .withSeparator('\t')<br>
+ * .withIgnoreQuotations(true)<br>
+ * .build();<br>
+ * </code></p>
  *
  * @see CSVParser
  */
@@ -50,7 +50,7 @@ public class CSVParserBuilder {
     /**
      * Sets the delimiter to use for separating entries.
      *
-     * @param separator the delimiter to use for separating entries
+     * @param separator The delimiter to use for separating entries
      * @return The CSVParserBuilder
      */
     public CSVParserBuilder withSeparator(
@@ -63,7 +63,7 @@ public class CSVParserBuilder {
     /**
      * Sets the character to use for quoted elements.
      *
-     * @param quoteChar the character to use for quoted element.
+     * @param quoteChar The character to use for quoted element.
      * @return The CSVParserBuilder
      */
     public CSVParserBuilder withQuoteChar(
@@ -76,7 +76,7 @@ public class CSVParserBuilder {
     /**
      * Sets the character to use for escaping a separator or quote.
      *
-     * @param escapeChar the character to use for escaping a separator or quote.
+     * @param escapeChar The character to use for escaping a separator or quote.
      * @return The CSVParserBuilder
      */
     public CSVParserBuilder withEscapeChar(
@@ -90,7 +90,7 @@ public class CSVParserBuilder {
      * Sets the strict quotes setting - if true, characters
      * outside the quotes are ignored.
      *
-     * @param strictQuotes if true, characters outside the quotes are ignored
+     * @param strictQuotes If true, characters outside the quotes are ignored
      * @return The CSVParserBuilder
      */
     public CSVParserBuilder withStrictQuotes(
@@ -103,7 +103,7 @@ public class CSVParserBuilder {
      * Sets the ignore leading whitespace setting - if true, white space
      * in front of a quote in a field is ignored.
      *
-     * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
+     * @param ignoreLeadingWhiteSpace If true, white space in front of a quote in a field is ignored
      * @return The CSVParserBuilder
      */
     public CSVParserBuilder withIgnoreLeadingWhiteSpace(
@@ -115,7 +115,7 @@ public class CSVParserBuilder {
     /**
      * Sets the ignore quotations mode - if true, quotations are ignored.
      *
-     * @param ignoreQuotations if true, quotations are ignored
+     * @param ignoreQuotations If true, quotations are ignored
      * @return The CSVParserBuilder
      */
     public CSVParserBuilder withIgnoreQuotations(
@@ -126,7 +126,7 @@ public class CSVParserBuilder {
 
     /**
      * Constructs CSVParser.
-     * @return a new CSVParser with defined settings.
+     * @return A new CSVParser with defined settings.
      */
     public CSVParser build() {
         return new CSVParser(
@@ -140,42 +140,42 @@ public class CSVParserBuilder {
     }
 
     /**
-     * @return the defined separator.
+     * @return The defined separator.
      */
     public char getSeparator() {
         return separator;
     }
 
     /**
-     * @return the defined quotation character.
+     * @return The defined quotation character.
      */
     public char getQuoteChar() {
         return quoteChar;
     }
 
     /**
-     * @return the defined escape character.
+     * @return The defined escape character.
      */
     public char getEscapeChar() {
         return escapeChar;
     }
 
     /**
-     * @return the defined strict quotation setting.
+     * @return The defined strict quotation setting.
      */
     public boolean isStrictQuotes() {
         return strictQuotes;
     }
 
     /**
-     * @return the defined ignoreLeadingWhiteSpace setting.
+     * @return The defined ignoreLeadingWhiteSpace setting.
      */
     public boolean isIgnoreLeadingWhiteSpace() {
         return ignoreLeadingWhiteSpace;
     }
 
     /**
-     * @return the defined ignoreQuotation setting.
+     * @return The defined ignoreQuotation setting.
      */
     public boolean isIgnoreQuotations() {
         return ignoreQuotations;
@@ -184,8 +184,8 @@ public class CSVParserBuilder {
     /**
      * Sets the NullFieldIndicator.
      *
-     * @param fieldIndicator - CSVReaderNullFieldIndicator set to what should be considered a null field.
-     * @return - The CSVParserBuilder
+     * @param fieldIndicator CSVReaderNullFieldIndicator set to what should be considered a null field.
+     * @return The CSVParserBuilder
      */
     public CSVParserBuilder withFieldAsNull(final CSVReaderNullFieldIndicator fieldIndicator) {
         this.nullFieldIndicator = fieldIndicator;
@@ -193,7 +193,7 @@ public class CSVParserBuilder {
     }
 
     /**
-     * @return - the null field indicator.
+     * @return The null field indicator.
      */
     public CSVReaderNullFieldIndicator nullFieldIndicator() {
         return nullFieldIndicator;

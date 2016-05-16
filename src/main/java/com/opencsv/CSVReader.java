@@ -1,6 +1,6 @@
 package com.opencsv;
 
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,7 +55,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader using a comma for the separator.
      *
-     * @param reader the reader to an underlying CSV source.
+     * @param reader The reader to an underlying CSV source.
      */
     public CSVReader(Reader reader) {
         this(reader, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER);
@@ -64,8 +64,8 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader with supplied separator.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param separator the delimiter to use for separating entries.
+     * @param reader    The reader to an underlying CSV source.
+     * @param separator The delimiter to use for separating entries.
      */
     public CSVReader(Reader reader, char separator) {
         this(reader, separator, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER);
@@ -74,22 +74,22 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader with supplied separator and quote char.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param separator the delimiter to use for separating entries
-     * @param quotechar the character to use for quoted elements
+     * @param reader    The reader to an underlying CSV source.
+     * @param separator The delimiter to use for separating entries
+     * @param quotechar The character to use for quoted elements
      */
     public CSVReader(Reader reader, char separator, char quotechar) {
         this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES);
     }
 
     /**
-     * Constructs CSVReader with supplied separator, quote char and quote handling
+     * Constructs CSVReader with supplied separator, quote char, and quote handling
      * behavior.
      *
-     * @param reader       the reader to an underlying CSV source.
-     * @param separator    the delimiter to use for separating entries
-     * @param quotechar    the character to use for quoted elements
-     * @param strictQuotes sets if characters outside the quotes are ignored
+     * @param reader       The reader to an underlying CSV source.
+     * @param separator    The delimiter to use for separating entries
+     * @param quotechar    The character to use for quoted elements
+     * @param strictQuotes Sets if characters outside the quotes are ignored
      */
     public CSVReader(Reader reader, char separator, char quotechar, boolean strictQuotes) {
         this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES, strictQuotes);
@@ -98,10 +98,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param separator the delimiter to use for separating entries
-     * @param quotechar the character to use for quoted elements
-     * @param escape    the character to use for escaping a separator or quote
+     * @param reader    The reader to an underlying CSV source.
+     * @param separator The delimiter to use for separating entries
+     * @param quotechar The character to use for quoted elements
+     * @param escape    The character to use for escaping a separator or quote
      */
 
     public CSVReader(Reader reader, char separator,
@@ -112,10 +112,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param separator the delimiter to use for separating entries
-     * @param quotechar the character to use for quoted elements
-     * @param line      the line number to skip for start reading
+     * @param reader    The reader to an underlying CSV source.
+     * @param separator The delimiter to use for separating entries
+     * @param quotechar The character to use for quoted elements
+     * @param line      The number of lines to skip before reading
      */
     public CSVReader(Reader reader, char separator, char quotechar, int line) {
         this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, line, CSVParser.DEFAULT_STRICT_QUOTES);
@@ -124,11 +124,11 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param separator the delimiter to use for separating entries
-     * @param quotechar the character to use for quoted elements
-     * @param escape    the character to use for escaping a separator or quote
-     * @param line      the line number to skip for start reading
+     * @param reader    The reader to an underlying CSV source.
+     * @param separator The delimiter to use for separating entries
+     * @param quotechar The character to use for quoted elements
+     * @param escape    The character to use for escaping a separator or quote
+     * @param line      The number of lines to skip before reading
      */
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line) {
         this(reader, separator, quotechar, escape, line, CSVParser.DEFAULT_STRICT_QUOTES);
@@ -137,12 +137,12 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader.
      *
-     * @param reader       the reader to an underlying CSV source.
-     * @param separator    the delimiter to use for separating entries
-     * @param quotechar    the character to use for quoted elements
-     * @param escape       the character to use for escaping a separator or quote
-     * @param line         the line number to skip for start reading
-     * @param strictQuotes sets if characters outside the quotes are ignored
+     * @param reader       The reader to an underlying CSV source.
+     * @param separator    The delimiter to use for separating entries
+     * @param quotechar    The character to use for quoted elements
+     * @param escape       The character to use for escaping a separator or quote
+     * @param line      The number of lines to skip before reading
+     * @param strictQuotes Sets if characters outside the quotes are ignored
      */
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line, boolean strictQuotes) {
         this(reader, separator, quotechar, escape, line, strictQuotes, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
@@ -151,13 +151,13 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader with all data entered.
      *
-     * @param reader                  the reader to an underlying CSV source.
-     * @param separator               the delimiter to use for separating entries
-     * @param quotechar               the character to use for quoted elements
-     * @param escape                  the character to use for escaping a separator or quote
-     * @param line                    the line number to skip for start reading
-     * @param strictQuotes            sets if characters outside the quotes are ignored
-     * @param ignoreLeadingWhiteSpace it true, parser should ignore white space before a quote in a field
+     * @param reader                  The reader to an underlying CSV source.
+     * @param separator               The delimiter to use for separating entries
+     * @param quotechar               The character to use for quoted elements
+     * @param escape                  The character to use for escaping a separator or quote
+     * @param line                    The number of lines to skip before reading
+     * @param strictQuotes            Sets if characters outside the quotes are ignored
+     * @param ignoreLeadingWhiteSpace If true, parser should ignore white space before a quote in a field
      */
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line, boolean strictQuotes, boolean ignoreLeadingWhiteSpace) {
         this(reader,
@@ -168,14 +168,14 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader with all data entered.
      *
-     * @param reader                  the reader to an underlying CSV source.
-     * @param separator               the delimiter to use for separating entries
-     * @param quotechar               the character to use for quoted elements
-     * @param escape                  the character to use for escaping a separator or quote
-     * @param line                    the line number to skip for start reading
-     * @param strictQuotes            sets if characters outside the quotes are ignored
-     * @param ignoreLeadingWhiteSpace if true, parser should ignore white space before a quote in a field
-     * @param keepCR                  if true the reader will keep carriage returns, otherwise it will discard them.
+     * @param reader                  The reader to an underlying CSV source.
+     * @param separator               The delimiter to use for separating entries
+     * @param quotechar               The character to use for quoted elements
+     * @param escape                  The character to use for escaping a separator or quote
+     * @param line                    The number of lines to skip before reading
+     * @param strictQuotes            Sets if characters outside the quotes are ignored
+     * @param ignoreLeadingWhiteSpace If true, parser should ignore white space before a quote in a field
+     * @param keepCR                  If true the reader will keep carriage returns, otherwise it will discard them.
      */
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line, boolean strictQuotes,
                      boolean ignoreLeadingWhiteSpace, boolean keepCR) {
@@ -186,9 +186,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader with supplied CSVParser.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param line      the line number to skip for start reading
-     * @param csvParser the parser to use to parse input
+     * @param reader    The reader to an underlying CSV source.
+     * @param line      The number of lines to skip before reading
+     * @param csvParser The parser to use to parse input
      */
     public CSVReader(Reader reader, int line, CSVParser csvParser) {
         this(reader, line, csvParser, DEFAULT_KEEP_CR, DEFAULT_VERIFY_READER);
@@ -197,11 +197,11 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Constructs CSVReader with supplied CSVParser.
      *
-     * @param reader    the reader to an underlying CSV source.
-     * @param line      the line number to skip for start reading
-     * @param csvParser the parser to use to parse input
-     * @param keepCR    true to keep carriage returns in data read, false otherwise
-     * @param verifyReader   true to verify reader before each read, false otherwise
+     * @param reader    The reader to an underlying CSV source.
+     * @param line      The number of lines to skip before reading
+     * @param csvParser The parser to use to parse input
+     * @param keepCR    True to keep carriage returns in data read, false otherwise
+     * @param verifyReader   True to verify reader before each read, false otherwise
      */
     CSVReader(Reader reader, int line, CSVParser csvParser, boolean keepCR, boolean verifyReader) {
         this.br =
@@ -215,17 +215,17 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         this.verifyReader = verifyReader;
     }
     /**
-     * @return the CSVParser used by the reader.
+     * @return The CSVParser used by the reader.
      */
     public CSVParser getParser() {
         return parser;
     }
 
     /**
-     * Returns the number of lines in the csv file to skip before processing.  This is
-     * useful when there is miscellaneous data at the beginning of a file.
+     * Returns the number of lines in the CSV file to skip before processing.
+     * This is useful when there are miscellaneous data at the beginning of a file.
      *
-     * @return the number of lines in the csv file to skip before processing.
+     * @return The number of lines in the CSV file to skip before processing.
      */
     public int getSkipLines() {
         return skipLines;
@@ -234,7 +234,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Returns if the reader will keep carriage returns found in data or remove them.
      *
-     * @return true if reader will keep carriage returns, false otherwise.
+     * @return True if reader will keep carriage returns, false otherwise.
      */
     public boolean keepCarriageReturns() {
         return keepCR;
@@ -244,13 +244,13 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * Reads the entire file into a List with each element being a String[] of
      * tokens.
      *
-     * @return a List of String[], with each String[] representing a line of the
+     * @return A List of String[], with each String[] representing a line of the
      * file.
-     * @throws IOException if bad things happen during the read
+     * @throws IOException If bad things happen during the read
      */
     public List<String[]> readAll() throws IOException {
 
-        List<String[]> allElements = new ArrayList<String[]>();
+        List<String[]> allElements = new ArrayList<>();
         while (hasNext) {
             String[] nextLineAsTokens = readNext();
             if (nextLineAsTokens != null) {
@@ -264,9 +264,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Reads the next line from the buffer and converts to a string array.
      *
-     * @return a string array with each comma-separated element as a separate
+     * @return A string array with each comma-separated element as a separate
      * entry.
-     * @throws IOException if bad things happen during the read
+     * @throws IOException If bad things happen during the read
      */
     public String[] readNext() throws IOException {
 
@@ -291,8 +291,8 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Increments the number of records read if the result passed in is not null.
      *
-     * @param result
-     * @return result that was passed in.
+     * @param result The result of the read operation
+     * @return Result that was passed in.
      */
     protected String[] validateResult(String[] result) {
         if (result != null) {
@@ -302,9 +302,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     }
 
     /**
-     * For multi line records this method combines the current result with the result from previous read(s).
-     * @param buffer - previous data read for this record
-     * @param lastRead - latest data read for this record.
+     * For multi-line records this method combines the current result with the result from previous read(s).
+     * @param buffer Previous data read for this record
+     * @param lastRead Latest data read for this record.
      * @return String array with union of the buffer and lastRead arrays.
      */
     protected String[] combineResultsFromMultipleReads(String[] buffer, String[] lastRead) {
@@ -317,8 +317,8 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Reads the next line from the file.
      *
-     * @return the next line from the file without trailing newline
-     * @throws IOException if bad things happen during the read
+     * @return The next line from the file without trailing newline
+     * @throws IOException If bad things happen during the read
      */
     protected String getNextLine() throws IOException {
         if (isClosed()) {
@@ -345,7 +345,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
 
     /**
      * Checks to see if the file is closed.
-     * @return true if the reader can no longer be read from.
+     * @return True if the reader can no longer be read from.
      */
     protected boolean isClosed() {
         if (!verifyReader) {
@@ -364,16 +364,18 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     /**
      * Closes the underlying reader.
      *
-     * @throws IOException if the close fails
+     * @throws IOException If the close fails
      */
+    @Override
     public void close() throws IOException {
         br.close();
     }
 
     /**
-     * Creates an Iterator for processing the csv data.
-     * @return an String[] iterator.
+     * Creates an Iterator for processing the CSV data.
+     * @return A String[] iterator.
      */
+    @Override
     public Iterator<String[]> iterator() {
         try {
             return new CSVIterator(this);
@@ -384,17 +386,19 @@ public class CSVReader implements Closeable, Iterable<String[]> {
 
     /**
      * Returns if the CSVReader will verify the reader before each read.
-     * <p/>
-     * By default the value is true which is the functionality for version 3.0.
+     * <p>
+     * By default the value is true, which is the functionality for version 3.0.
      * If set to false the reader is always assumed ready to read - this is the functionality
      * for version 2.4 and before.
-     * <p/>
-     * The reason this method was needed was that certain types of Readers would return
-     * false for its ready() method until a read was done (namely readers created using Channels).
+     * </p>
+     * <p>
+     * The reason this method was needed was that certain types of readers would return
+     * false for their ready() methods until a read was done (namely readers created using Channels).
      * This caused opencsv not to read from those readers.
+     * </p>
      *
-     * @return true if CSVReader will verify the reader before reads.  False otherwise.
-     * @link https://sourceforge.net/p/opencsv/bugs/108/
+     * @return True if CSVReader will verify the reader before reads.  False otherwise.
+     * @see <a href="https://sourceforge.net/p/opencsv/bugs/108/">Bug 108</a>
      * @since 3.3
      */
     public boolean verifyReader() {
@@ -402,11 +406,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     }
 
     /**
-     * Used for debugging purposes this method returns the number of lines that has been read from
-     * the reader passed into the CSVReader.
-     * <p/>
-     * Given the following data.
-     * <code>
+     * Used for debugging purposes, this method returns the number of lines that
+     * has been read from the reader passed into the CSVReader.
+     * <p>
+     * Given the following data:</p>
      * <pre>
      * First line in the file
      * some other descriptive line
@@ -414,25 +417,26 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      *
      * a,"b\nb",c
      * </pre>
-     * </code>
-     * With a CSVReader constructed like so
+     * <p>
+     * With a CSVReader constructed like so:<br>
      * <code>
-     * <pre>
-     * CSVReader c = builder.withCSVParser(new CSVParser())
-     *                      .withSkipLines(2)
-     *                      .build();
-     * </pre>
-     * </code>
-     * The initial call to getLinesRead will be 0.<br>
-     * After the first call to readNext() then getLinesRead will return 3 (because header was read).<br>
-     * After the second call to read the blank line then getLinesRead will return 4 (still a read).<br>
-     * After third call to readNext getLinesRead will return 6 because it took two line reads to retrieve this record.<br>
-     * Subsequent calls to readNext (since we are out of data) will not increment the number of lines read.<br>
-     * <p/>
+     * CSVReader c = builder.withCSVParser(new CSVParser())<br>
+     *                      .withSkipLines(2)<br>
+     *                      .build();<br>
+     * </code><br>
+     * The initial call to getLinesRead() will be 0. After the first call to
+     * readNext() then getLinesRead() will return 3 (because header was read).
+     * After the second call to read the blank line then getLinesRead() will
+     * return 4 (still a read). After third call to readNext() getLinesRead()
+     * will return 6 because it took two line reads to retrieve this record.
+     * Subsequent calls to readNext() (since we are out of data) will not
+     * increment the number of lines read.</p>
+     * <p>
      * An example of this is in the linesAndRecordsRead() test in CSVReaderTest.
+     * </p>
      *
-     * @return the number of lines read by the reader (including skip lines).
-     * @link https://sourceforge.net/p/opencsv/feature-requests/73/
+     * @return The number of lines read by the reader (including skip lines).
+     * @see <a href="https://sourceforge.net/p/opencsv/feature-requests/73/">Feature Request 73</a>
      * @since 3.6
      */
     public long getLinesRead() {
@@ -440,35 +444,37 @@ public class CSVReader implements Closeable, Iterable<String[]> {
     }
 
     /**
-     * Used for debugging purposes this method returns the number of records that has been read from
-     * the CSVReader.
-     * <p/>
-     * Given the following data.
-     * <code><pre>
+     * Used for debugging purposes, this method returns the number of records
+     * that has been read from the CSVReader.
+     * <p>
+     * Given the following data:</p>
+     * <pre>
      * First line in the file
      * some other descriptive line
      * a,b,c
-     * <p/>
      * a,"b\nb",c
-     * </pre></code>
-     * With a CSVReader constructed like so
-     * <code><pre>
-     * CSVReader c = builder.withCSVParser(new CSVParser())
-     *                      .withSkipLines(2)
-     *                      .build();
-     * </pre></code>
-     * The initial call to getRecordsRead will be 0.<br>
-     * After the first call to readNext() then getRecordsRead will return 1.<br>
-     * After the second call to read the blank line then getRecordsRead will return 2
-     * (a blank line is considered a record with one empty field).<br>
-     * After third call to readNext getRecordsRead will return 3 because even though
-     * reads to retrieve this record it is still a single record read.<br>
-     * Subsequent calls to readNext (since we are out of data) will not increment the number of records read.<br>
-     * <p/>
+     * </pre><p>
+     * With a CSVReader constructed like so:<br>
+     * <code>
+     * CSVReader c = builder.withCSVParser(new CSVParser())<br>
+     *                      .withSkipLines(2)<br>
+     *                      .build();<br>
+     * </code><br>
+     * The initial call to getRecordsRead() will be 0. After the first call to
+     * readNext() then getRecordsRead() will return 1. After the second call to
+     * read the blank line then getRecordsRead() will return 2 (a blank line is
+     * considered a record with one empty field). After third call to readNext()
+     * getRecordsRead() will return 3 because even though it reads to retrieve
+     * this record, it is still a single record read. Subsequent calls to
+     * readNext() (since we are out of data) will not increment the number of
+     * records read.
+     * </p>
+     * <p>
      * An example of this is in the linesAndRecordsRead() test in CSVReaderTest.
+     * </p>
      *
-     * @return the number of records (Array of Strings[]) read by the reader.
-     * @link https://sourceforge.net/p/opencsv/feature-requests/73/
+     * @return The number of records (array of Strings[]) read by the reader.
+     * @see <a href="https://sourceforge.net/p/opencsv/feature-requests/73/">Feature Request 73</a>
      * @since 3.6
      */
     public long getRecordsRead() {

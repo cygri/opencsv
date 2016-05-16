@@ -1,14 +1,14 @@
 package com.opencsv.bean;
 
-/**
+/*
  * Copyright 2015 Bytecode Pty Ltd.
- * <p/>
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,24 +29,25 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Converts CSV strings to objects.  Unlike CsvToBean it returns a single record at a time.
+ * Converts CSV strings to objects.
+ * Unlike CsvToBean it returns a single record at a time.
  *
- * @param <T> - class to convert the objects to.
+ * @param <T> Class to convert the objects to.
  */
 
 public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<T> {
-    private MappingStrategy<T> strategy;
-    private CSVReader csvReader;
-    private CsvToBeanFilter filter;
+    private final MappingStrategy<T> strategy;
+    private final CSVReader csvReader;
+    private final CsvToBeanFilter filter;
     private Map<Class<?>, PropertyEditor> editorMap = null;
     private boolean hasHeader;
 
     /**
      * IterableCSVToBean constructor
      *
-     * @param csvReader - CSVReader.  Should not be null.
-     * @param strategy  - MappingStrategy used to map csv data to the bean.  Should not be null.
-     * @param filter    - Optional CsvToBeanFilter used remove unwanted data from reads.
+     * @param csvReader CSVReader.  Should not be null.
+     * @param strategy  MappingStrategy used to map CSV data to the bean.  Should not be null.
+     * @param filter    Optional CsvToBeanFilter used remove unwanted data from reads.
      */
     public IterableCSVToBean(CSVReader csvReader, MappingStrategy<T> strategy, CsvToBeanFilter filter) {
         this.csvReader = csvReader;
@@ -56,25 +57,25 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
     }
 
     /**
-     * retrieves the MappingStrategy.
-     * @return - the MappingStrategy being used by the IterableCSVToBean.
+     * Retrieves the MappingStrategy.
+     * @return The MappingStrategy being used by the IterableCSVToBean.
      */
     protected MappingStrategy<T> getStrategy() {
         return strategy;
     }
 
     /**
-     * retrieves the CSVReader.
-     * @return - the CSVReader being used by the IterableCSVToBean.
+     * Retrieves the CSVReader.
+     * @return The CSVReader being used by the IterableCSVToBean.
      */
     protected CSVReader getCSVReader() {
         return csvReader;
     }
 
     /**
-     * retrieves the CsvToBeanFilter
+     * Retrieves the CsvToBeanFilter
      *
-     * @return - the CsvToBeanFilter being used by the IterableCSVToBean.
+     * @return The CsvToBeanFilter being used by the IterableCSVToBean.
      */
     protected CsvToBeanFilter getFilter() {
         return filter;
@@ -82,14 +83,16 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
 
     /**
      * Reads and processes a single line.
-     * @return Object of type T with the requested information or null if there is no more lines to process.
-     * @throws IllegalAccessException -  thrown if there is an failure in Introspection.
-     * @throws InstantiationException - thrown when getting the PropertyDescriptor for the class.
-     * @throws IOException - thrown when there is an unexpected error reading the file.
-     * @throws IntrospectionException -  thrown if there is an failure in Introspection.
-     * @throws InvocationTargetException  -  thrown if there is an failure in Introspection.
+     * @return Object of type T with the requested information or null if there
+     *   are no more lines to process.
+     * @throws IllegalAccessException Thrown if there is a failure in introspection.
+     * @throws InstantiationException Thrown when getting the PropertyDescriptor for the class.
+     * @throws IOException Thrown when there is an unexpected error reading the file.
+     * @throws IntrospectionException Thrown if there is a failure in introspection.
+     * @throws InvocationTargetException Thrown if there is a failure in introspection.
      */
-    public T nextLine() throws IllegalAccessException, InstantiationException, IOException, IntrospectionException, InvocationTargetException {
+    public T nextLine() throws IllegalAccessException, InstantiationException,
+            IOException, IntrospectionException, InvocationTargetException {
         if (!hasHeader) {
             strategy.captureHeader(csvReader);
             hasHeader = true;
@@ -113,14 +116,7 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
         return bean;
     }
 
-    /**
-     * Attempt to find custom property editor on descriptor first, else try the propery editor manager.
-     *
-     * @param desc - PropertyDescriptor.
-     * @return - the PropertyEditor for the given PropertyDescriptor.
-     * @throws InstantiationException - thrown when getting the PropertyEditor for the class.
-     * @throws IllegalAccessException - thrown when getting the PropertyEditor for the class.
-     */
+    @Override
     protected PropertyEditor getPropertyEditor(PropertyDescriptor desc) throws InstantiationException, IllegalAccessException {
         Class<?> cls = desc.getPropertyEditorClass();
         if (null != cls) {
@@ -128,6 +124,7 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
         }
         return getPropertyEditorValue(desc.getPropertyType());
     }
+
 
     private PropertyEditor getPropertyEditorValue(Class<?> cls) {
         if (editorMap == null) {
@@ -167,15 +164,9 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
 
                 try {
                     nextBean = bean.nextLine();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (IntrospectionException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InstantiationException |
+                        IOException | IntrospectionException |
+                        InvocationTargetException e) {
                     e.printStackTrace();
                 }
 

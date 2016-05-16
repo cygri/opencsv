@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,25 +21,25 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import java.io.Reader;
 
 /**
- * Builder for creating a CSVReader.  This should be the preferred method of
- * creating a Reader as there are so many possible values to be set it is
- * impossible to have constructors for all of them and keep backwards
- * compatibility with previous constructors.
+ * Builder for creating a CSVReader.
+ * <p>This should be the preferred method of creating a Reader as there are so many
+ * possible values to be set it is impossible to have constructors for all of
+ * them and keep backwards compatibility with previous constructors.<br>
  *
  * <code>
- * final CSVParser parser =
- * new CSVParserBuilder()
- * .withSeparator('\t')
- * .withIgnoreQuotations(true)
- * .build();
- * final CSVReader reader =
- * new CSVReaderBuilder(new StringReader(csv))
- * .withSkipLines(1)
- * .withCSVParser(parser)
- * .build();
- * </code>
+ * final CSVParser parser =<br>
+ * new CSVParserBuilder()<br>
+ * .withSeparator('\t')<br>
+ * .withIgnoreQuotations(true)<br>
+ * .build();<br>
+ * final CSVReader reader =<br>
+ * new CSVReaderBuilder(new StringReader(csv))<br>
+ * .withSkipLines(1)<br>
+ * .withCSVParser(parser)<br>
+ * .build();<br>
+ * </code></p>
  *
- * @see CSVReader
+ * @see com.opencsv.CSVReader
  */
 public class CSVReaderBuilder {
 
@@ -54,7 +54,7 @@ public class CSVReaderBuilder {
    /**
     * Sets the reader to an underlying CSV source.
     *
-    * @param reader the reader to an underlying CSV source.
+    * @param reader The reader to an underlying CSV source.
     */
    public CSVReaderBuilder(
          final Reader reader) {
@@ -67,14 +67,14 @@ public class CSVReaderBuilder {
     /**
      * Used by unit tests.
      *
-     * @return the reader.
+     * @return The reader.
      */
     protected Reader getReader() {
         return reader;
     }
 
     /**
-     * used by unit tests.
+     * Used by unit tests.
      *
      * @return The set number of lines to skip
      */
@@ -83,19 +83,19 @@ public class CSVReaderBuilder {
     }
 
     /**
-     * used by unit tests.
+     * Used by unit tests.
      *
-     * @return the csvParser used by the builder.
+     * @return The CSVParser used by the builder.
      */
     protected CSVParser getCsvParser() {
         return csvParser;
     }
 
     /**
-    * Sets the line number to skip for start reading.
+     * Sets the number of lines to skip before reading.
      *
-     * @param skipLines the line number to skip for start reading.
-     * @return the CSVReaderBuilder with skipLines set.
+     * @param skipLines The number of lines to skip before reading.
+     * @return The CSVReaderBuilder with skipLines set.
     */
     public CSVReaderBuilder withSkipLines(
          final int skipLines) {
@@ -107,8 +107,8 @@ public class CSVReaderBuilder {
     /**
      * Sets the parser to use to parse the input.
      *
-     * @param csvParser the parser to use to parse the input.
-     * @return the CSVReaderBuilder with the CSVParser set.
+     * @param csvParser The parser to use to parse the input.
+     * @return The CSVReaderBuilder with the CSVParser set.
     */
     public CSVReaderBuilder withCSVParser(
          final /*@Nullable*/ CSVParser csvParser) {
@@ -119,7 +119,7 @@ public class CSVReaderBuilder {
 
     /**
      * Creates the CSVReader.
-     * @return the CSVReader based on the set criteria.
+     * @return The CSVReader based on the set criteria.
      */
     public CSVReader build() {
       final CSVParser parser =
@@ -130,8 +130,8 @@ public class CSVReaderBuilder {
     /**
      * Sets if the reader will keep or discard carriage returns.
      *
-     * @param keepCR - true to keep carriage returns, false to discard.
-     * @return the CSVReaderBuilder based on the set criteria.
+     * @param keepCR True to keep carriage returns, false to discard.
+     * @return The CSVReaderBuilder based on the set criteria.
      */
     public CSVReaderBuilder withKeepCarriageReturn(boolean keepCR) {
         this.keepCR = keepCR;
@@ -141,21 +141,22 @@ public class CSVReaderBuilder {
     /**
      * Returns if the reader built will keep or discard carriage returns.
      *
-     * @return true if the reader built will keep carriage returns, false otherwise.
+     * @return True if the reader built will keep carriage returns, false otherwise.
      */
     protected boolean keepCarriageReturn() {
         return this.keepCR;
     }
 
     /**
-     * Checks to see if the CSVReader should verify the reader state before reads or not.
+     * Checks to see if the CSVReader should verify the reader state before
+     * reads or not.
      *
-     * This should be set to false if you are using some form of asynchronous reader (like readers created
-     * by the java.nio.* classes).
+     * <p>This should be set to false if you are using some form of asynchronous
+     * reader (like readers created by the java.nio.* classes).</p>
      *
-     * The default value is true.
+     * <p>The default value is true.</p>
      *
-     * @param verifyReader true if CSVReader should verify reader before each read, false otherwise.
+     * @param verifyReader True if CSVReader should verify reader before each read, false otherwise.
      * @return The CSVReaderBuilder based on this criteria.
      */
     public CSVReaderBuilder withVerifyReader(boolean verifyReader) {
@@ -164,9 +165,9 @@ public class CSVReaderBuilder {
     }
 
     /**
-     * Checks to see if it should treat an field with two separators, two quotes, or both as a null field.
+     * Checks to see if it should treat a field with two separators, two quotes, or both as a null field.
      *
-     * @param indicator - CSVReaderNullFieldIndicator set to what should be considered a null field.
+     * @param indicator CSVReaderNullFieldIndicator set to what should be considered a null field.
      * @return The CSVReaderBuilder based on this criteria.
      */
     public CSVReaderBuilder withFieldAsNull(CSVReaderNullFieldIndicator indicator) {

@@ -19,6 +19,7 @@ package integrationTest.issue3402853;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -32,16 +33,18 @@ public class HeaderColumnNameMappingStrategyUserTest {
 
    private static final String USER_FILE = "src/test/java/integrationTest/issue3402853/user.csv";
 
-   private List<MockUserBean> createTestParseResult() throws FileNotFoundException {
+   private List<MockUserBean> createTestParseResult() throws FileNotFoundException,
+           CsvBadConverterException {
       CSVReader reader = new CSVReader(new FileReader(USER_FILE));
-       HeaderColumnNameMappingStrategy<MockUserBean> strat = new HeaderColumnNameMappingStrategy<MockUserBean>();
+      HeaderColumnNameMappingStrategy<MockUserBean> strat = new HeaderColumnNameMappingStrategy<>();
       strat.setType(MockUserBean.class);
-       CsvToBean<MockUserBean> csv = new CsvToBean<MockUserBean>();
+      CsvToBean<MockUserBean> csv = new CsvToBean<>();
       return csv.parse(strat, reader);
    }
 
    @Test
-   public void testParse() throws FileNotFoundException {
+   public void testParse() throws FileNotFoundException,
+           CsvBadConverterException {
       List<MockUserBean> list = createTestParseResult();
       assertNotNull(list);
       assertEquals(2, list.size());

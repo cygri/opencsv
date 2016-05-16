@@ -13,4 +13,5 @@
     <suppress files="." checks="AvoidStarImport"/>
     <suppress files="." checks="NewlineAtEndOfFile"/>
     <suppress files="." checks="RegexpSingleline"/>
+    <suppress files="." checks="VisibilityModifierCheck"/>
 </suppressions>

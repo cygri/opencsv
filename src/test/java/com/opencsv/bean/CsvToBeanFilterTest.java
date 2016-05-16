@@ -1,6 +1,7 @@
 package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
@@ -24,7 +25,7 @@ public class CsvToBeanFilterTest {
       return new CSVReader(reader);
    }
 
-   private MappingStrategy CreateMappingStrategy() {
+   private MappingStrategy CreateMappingStrategy() throws CsvBadConverterException {
       HeaderColumnNameTranslateMappingStrategy<Feature> strategy = new HeaderColumnNameTranslateMappingStrategy();
       Map<String, String> columnMap = new HashMap();
       columnMap.put("FEATURE_NAME", "name");
@@ -63,6 +64,7 @@ public class CsvToBeanFilterTest {
          this.strategy = strategy;
       }
 
+      @Override
       public boolean allowLine(String[] line) {
          int index = strategy.getColumnIndex("STATE");
          String value = line[index];
@@ -73,7 +75,7 @@ public class CsvToBeanFilterTest {
    }
 
    @Test
-   public void testColumnNameTranslationWithLineFiltering() {
+   public void testColumnNameTranslationWithLineFiltering() throws CsvBadConverterException {
       CsvToBean csvToBean = new CsvToBean();
       CSVReader reader = createReader();
       MappingStrategy strategy = CreateMappingStrategy();
@@ -86,7 +88,7 @@ public class CsvToBeanFilterTest {
       assertEquals("The second item has the wrong state.", "alpha", list.get(1).getState());
    }
 
-   public List<Feature> parseCsv(InputStreamReader streamReader) {
+   public List<Feature> parseCsv(InputStreamReader streamReader) throws CsvBadConverterException {
       HeaderColumnNameTranslateMappingStrategy<Feature> strategy = new HeaderColumnNameTranslateMappingStrategy();
       Map<String, String> columnMap = new HashMap();
       columnMap.put("FEATURE_NAME", "name");

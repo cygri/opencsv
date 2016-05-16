@@ -6,6 +6,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
+import com.opencsv.exceptions.CsvBadConverterException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -92,7 +93,7 @@ public class CsvSample {
     * @throws FileNotFoundException
     */
    protected void testMappingStrategyRead(String originalCommentText)
-         throws FileNotFoundException {
+           throws FileNotFoundException, CsvBadConverterException {
       ColumnPositionMappingStrategy mappingStrategy = new ColumnPositionMappingStrategy();
       mappingStrategy.setType(MyBean.class);
       String[] columns = new String[]{"name", "value", "amount1", "currency", "comments"}; // the fields to bind to in your JavaBean

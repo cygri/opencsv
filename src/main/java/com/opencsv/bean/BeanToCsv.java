@@ -1,6 +1,6 @@
 package com.opencsv.bean;
 
-/**
+/*
  Copyright 2007 Kyle Miller.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,26 +27,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Allows to export Java beans content to a new CSV spreadsheet file.
+ * Allows exporting content from Java beans to a new CSV spreadsheet file.
  *
  * @author Kali &lt;kali.tystrit@gmail.com&gt;
- * @param <T> - Type of object that is being processed.
+ * @param <T> Type of object that is being processed.
  */
 public class BeanToCsv<T> {
 
     /**
-     * default constructor.
+     * Default constructor.
      */
     public BeanToCsv() {
     }
 
     /**
-     * Writes all the objects, one at a time, to a created csvWriter using the passed in Strategy.
+     * Writes all the objects, one at a time, to a created CSVWriter using the
+     * passed in Strategy.
      *
-     * @param mapper  - Mapping strategy for the bean.
-     * @param writer  - Writer object used to construct the CSVWriter.
-     * @param objects - list of objects to write.
-     * @return - false if there are no objects to process, true otherwise.
+     * @param mapper  Mapping strategy for the bean.
+     * @param writer  Writer object used to construct the CSVWriter.
+     * @param objects List of objects to write.
+     * @return False if there are no objects to process, true otherwise.
      */
     public boolean write(MappingStrategy<T> mapper, Writer writer,
                          List<?> objects) {
@@ -54,11 +55,12 @@ public class BeanToCsv<T> {
     }
 
     /**
-     * Writes all the objects, one at a time, to the csvWriter using the passed in Strategy.
-     * @param mapper - Mapping strategy for the bean.
-     * @param csv - CSVWriter
-     * @param objects - list of objects to write.
-     * @return - false if there are no objects to process, true otherwise.
+     * Writes all the objects, one at a time, to the CSVWriter using the passed
+     * in Strategy.
+     * @param mapper Mapping strategy for the bean.
+     * @param csv CSVWriter
+     * @param objects List of objects to write.
+     * @return False if there are no objects to process, true otherwise.
      */
     public boolean write(MappingStrategy<T> mapper, CSVWriter csv, List<?> objects) {
         if (objects == null || objects.isEmpty()) {
@@ -77,12 +79,12 @@ public class BeanToCsv<T> {
 
     /**
      * Processes a list of objects.
-     * @param csv - csvWriter
-     * @param objects - list of objects to process
-     * @param getters - list of getter methods to retrieve the data from the objects.
-     * @throws IntrospectionException -  thrown if there is an failure in Introspection.
-     * @throws IllegalAccessException -  thrown if there is an failure in Introspection.
-     * @throws InvocationTargetException -  thrown if there is an failure in Introspection.
+     * @param csv CSVWriter
+     * @param objects List of objects to process
+     * @param getters List of getter methods to retrieve the data from the objects.
+     * @throws IntrospectionException Thrown if there is a failure in introspection.
+     * @throws IllegalAccessException Thrown if there is a failure in introspection.
+     * @throws InvocationTargetException Thrown if there is a failure in introspection.
      */
     private void processAndWriteObjects(CSVWriter csv, List<?> objects, List<Method> getters) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
         for (Object obj : objects) {
@@ -93,12 +95,12 @@ public class BeanToCsv<T> {
 
     /**
      * Processes the header for the bean.
-     * @param mapper  MappingStrategy for Bean
+     * @param mapper MappingStrategy for the bean
      * @return String array with header values.
-     * @throws IntrospectionException -  thrown if there is an failure in Introspection.
+     * @throws IntrospectionException Thrown if there is a failure in introspection.
      */
     protected String[] processHeader(MappingStrategy<T> mapper) throws IntrospectionException {
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         int i = 0;
         PropertyDescriptor prop = mapper.findDescriptor(i);
         while (prop != null) {
@@ -111,16 +113,16 @@ public class BeanToCsv<T> {
 
     /**
      * Retrieve all the information out of an object.
-     * @param getters - List of methods to retrieve information.
-     * @param bean - object to get the information from.
+     * @param getters List of methods to retrieve information.
+     * @param bean Object to get the information from.
      * @return String array containing the information from the object
-     * @throws IntrospectionException - thrown by error in introspection.
-     * @throws IllegalAccessException - thrown by error in introspection.
-     * @throws InvocationTargetException - thrown by error in introspection.
+     * @throws IntrospectionException Thrown by error in introspection.
+     * @throws IllegalAccessException Thrown by error in introspection.
+     * @throws InvocationTargetException Thrown by error in introspection.
      */
     protected String[] processObject(List<Method> getters, Object bean) throws IntrospectionException,
             IllegalAccessException, InvocationTargetException {
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         // retrieve bean values
         for (Method getter : getters) {
             Object value = getter.invoke(bean, (Object[]) null);
@@ -135,16 +137,16 @@ public class BeanToCsv<T> {
 
     /**
      * Build getters list from provided mapper.
-     * @param mapper MappingStrategy for Bean
-     * @return - list of methods for getting the data in the bean.
-     * @throws IntrospectionException - thrown if there is an failure in Introspection.
+     * @param mapper MappingStrategy for the bean
+     * @return List of methods for getting the data in the bean.
+     * @throws IntrospectionException Thrown if there is a failure in introspection.
      */
     private List<Method> findGetters(MappingStrategy<T> mapper)
             throws IntrospectionException {
         int i = 0;
         PropertyDescriptor prop = mapper.findDescriptor(i);
         // build getters methods list
-        List<Method> readers = new ArrayList<Method>();
+        List<Method> readers = new ArrayList<>();
         while (prop != null) {
             readers.add(prop.getReadMethod());
             i++;

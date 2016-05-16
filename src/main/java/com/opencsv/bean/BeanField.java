@@ -1,79 +1,51 @@
 package com.opencsv.bean;
 
-import org.apache.commons.lang3.StringUtils;
+import com.opencsv.exceptions.CsvConstraintViolationException;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import java.lang.reflect.Field;
 
 /**
- * Used to extend the Field class to add a required flag.  This flag determines if the field has to have information,
- * or in the case of the String class cannot be an empty String.
+ * Used to extend the Field class to add a required flag.
+ * This flag determines if the field has to have information, or in the case of
+ * the String class cannot be an empty String.
+ *
+ * @param <T> Type of the bean being populated
  */
-public class BeanField {
-   private final Field field;
-   private final boolean required;
+public interface BeanField<T> {
 
-   /**
-    * @param field    - A java.lang.reflect.Field object.
-    * @param required - true if the field is required to contain a value, false if it is allowed to be null or blank String.
-    */
-   public BeanField(Field field, boolean required) {
-      this.field = field;
-      this.required = required;
-   }
+    /**
+     * Sets the field to be processed.
+     *
+     * @param field Which field is being populated
+     */
+    void setField(Field field);
 
-   /**
-    * @return - a field object
-    * @see java.lang.reflect.Field
-    */
-   public Field getField() {
-      return this.field;
-   }
+    /**
+     * Gets the field to be processed.
+     *
+     * @return A field object
+     * @see java.lang.reflect.Field
+     */
+    Field getField();
 
-   /**
-    *
-    * @return - true if the field is required to be set (cannot be null or empty string), false otherwise.
-    */
-   public boolean isRequired() {
-      return this.required;
-   }
-
-   /**
-    *
-    * @param bean - Object containing the field to be set.
-    * @param value - String containing the value to set the field to.
-    * @param <T> - Type of the bean.
-    * @throws IllegalAccessException - Thrown on reflection error.
-    */
-   public <T> void setFieldValue(T bean, String value) throws IllegalAccessException {
-      if (required && StringUtils.isBlank(value)) {
-         throw new IllegalStateException(String.format("Field '%s' is mandatory but no value was provided.", field.getName()));
-      }
-
-      if (StringUtils.isNotBlank(value)) {
-         Class<?> fieldType = field.getType();
-         field.setAccessible(true);
-         if (fieldType.equals(Boolean.TYPE)) {
-            field.setBoolean(bean, Boolean.valueOf(value.trim()));
-         } else if (fieldType.equals(Byte.TYPE)) {
-            field.setByte(bean, Byte.valueOf(value.trim()));
-         } else if (fieldType.equals(Double.TYPE)) {
-            field.setDouble(bean, Double.valueOf(value.trim()));
-         } else if (fieldType.equals(Float.TYPE)) {
-            field.setFloat(bean, Float.valueOf(value.trim()));
-         } else if (fieldType.equals(Integer.TYPE)) {
-            field.setInt(bean, Integer.parseInt(value.trim()));
-         } else if (fieldType.equals(Long.TYPE)) {
-            field.setLong(bean, Long.parseLong(value.trim()));
-         } else if (fieldType.equals(Short.TYPE)) {
-            field.setShort(bean, Short.valueOf(value.trim()));
-         } else if (fieldType.equals(Character.TYPE)) {
-            field.setChar(bean, value.charAt(0));
-         } else if (fieldType.isAssignableFrom(String.class)) {
-            field.set(bean, value);
-         } else {
-            throw new IllegalStateException(String.format("Unable to set field value for field '%s' with value '%s' " +
-                    "- type is unsupported. Use primitive and String types only.", fieldType, value));
-         }
-      }
-   }
+    /**
+     * Populates the selected field of the bean.
+     * This method performs conversion on the input string and assigns the
+     * result to the proper field in the provided bean.
+     *
+     * @param bean  Object containing the field to be set.
+     * @param value String containing the value to set the field to.
+     * @param <T>   Type of the bean.
+     * @throws CsvDataTypeMismatchException    When the result of data conversion returns
+     *                                         an object that cannot be assigned to the selected field
+     * @throws CsvRequiredFieldEmptyException  When a field is mandatory, but there is no
+     *                                         input datum in the CSV file
+     * @throws CsvConstraintViolationException When the internal structure of
+     *                                         data would be violated by the data in the CSV file
+     */
+    <T> void setFieldValue(T bean, String value)
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException,
+            CsvConstraintViolationException;
 }

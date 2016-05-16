@@ -3,7 +3,7 @@ package com.opencsv.bean;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
+/*
  * Copyright 2007,2010 Kyle Miller.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,34 +20,32 @@ import java.util.Map;
  */
 
 /**
- * Expands on HeaderColumnNameMappingStrategy by allowing the user to pass in a map of column names to
- * bean names.  This way the fields in the bean do not have to match the fields in the csv file.
+ * Expands on HeaderColumnNameMappingStrategy by allowing the user to pass in a
+ * map of column names to bean names.
+ * This way the fields in the bean do not have to match the fields in the CSV
+ * file. This is only for when the user passes in the header names
+ * programmatically, and not for annotated beans.
  *
- * @param <T> - class to be mapped.
+ * @param <T> Class to be mapped.
  */
 public class HeaderColumnNameTranslateMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
-   private Map<String, String> columnMapping = new HashMap<String, String>();
+   private final Map<String, String> columnMapping;
 
    /**
     * Default constructor.
     */
    public HeaderColumnNameTranslateMappingStrategy() {
+      columnMapping = new HashMap<>();
    }
 
-   /**
-    * Retrieves the column name for a given column position
-    *
-    * @param col - column position.
-    * @return - The column name.
-    */
    @Override
    public String getColumnName(int col) {
       return col < header.length ? columnMapping.get(header[col].toUpperCase()) : null;
    }
 
    /**
-    * retrieves the column mappings of the strategy.
-    * @return - the column mappings of the strategy.
+    * Retrieves the column mappings of the strategy.
+    * @return The column mappings of the strategy.
     */
    public Map<String, String> getColumnMapping() {
       return columnMapping;
@@ -55,7 +53,7 @@ public class HeaderColumnNameTranslateMappingStrategy<T> extends HeaderColumnNam
 
    /**
     * Sets the column mapping to those passed in.
-    * @param columnMapping - source column mapping.
+    * @param columnMapping Source column mapping.
     */
    public void setColumnMapping(Map<String, String> columnMapping) {
       this.columnMapping.clear();

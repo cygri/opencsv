@@ -1,6 +1,6 @@
 package com.opencsv;
 
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,7 @@ public class CSVParser {
      */
     public static final char DEFAULT_SEPARATOR = ',';
     /**
-     * The average size of a line read by openCSV (used for setting the size of StringBuilders).
+     * The average size of a line read by opencsv (used for setting the size of StringBuilders).
      */
     public static final int INITIAL_READ_SIZE = 1024;
     /**
@@ -118,7 +118,7 @@ public class CSVParser {
     /**
      * Constructs CSVParser with supplied separator.
      *
-     * @param separator the delimiter to use for separating entries.
+     * @param separator The delimiter to use for separating entries.
      */
     public CSVParser(char separator) {
         this(separator, DEFAULT_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER);
@@ -128,19 +128,19 @@ public class CSVParser {
     /**
      * Constructs CSVParser with supplied separator and quote char.
      *
-     * @param separator the delimiter to use for separating entries
-     * @param quotechar the character to use for quoted elements
+     * @param separator The delimiter to use for separating entries
+     * @param quotechar The character to use for quoted elements
      */
     public CSVParser(char separator, char quotechar) {
         this(separator, quotechar, DEFAULT_ESCAPE_CHARACTER);
     }
 
     /**
-     * Constructs CSVReader with supplied separator and quote char.
+     * Constructs CSVParser with supplied separator and quote char.
      *
-     * @param separator the delimiter to use for separating entries
-     * @param quotechar the character to use for quoted elements
-     * @param escape    the character to use for escaping a separator or quote
+     * @param separator The delimiter to use for separating entries
+     * @param quotechar The character to use for quoted elements
+     * @param escape    The character to use for escaping a separator or quote
      */
     public CSVParser(char separator, char quotechar, char escape) {
         this(separator, quotechar, escape, DEFAULT_STRICT_QUOTES);
@@ -148,12 +148,12 @@ public class CSVParser {
 
     /**
      * Constructs CSVParser with supplied separator and quote char.
-     * Allows setting the "strict quotes" flag
+     * Allows setting the "strict quotes" flag.
      *
-     * @param separator    the delimiter to use for separating entries
-     * @param quotechar    the character to use for quoted elements
-     * @param escape       the character to use for escaping a separator or quote
-     * @param strictQuotes if true, characters outside the quotes are ignored
+     * @param separator    The delimiter to use for separating entries
+     * @param quotechar    The character to use for quoted elements
+     * @param escape       The character to use for escaping a separator or quote
+     * @param strictQuotes If true, characters outside the quotes are ignored
      */
     public CSVParser(char separator, char quotechar, char escape, boolean strictQuotes) {
         this(separator, quotechar, escape, strictQuotes, DEFAULT_IGNORE_LEADING_WHITESPACE);
@@ -161,13 +161,13 @@ public class CSVParser {
 
     /**
      * Constructs CSVParser with supplied separator and quote char.
-     * Allows setting the "strict quotes" and "ignore leading whitespace" flags
+     * Allows setting the "strict quotes" and "ignore leading whitespace" flags.
      *
-     * @param separator               the delimiter to use for separating entries
-     * @param quotechar               the character to use for quoted elements
-     * @param escape                  the character to use for escaping a separator or quote
-     * @param strictQuotes            if true, characters outside the quotes are ignored
-     * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
+     * @param separator               The delimiter to use for separating entries
+     * @param quotechar               The character to use for quoted elements
+     * @param escape                  The character to use for escaping a separator or quote
+     * @param strictQuotes            If true, characters outside the quotes are ignored
+     * @param ignoreLeadingWhiteSpace If true, white space in front of a quote in a field is ignored
      */
     public CSVParser(char separator, char quotechar, char escape, boolean strictQuotes, boolean ignoreLeadingWhiteSpace) {
         this(separator, quotechar, escape, strictQuotes, ignoreLeadingWhiteSpace, DEFAULT_IGNORE_QUOTATIONS);
@@ -175,14 +175,14 @@ public class CSVParser {
 
     /**
      * Constructs CSVParser with supplied separator and quote char.
-     * Allows setting the "strict quotes" and "ignore leading whitespace" flags
+     * Allows setting the "strict quotes" and "ignore leading whitespace" flags.
      *
-     * @param separator               the delimiter to use for separating entries
-     * @param quotechar               the character to use for quoted elements
-     * @param escape                  the character to use for escaping a separator or quote
-     * @param strictQuotes            if true, characters outside the quotes are ignored
-     * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
-     * @param ignoreQuotations        if true, treat quotations like any other character.
+     * @param separator               The delimiter to use for separating entries
+     * @param quotechar               The character to use for quoted elements
+     * @param escape                  The character to use for escaping a separator or quote
+     * @param strictQuotes            If true, characters outside the quotes are ignored
+     * @param ignoreLeadingWhiteSpace If true, white space in front of a quote in a field is ignored
+     * @param ignoreQuotations        If true, treat quotations like any other character.
      */
     public CSVParser(char separator, char quotechar, char escape, boolean strictQuotes, boolean ignoreLeadingWhiteSpace,
                      boolean ignoreQuotations) {
@@ -191,15 +191,15 @@ public class CSVParser {
 
     /**
      * Constructs CSVParser with supplied separator and quote char.
-     * Allows setting the "strict quotes" and "ignore leading whitespace" flags
+     * Allows setting the "strict quotes" and "ignore leading whitespace" flags.
      *
-     * @param separator               the delimiter to use for separating entries
-     * @param quotechar               the character to use for quoted elements
-     * @param escape                  the character to use for escaping a separator or quote
-     * @param strictQuotes            if true, characters outside the quotes are ignored
-     * @param ignoreLeadingWhiteSpace if true, white space in front of a quote in a field is ignored
-     * @param ignoreQuotations        if true, treat quotations like any other character.
-     * @param nullFieldIndicator      which field content will be returned as null: EMPTY_SEPARATORS, EMPTY_QUOTES,
+     * @param separator               The delimiter to use for separating entries
+     * @param quotechar               The character to use for quoted elements
+     * @param escape                  The character to use for escaping a separator or quote
+     * @param strictQuotes            If true, characters outside the quotes are ignored
+     * @param ignoreLeadingWhiteSpace If true, white space in front of a quote in a field is ignored
+     * @param ignoreQuotations        If true, treat quotations like any other character.
+     * @param nullFieldIndicator      Which field content will be returned as null: EMPTY_SEPARATORS, EMPTY_QUOTES,
      *                                BOTH, NEITHER (default)
      */
     CSVParser(char separator, char quotechar, char escape, boolean strictQuotes, boolean ignoreLeadingWhiteSpace,
@@ -256,61 +256,62 @@ public class CSVParser {
     }
 
     /**
-     * @return the default ignoreQuotation setting for this parser.
+     * @return The default ignoreQuotation setting for this parser.
      */
     public boolean isIgnoreQuotations() {
         return ignoreQuotations;
     }
 
     /**
-     * checks to see if any two of the three characters are the same.  This is because in openCSV the
-     * separator, quote, and escape characters must the different.
+     * Checks to see if any two of the three characters are the same.
+     * This is because in opencsv the separator, quote, and escape characters
+     * must the different.
      *
-     * @param separator the defined separator character
-     * @param quotechar the defined quotation cahracter
-     * @param escape    the defined escape character
-     * @return true if any two of the three are the same.
+     * @param separator The defined separator character
+     * @param quotechar The defined quotation cahracter
+     * @param escape    The defined escape character
+     * @return True if any two of the three are the same.
      */
     private boolean anyCharactersAreTheSame(char separator, char quotechar, char escape) {
         return isSameCharacter(separator, quotechar) || isSameCharacter(separator, escape) || isSameCharacter(quotechar, escape);
     }
 
     /**
-     * checks that the two characters are the same and are not the defined NULL_CHARACTER.
-     * @param c1 first character
-     * @param c2 second character
-     * @return true if both characters are the same and are not the defined NULL_CHARACTER
+     * Checks that the two characters are the same and are not the defined NULL_CHARACTER.
+     * @param c1 First character
+     * @param c2 Second character
+     * @return True if both characters are the same and are not the defined NULL_CHARACTER
      */
     private boolean isSameCharacter(char c1, char c2) {
         return c1 != NULL_CHARACTER && c1 == c2;
     }
 
     /**
-     * @return true if something was left over from last call(s)
+     * @return True if something was left over from last call(s)
      */
     public boolean isPending() {
         return pending != null;
     }
 
     /**
-     * Parses an incoming String and returns an array of elements.  This method is used when the
-     * data spans multiple lines.
+     * Parses an incoming String and returns an array of elements.
+     * This method is used when the data spans multiple lines.
      *
-     * @param nextLine current line to be processed
-     * @return the comma-tokenized list of elements, or null if nextLine is null
-     * @throws IOException if bad things happen during the read
+     * @param nextLine Current line to be processed
+     * @return The comma-tokenized list of elements, or null if nextLine is null
+     * @throws IOException If bad things happen during the read
      */
     public String[] parseLineMulti(String nextLine) throws IOException {
         return parseLine(nextLine, true);
     }
 
     /**
-     * Parses an incoming String and returns an array of elements.  This method is used when all data is contained
-     * in a single line.
+     * Parses an incoming String and returns an array of elements.
+     * This method is used when all data is contained in a single line.
      *
      * @param nextLine Line to be parsed.
-     * @return the comma-tokenized list of elements, or null if nextLine is null
-     * @throws IOException if bad things happen during the read
+     * @return The comma-tokenized list of elements, or null if nextLine is null
+     * @throws IOException If bad things happen during the read
      */
     public String[] parseLine(String nextLine) throws IOException {
         return parseLine(nextLine, false);
@@ -319,10 +320,10 @@ public class CSVParser {
     /**
      * Parses an incoming String and returns an array of elements.
      *
-     * @param nextLine the string to parse
+     * @param nextLine The string to parse
      * @param multi Does it take multiple lines to form a single record.
-     * @return the comma-tokenized list of elements, or null if nextLine is null
-     * @throws IOException if bad things happen during the read
+     * @return The comma-tokenized list of elements, or null if nextLine is null
+     * @throws IOException If bad things happen during the read
      */
     protected String[] parseLine(String nextLine, boolean multi) throws IOException {
 
@@ -340,7 +341,7 @@ public class CSVParser {
             }
         }
 
-        List<String> tokensOnThisLine = new ArrayList<String>();
+        List<String> tokensOnThisLine = new ArrayList<>();
         StringBuilder sb = new StringBuilder(nextLine.length() + READ_BUFFER_SIZE);
         boolean inQuotes = false;
         boolean fromQuotedField = false;
@@ -417,7 +418,6 @@ public class CSVParser {
 
         if (sb != null) {
             tokensOnThisLine.add(convertEmptyToNullIfNeeded(sb.toString(), fromQuotedField));
-            fromQuotedField = false;
         }
         return tokensOnThisLine.toArray(new String[tokensOnThisLine.size()]);
 
@@ -448,12 +448,12 @@ public class CSVParser {
     }
 
     /**
-     * Appends the next character in the line to the stringbuffer.
+     * Appends the next character in the line to the string buffer.
      *
-     * @param line - line to process
-     * @param sb   - contains the processed character
-     * @param i    - current position in the line.
-     * @return new position in the line.
+     * @param line Line to process
+     * @param sb Contains the processed character
+     * @param i Current position in the line.
+     * @return New position in the line.
      */
     private int appendNextCharacterAndAdvanceLoop(String line, StringBuilder sb, int i) {
         sb.append(line.charAt(i + 1));
@@ -464,8 +464,8 @@ public class CSVParser {
     /**
      * Determines if we can process as if we were in quotes.
      *
-     * @param inQuotes - are we currently in quotes.
-     * @return - true if we should process as if we are inside quotes.
+     * @param inQuotes Are we currently in quotes.
+     * @return True if we should process as if we are inside quotes.
      */
     private boolean inQuotes(boolean inQuotes) {
         return (inQuotes && !ignoreQuotations) || inField;
@@ -474,12 +474,12 @@ public class CSVParser {
     /**
      * Checks to see if the character after the index is a quotation character.
      *
-     * precondition: the current character is a quote or an escape
+     * Precondition: the current character is a quote or an escape.
      *
-     * @param nextLine the current line
-     * @param inQuotes true if the current context is quoted
-     * @param i        current index in line
-     * @return true if the following character is a quote
+     * @param nextLine The current line
+     * @param inQuotes True if the current context is quoted
+     * @param i        Current index in line
+     * @return True if the following character is a quote
      */
     private boolean isNextCharacterEscapedQuote(String nextLine, boolean inQuotes, int i) {
         return inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
@@ -490,45 +490,47 @@ public class CSVParser {
     /**
      * Checks to see if the passed in character is the defined quotation character.
      *
-     * @param c source character
-     * @return true if c is the defined quotation character
+     * @param c Source character
+     * @return True if c is the defined quotation character
      */
     private boolean isCharacterQuoteCharacter(char c) {
         return c == quotechar;
     }
 
     /**
-     * checks to see if the character is the defined escape character.
+     * Checks to see if the character is the defined escape character.
      *
-     * @param c source character
-     * @return true if the character is the defined escape character
+     * @param c Source character
+     * @return True if the character is the defined escape character
      */
     private boolean isCharacterEscapeCharacter(char c) {
         return c == escape;
     }
 
     /**
-     * Checks to see if the character passed in could be escapable.  Escapable characters for openCSV are the
-     * quotation character or the escape character.
+     * Checks to see if the character passed in could be escapable.
+     * Escapable characters for opencsv are the quotation character or the
+     * escape character.
      *
-     * @param c source character
-     * @return true if the character could be escapable.
+     * @param c Source character
+     * @return True if the character could be escapable.
      */
     private boolean isCharacterEscapable(char c) {
         return isCharacterQuoteCharacter(c) || isCharacterEscapeCharacter(c);
     }
 
     /**
-     * Checks to see if the character after the current index in a String is an escapable character.
-     * Meaning the next character is either a quotation character or the escape char and you are inside
-     * quotes.
+     * Checks to see if the character after the current index in a String is an
+     * escapable character.
+     * Meaning the next character is either a quotation character or the escape
+     * char and you are inside quotes.
      *
-     * precondition: the current character is an escape
+     * Precondition: the current character is an escape.
      *
-     * @param nextLine the current line
-     * @param inQuotes true if the current context is quoted
-     * @param i        current index in line
-     * @return true if the following character is a quote
+     * @param nextLine The current line
+     * @param inQuotes True if the current context is quoted
+     * @param i        Current index in line
+     * @return True if the following character is a quote
      */
     protected boolean isNextCharacterEscapable(String nextLine, boolean inQuotes, int i) {
         return inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
@@ -539,17 +541,17 @@ public class CSVParser {
     /**
      * Checks if every element is the character sequence is whitespace.
      *
-     * precondition: sb.length() is greater than 0
+     * Precondition: sb.length() is greater than 0.
      *
      * @param sb A sequence of characters to examine
-     * @return true if every character in the sequence is whitespace
+     * @return True if every character in the sequence is whitespace
      */
     protected boolean isAllWhiteSpace(CharSequence sb) {
         return StringUtils.isWhitespace(sb);
     }
 
     /**
-     * @return - the null field indicator.
+     * @return The null field indicator.
      */
     public CSVReaderNullFieldIndicator nullFieldIndicator() {
         return nullFieldIndicator;

@@ -1,5 +1,5 @@
 package com.opencsv;
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +15,20 @@ package com.opencsv;
  limitations under the License.
  */
 
+import org.apache.commons.lang3.text.StrBuilder;
+
 import java.io.IOException;
-import java.io.Reader;
-import java.math.BigDecimal;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * helper class for processing JDBC ResultSet objects.
+ * Helper class for processing JDBC ResultSet objects.
  */
 public class ResultSetHelperService implements ResultSetHelper {
-   public static final int CLOBBUFFERSIZE = 2048;
+   protected static final int CLOBBUFFERSIZE = 2048;
 
    // note: we want to maintain compatibility with Java 5 VM's
    // These types don't exist in Java 5
@@ -43,7 +44,7 @@ public class ResultSetHelperService implements ResultSetHelper {
    private String dateTimeFormat = DEFAULT_TIMESTAMP_FORMAT;
 
    /**
-    * Default Constructor.
+    * Default constructor.
     */
    public ResultSetHelperService() {
    }
@@ -51,7 +52,7 @@ public class ResultSetHelperService implements ResultSetHelper {
    /**
     * Set a default date format pattern that will be used by the service.
     *
-    * @param dateFormat - desired date format
+    * @param dateFormat Desired date format
     */
    public void setDateFormat(String dateFormat) {
       this.dateFormat = dateFormat;
@@ -60,80 +61,42 @@ public class ResultSetHelperService implements ResultSetHelper {
    /**
     * Set a default date time format pattern that will be used by the service.
     *
-    * @param dateTimeFormat - desired date time format
+    * @param dateTimeFormat Desired date time format
     */
    public void setDateTimeFormat(String dateTimeFormat) {
       this.dateTimeFormat = dateTimeFormat;
    }
 
-   private static String read(Clob c) throws SQLException, IOException {
-      StringBuilder sb = new StringBuilder((int) c.length());
-      Reader r = c.getCharacterStream();
-      char[] cbuf = new char[CLOBBUFFERSIZE];
-      int n;
-      while ((n = r.read(cbuf, 0, cbuf.length)) != -1) {
-         sb.append(cbuf, 0, n);
-      }
-      return sb.toString();
-   }
-
-   /**
-    * Returns the column names from the result set.
-    * @param rs - ResultSet
-    * @return - a string array containing the column names.
-    * @throws SQLException - thrown by the result set.
-    */
+   @Override
    public String[] getColumnNames(ResultSet rs) throws SQLException {
-      List<String> names = new ArrayList<String>();
+      List<String> names = new ArrayList<>();
       ResultSetMetaData metadata = rs.getMetaData();
 
-      for (int i = 0; i < metadata.getColumnCount(); i++) {
-         names.add(metadata.getColumnLabel(i + 1));
+      for (int i = 1; i <= metadata.getColumnCount(); i++) {
+         names.add(metadata.getColumnLabel(i));
       }
 
       String[] nameArray = new String[names.size()];
       return names.toArray(nameArray);
    }
 
-   /**
-    * Get all the column values from the result set.
-    * @param rs - the ResultSet containing the values.
-    * @return - String array containing all the column values.
-    * @throws SQLException - thrown by the result set.
-    * @throws IOException - thrown by the result set.
-    */
+   @Override
    public String[] getColumnValues(ResultSet rs) throws SQLException, IOException {
       return this.getColumnValues(rs, false, dateFormat, dateTimeFormat);
    }
 
-   /**
-    * Get all the column values from the result set.
-    * @param rs - the ResultSet containing the values.
-    * @param trim - values should have white spaces trimmed.
-    * @return - String array containing all the column values.
-    * @throws SQLException - thrown by the result set.
-    * @throws IOException - thrown by the result set.
-    */
+   @Override
    public String[] getColumnValues(ResultSet rs, boolean trim) throws SQLException, IOException {
       return this.getColumnValues(rs, trim, dateFormat, dateTimeFormat);
    }
 
-   /**
-    * Get all the column values from the result set.
-    * @param rs - the ResultSet containing the values.
-    * @param trim - values should have white spaces trimmed.
-    * @param dateFormatString - format String for dates.
-    * @param timeFormatString - format String for timestamps.
-    * @return - String array containing all the column values.
-    * @throws SQLException - thrown by the result set.
-    * @throws IOException - thrown by the result set.
-    */
+   @Override
    public String[] getColumnValues(ResultSet rs, boolean trim, String dateFormatString, String timeFormatString) throws SQLException, IOException {
-      List<String> values = new ArrayList<String>();
+      List<String> values = new ArrayList<>();
       ResultSetMetaData metadata = rs.getMetaData();
 
-      for (int i = 0; i < metadata.getColumnCount(); i++) {
-         values.add(getColumnValue(rs, metadata.getColumnType(i + 1), i + 1, trim, dateFormatString, timeFormatString));
+      for (int i = 1; i <= metadata.getColumnCount(); i++) {
+         values.add(getColumnValue(rs, metadata.getColumnType(i), i, trim, dateFormatString, timeFormatString));
       }
 
       String[] valueArray = new String[values.size()];
@@ -141,100 +104,10 @@ public class ResultSetHelperService implements ResultSetHelper {
    }
 
    /**
-    * changes an object to a String.
-    * @param obj - Object to format.
-    * @return - String value of an object or empty string if the object is null.
-    */
-   protected String handleObject(Object obj) {
-      return obj == null ? "" : String.valueOf(obj);
-   }
-
-   /**
-    * changes a BigDecimal to String.
-    * @param decimal - BigDecimal to format
-    * @return String representation of a BigDecimal or empty string if null
-    */
-   protected String handleBigDecimal(BigDecimal decimal) {
-      return decimal == null ? "" : decimal.toString();
-   }
-
-   /**
-    * changes a Double to String.
-    *
-    * @param decimal - Double to format
-    * @return String representation of a BigDecimal or empty string if null
-    */
-   protected String handleDouble(Double decimal) {
-      return decimal == null ? "" : decimal.toString();
-   }
-
-   /**
-    * changes a Float to String.
-    *
-    * @param decimal - Float to format
-    * @return String representation of a BigDecimal or empty string if null
-    */
-   protected String handleFloat(Float decimal) {
-      return decimal == null ? "" : decimal.toString();
-   }
-
-   /**
-    * Retrieves the string representation of an Long value from the result set.
-    * @param rs - Result set containing the data.
-    * @param columnIndex - index to the column of the long.
-    * @return - the string representation of the long
-    * @throws SQLException - thrown by the result set on error.
-    */
-   protected String handleLong(ResultSet rs, int columnIndex) throws SQLException {
-      long lv = rs.getLong(columnIndex);
-      return rs.wasNull() ? "" : Long.toString(lv);
-   }
-
-   /**
-    * Retrieves the string representation of an Integer value from the result set.
-    * @param rs - Result set containing the data.
-    * @param columnIndex - index to the column of the integer.
-    * @return - string representation of the Integer.
-    * @throws SQLException - returned from the result set on error.
-    */
-   protected String handleInteger(ResultSet rs, int columnIndex) throws SQLException {
-      int i = rs.getInt(columnIndex);
-      return rs.wasNull() ? "" : Integer.toString(i);
-   }
-
-   /**
-    * Retrieves a date from the result set.
-    * @param rs - Result set containing the data
-    * @param columnIndex - index to the column of the date
-    * @param dateFormatString - format for the date
-    * @return - formatted date.
-    * @throws SQLException - returned from the result set on error.
-    */
-   protected String handleDate(ResultSet rs, int columnIndex, String dateFormatString) throws SQLException {
-      java.sql.Date date = rs.getDate(columnIndex);
-      String value = null;
-      if (date != null) {
-         SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString);
-         value = dateFormat.format(date);
-      }
-      return value;
-   }
-
-   /**
-    * Return time read from ResultSet.
-    *
-    * @param time time read from ResultSet
-    * @return String version of time or null if time is null.
-    */
-   protected String handleTime(Time time) {
-      return time == null ? null : time.toString();
-   }
-
-   /**
     * The formatted timestamp.
-    * @param timestamp - timestamp read from resultset
-    * @param timestampFormatString - format string
-    * @return - formatted time stamp.
+    * @param timestamp Timestamp read from resultset
+    * @param timestampFormatString Format string
+    * @return Formatted time stamp.
     */
    protected String handleTimestamp(Timestamp timestamp, String timestampFormatString) {
       SimpleDateFormat timeFormat = new SimpleDateFormat(timestampFormatString);
@@ -249,43 +122,48 @@ public class ResultSetHelperService implements ResultSetHelper {
       switch (colType) {
          case Types.BIT:
          case Types.JAVA_OBJECT:
-            value = handleObject(rs.getObject(colIndex));
+            value = Objects.toString(rs.getObject(colIndex), "");
             break;
          case Types.BOOLEAN:
-            boolean b = rs.getBoolean(colIndex);
-            value = Boolean.valueOf(b).toString();
+            value = Objects.toString(rs.getBoolean(colIndex));
             break;
          case NCLOB: // todo : use rs.getNClob
          case Types.CLOB:
             Clob c = rs.getClob(colIndex);
             if (c != null) {
-               value = read(c);
+               StrBuilder sb = new StrBuilder();
+               sb.readFrom(c.getCharacterStream());
+               value = sb.toString();
             }
             break;
          case Types.BIGINT:
-            value = handleLong(rs, colIndex);
+            value = Objects.toString(rs.getLong(colIndex));
             break;
          case Types.DECIMAL:
          case Types.REAL:
          case Types.NUMERIC:
-            value = handleBigDecimal(rs.getBigDecimal(colIndex));
+            value = Objects.toString(rs.getBigDecimal(colIndex), "");
             break;
          case Types.DOUBLE:
-            value = handleDouble(rs.getDouble(colIndex));
+            value = Objects.toString(rs.getDouble(colIndex));
             break;
          case Types.FLOAT:
-            value = handleFloat(rs.getFloat(colIndex));
+            value = Objects.toString(rs.getFloat(colIndex));
             break;
          case Types.INTEGER:
          case Types.TINYINT:
          case Types.SMALLINT:
-            value = handleInteger(rs, colIndex);
+            value = Objects.toString(rs.getInt(colIndex));
             break;
          case Types.DATE:
-            value = handleDate(rs, colIndex, dateFormatString);
+            java.sql.Date date = rs.getDate(colIndex);
+            if (date != null) {
+               SimpleDateFormat df = new SimpleDateFormat(dateFormatString);
+               value = df.format(date);
+            }
             break;
          case Types.TIME:
-            value = handleTime(rs.getTime(colIndex));
+            value = Objects.toString(rs.getTime(colIndex), "");
             break;
          case Types.TIMESTAMP:
             value = handleTimestamp(rs.getTimestamp(colIndex), timestampFormatString);
@@ -308,7 +186,7 @@ public class ResultSetHelperService implements ResultSetHelper {
       }
 
 
-      if (value == null) {
+      if (rs.wasNull() || value == null) {
          value = "";
       }
 

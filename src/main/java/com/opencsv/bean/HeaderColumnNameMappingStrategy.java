@@ -1,6 +1,7 @@
 package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvBadConverterException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.beans.BeanInfo;
@@ -31,240 +32,269 @@ import java.util.Map;
  */
 
 /**
- * Maps data to objects using the column names in the first row of the csv
- * file as reference.  This way the column order does not matter.
+ * Maps data to objects using the column names in the first row of the CSV file
+ * as reference. This way the column order does not matter.
  *
- * @param <T>
+ * @param <T> Type of the bean to be returned
  */
-
 public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
-   protected String[] header;
-   protected Map<String, Integer> indexLookup = new HashMap<String, Integer>();
-   protected Map<String, PropertyDescriptor> descriptorMap = null;
-   protected Map<String, BeanField> fieldMap = null;
-   protected Class<T> type;
-   protected boolean annotationDriven;
-   protected boolean determinedIfAnnotationDriven;
 
-   /**
-    * Default constructor.
-    */
-   public HeaderColumnNameMappingStrategy() {
-   }
+    protected String[] header;
+    protected Map<String, Integer> indexLookup = new HashMap<>();
+    protected Map<String, PropertyDescriptor> descriptorMap = null;
+    protected Map<String, BeanField> fieldMap = null;
+    protected Class<T> type;
+    protected boolean annotationDriven;
 
-   /**
-    * Retrieves the header from the CSVReader.
-    *
-    * @param reader the CSVReader to use for header parsing
-    * @throws IOException - thrown on error reading from the CSVReader.
-    */
-   @Override
-   public void captureHeader(CSVReader reader) throws IOException {
-      header = reader.readNext();
-   }
+    /**
+     * Default constructor.
+     */
+    public HeaderColumnNameMappingStrategy() {
+    }
 
-   /**
-    * Creates an index map of column names to column position.
-    * @param values - array of header values.
-    */
-   protected void createIndexLookup(String[] values) {
-      if (indexLookup.isEmpty()) {
-         for (int i = 0; i < values.length; i++) {
-            indexLookup.put(values[i], i);
-         }
-      }
-   }
+    @Override
+    public void captureHeader(CSVReader reader) throws IOException {
+        header = reader.readNext();
+    }
 
-   /**
-    * Resets index map of column names to column position.
-    */
-   protected void resetIndexMap() {
-      indexLookup.clear();
-   }
-
-   /**
-    * Gets the column index that corresponds to a specific colum name.
-    * If the CSV file doesn't have a header row, this method will always return
-    * null.
-    *
-    * @param name the column name
-    * @return the column index, or null if the name doesn't exist
-    */
-   @Override
-   public Integer getColumnIndex(String name) {
-      if (null == header) {
-         throw new IllegalStateException("The header row hasn't been read yet.");
-      }
-
-      createIndexLookup(header);
-
-      return indexLookup.get(name);
-   }
-
-   /**
-    * Gets the property descriptor for a given column position.
-    * @param col the column to find the description for
-    * @return - the property descriptor for the column position or null if one could not be found.
-    * @throws IntrospectionException - thrown on error retrieving the property description.
-    */
-   @Override
-   public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
-      String columnName = getColumnName(col);
-      return (StringUtils.isNotBlank(columnName)) ? findDescriptor(columnName) : null;
-   }
-
-   /**
-    * Gets the field for a given column position.
-    *
-    * @param col the column to find the field for
-    * @return - BeanField containing the field - and whether it is mandatory - for a given column position, or null if
-    * one could not be found
-    */
-   @Override
-   public BeanField findField(int col) {
-      String columnName = getColumnName(col);
-      return (StringUtils.isNotBlank(columnName)) ? findField(columnName) : null;
-   }
-
-   /**
-    * Get the column name for a given column position.
-    *
-    * @param col - column position.
-    * @return - the column name or null if the position is larger than the header array or there is no headers defined.
-    */
-   public String getColumnName(int col) {
-      return (null != header && col < header.length) ? header[col] : null;
-   }
-
-   /**
-    * Find the property descriptor for a given column.
-    * @param name - column name to look up.
-    * @return - the property descriptor for the column.
-    * @throws IntrospectionException - thrown on error loading the property descriptors.
-    */
-   protected PropertyDescriptor findDescriptor(String name) throws IntrospectionException {
-      if (null == descriptorMap) {
-         descriptorMap = loadDescriptorMap(); //lazy load descriptors
-      }
-      return descriptorMap.get(name.toUpperCase().trim());
-   }
-
-   /**
-    * Find the field for a given column.
-    *
-    * @param name - the column name to look up.
-    * @return - BeanField containing the field - and whether it is mandatory - for the column.
-    */
-   protected BeanField findField(String name) {
-      if (null == fieldMap) {
-         fieldMap = loadFieldMap(); //lazy load fields
-      }
-      return fieldMap.get(name.toUpperCase().trim());
-   }
-
-   /**
-    * Determines if the name of a property descriptor matches the column name.
-    * Currently only used by unit tests.
-    * @param name - name of the column.
-    * @param desc - property descriptor to check against
-    * @return - true if the name matches the name in the property descriptor.
-    */
-   protected boolean matches(String name, PropertyDescriptor desc) {
-      return desc.getName().equals(name.trim());
-   }
-
-   /**
-    * builds a map of property descriptors for the Bean.
-    * @return - map of property descriptors
-    * @throws IntrospectionException - thrown on error getting information about the bean.
-    */
-   protected Map<String, PropertyDescriptor> loadDescriptorMap() throws IntrospectionException {
-      Map<String, PropertyDescriptor> map = new HashMap<>();
-
-      PropertyDescriptor[] descriptors;
-      descriptors = loadDescriptors(getType());
-      for (PropertyDescriptor descriptor : descriptors) {
-         map.put(descriptor.getName().toUpperCase().trim(), descriptor);
-      }
-
-      return map;
-   }
-
-   /**
-    * Builds a map of fields (and whether they're mandatory) for the Bean.
-    *
-    * @return - a map of fields (and whether they're mandatory)
-    */
-   protected Map<String, BeanField> loadFieldMap() {
-      Map<String, BeanField> map = new HashMap<>();
-
-      for (Field field : loadFields(getType())) {
-         boolean required = field.getAnnotation(CsvBind.class).required();
-         map.put(field.getName().toUpperCase().trim(), new BeanField(field, required));
-      }
-
-      return map;
-   }
-
-   private PropertyDescriptor[] loadDescriptors(Class<T> cls) throws IntrospectionException {
-      BeanInfo beanInfo = Introspector.getBeanInfo(cls);
-      return beanInfo.getPropertyDescriptors();
-   }
-
-   private List<Field> loadFields(Class<T> cls) {
-      List<Field> fields = new ArrayList<>();
-      for (Field field : cls.getDeclaredFields()) {
-         if (field.isAnnotationPresent(CsvBind.class)) {
-            fields.add(field);
-         }
-      }
-      return fields;
-   }
-
-   /**
-    * Creates an object to be mapped.
-    * @return an object of type T.
-    * @throws InstantiationException - thrown on error creating object.
-    * @throws IllegalAccessException - thrown on error creating object.
-    */
-   @Override
-   public T createBean() throws InstantiationException, IllegalAccessException {
-      return type.newInstance();
-   }
-
-   /**
-    * get the class type that the Strategy is mapping.
-    * @return Class of the object that mapper will create.
-    */
-   public Class<T> getType() {
-      return type;
-   }
-
-   /**
-    * Sets the class type that is being mapped.
-    *
-    * @param type Class type.
-    */
-   public void setType(Class<T> type) {
-      this.type = type;
-   }
-
-   /**
-    * Determines whether the mapping strategy is driven by {@link com.opencsv.bean.CsvBind} annotations.
-    *
-    * @return whether the mapping strategy is driven by annotations
-    */
-   @Override
-   public boolean isAnnotationDriven() {
-      if (!determinedIfAnnotationDriven) { // lazy load this, and only calculate it once
-         for (Field field : type.getDeclaredFields()) {
-            if (field.isAnnotationPresent(CsvBind.class)) {
-               annotationDriven = true;
-               break;
+    /**
+     * Creates an index map of column names to column position.
+     *
+     * @param values Array of header values.
+     */
+    protected void createIndexLookup(String[] values) {
+        if (indexLookup.isEmpty()) {
+            for (int i = 0; i < values.length; i++) {
+                indexLookup.put(values[i], i);
             }
-         }
-         determinedIfAnnotationDriven = true;
-      }
-      return annotationDriven;
-   }
+        }
+    }
+
+    /**
+     * Resets index map of column names to column position.
+     */
+    protected void resetIndexMap() {
+        indexLookup.clear();
+    }
+
+    @Override
+    public Integer getColumnIndex(String name) {
+        if (null == header) {
+            throw new IllegalStateException("The header row hasn't been read yet.");
+        }
+
+        createIndexLookup(header);
+
+        return indexLookup.get(name);
+    }
+
+    @Override
+    public PropertyDescriptor findDescriptor(int col)
+            throws IntrospectionException {
+        String columnName = getColumnName(col);
+        return (StringUtils.isNotBlank(columnName)) ? findDescriptor(columnName) : null;
+    }
+
+    @Override
+    public BeanField findField(int col) throws CsvBadConverterException {
+        String columnName = getColumnName(col);
+        return (StringUtils.isNotBlank(columnName)) ? findField(columnName) : null;
+    }
+
+    /**
+     * Get the column name for a given column position.
+     *
+     * @param col Column position.
+     * @return The column name or null if the position is larger than the
+     * header array or there are no headers defined.
+     */
+    public String getColumnName(int col) {
+        return (null != header && col < header.length) ? header[col] : null;
+    }
+
+    /**
+     * Find the property descriptor for a given column.
+     *
+     * @param name Column name to look up.
+     * @return The property descriptor for the column.
+     * @throws IntrospectionException Thrown on error loading the property
+     *                                descriptors.
+     */
+    protected PropertyDescriptor findDescriptor(String name) throws IntrospectionException {
+        if (null == descriptorMap) {
+            descriptorMap = loadDescriptorMap(); //lazy load descriptors
+        }
+        return descriptorMap.get(name.toUpperCase().trim());
+    }
+
+    /**
+     * Find the field for a given column.
+     *
+     * @param name The column name to look up.
+     * @return BeanField containing the field for the column.
+     * @throws CsvBadConverterException If a custom converter for a field cannot
+     *                                  be initialized
+     */
+    protected BeanField findField(String name) throws CsvBadConverterException {
+        return fieldMap.get(name.toUpperCase().trim());
+    }
+
+    /**
+     * Determines if the name of a property descriptor matches the column name.
+     * Currently only used by unit tests.
+     *
+     * @param name Name of the column.
+     * @param desc Property descriptor to check against
+     * @return True if the name matches the name in the property descriptor.
+     */
+    protected boolean matches(String name, PropertyDescriptor desc) {
+        return desc.getName().equals(name.trim());
+    }
+
+    /**
+     * Builds a map of property descriptors for the bean.
+     *
+     * @return Map of property descriptors
+     * @throws IntrospectionException Thrown on error getting information
+     *                                about the bean.
+     */
+    protected Map<String, PropertyDescriptor> loadDescriptorMap() throws IntrospectionException {
+        Map<String, PropertyDescriptor> map = new HashMap<>();
+
+        PropertyDescriptor[] descriptors;
+        descriptors = loadDescriptors(getType());
+        for (PropertyDescriptor descriptor : descriptors) {
+            map.put(descriptor.getName().toUpperCase().trim(), descriptor);
+        }
+
+        return map;
+    }
+
+    /**
+     * Builds a map of fields for the bean.
+     *
+     * @throws CsvBadConverterException If there is a problem instantiating the
+     *                                  custom converter for an annotated field
+     */
+    protected void loadFieldMap() throws CsvBadConverterException {
+        fieldMap = new HashMap<>();
+
+        for (Field field : loadFields(getType())) {
+            String columnName, locale;
+
+            // Always check for a custom converter first.
+            if (field.isAnnotationPresent(CsvCustomBindByName.class)) {
+                columnName = field.getAnnotation(CsvCustomBindByName.class).column().toUpperCase().trim();
+                Class<? extends AbstractBeanField> converter = field
+                        .getAnnotation(CsvCustomBindByName.class)
+                        .converter();
+                BeanField bean;
+                try {
+                    bean = converter.newInstance();
+                } catch (InstantiationException | IllegalAccessException oldEx) {
+                    CsvBadConverterException newEx =
+                            new CsvBadConverterException(converter,
+                                    "There was a problem instantiating the custom converter "
+                                            + converter.getCanonicalName());
+                    newEx.initCause(oldEx);
+                    throw newEx;
+                }
+                bean.setField(field);
+                fieldMap.put(columnName, bean);
+            }
+
+            // Then check for CsvBindByName.
+            else if (field.isAnnotationPresent(CsvBindByName.class)) {
+                boolean required = field.getAnnotation(CsvBindByName.class).required();
+                columnName = field.getAnnotation(CsvBindByName.class).column().toUpperCase().trim();
+                locale = field.getAnnotation(CsvBindByName.class).locale();
+                if (field.isAnnotationPresent(CsvDate.class)) {
+                    String formatString = field.getAnnotation(CsvDate.class).value();
+                    if (StringUtils.isEmpty(columnName)) {
+                        fieldMap.put(field.getName().toUpperCase().trim(),
+                                new BeanFieldDate(field, required, formatString, locale));
+                    } else {
+                        fieldMap.put(columnName, new BeanFieldDate(field, required, formatString, locale));
+                    }
+                } else {
+                    if (StringUtils.isEmpty(columnName)) {
+                        fieldMap.put(field.getName().toUpperCase().trim(),
+                                new BeanFieldPrimitiveTypes(field, required, locale));
+                    } else {
+                        fieldMap.put(columnName, new BeanFieldPrimitiveTypes(field, required, locale));
+                    }
+                }
+            }
+
+            // And only check for CsvBind if nothing else is there, because
+            // CsvBind is deprecated.
+            else {
+                boolean required = field.getAnnotation(CsvBind.class).required();
+                fieldMap.put(field.getName().toUpperCase().trim(),
+                        new BeanFieldPrimitiveTypes(field, required, null));
+            }
+        }
+    }
+
+    private PropertyDescriptor[] loadDescriptors(Class<T> cls) throws IntrospectionException {
+        BeanInfo beanInfo = Introspector.getBeanInfo(cls);
+        return beanInfo.getPropertyDescriptors();
+    }
+
+    private List<Field> loadFields(Class<T> cls) {
+        List<Field> fields = new ArrayList<>();
+        for (Field field : cls.getDeclaredFields()) {
+            if (field.isAnnotationPresent(CsvBind.class)
+                    || field.isAnnotationPresent(CsvBindByName.class)
+                    || field.isAnnotationPresent(CsvCustomBindByName.class)) {
+                fields.add(field);
+            }
+        }
+        annotationDriven = !fields.isEmpty();
+        return fields;
+    }
+
+    @Override
+    public T createBean() throws InstantiationException, IllegalAccessException {
+        return type.newInstance();
+    }
+
+    /**
+     * Get the class type that the Strategy is mapping.
+     *
+     * @return Class of the object that mapper will create.
+     */
+    public Class<T> getType() {
+        return type;
+    }
+
+    /**
+     * Sets the class type that is being mapped.
+     * Also initializes the mapping between column names and bean fields.
+     *
+     * @param type Class type.
+     * @throws CsvBadConverterException If a field in the bean is annotated
+     *                                  with a custom converter that cannot be initialized. If you are not
+     *                                  using custom converters that you have written yourself, it should be
+     *                                  safe to catch this exception and ignore it.
+     */
+    public void setType(Class<T> type) throws CsvBadConverterException {
+        this.type = type;
+        loadFieldMap();
+    }
+
+    /**
+     * Determines whether the mapping strategy is driven by annotations.
+     * For this mapping strategy, the supported annotations are:
+     * <ul><li>{@link com.opencsv.bean.CsvBindByName}</li>
+     * <li>{@link com.opencsv.bean.CsvCustomBindByName}</li>
+     * <li>{@link com.opencsv.bean.CsvBind}</li>
+     * </ul>
+     *
+     * @return Whether the mapping strategy is driven by annotations
+     */
+    @Override
+    public boolean isAnnotationDriven() {
+        return annotationDriven;
+    }
 }

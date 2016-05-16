@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.mocks.MockBean;
 import com.opencsv.bean.mocks.SimpleAnnotatedMockBean;
+import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -150,6 +151,7 @@ public class BeanToCsvTest {
    private MappingStrategy createErrorMappingStrategy() {
       return new MappingStrategy() {
 
+         @Override
          public PropertyDescriptor findDescriptor(int col)
                throws IntrospectionException {
             throw new IntrospectionException("This is the test exception");
@@ -160,14 +162,17 @@ public class BeanToCsvTest {
             return null;
          }
 
+         @Override
          public Object createBean() throws InstantiationException,
                IllegalAccessException {
             return null;
          }
 
+         @Override
          public void captureHeader(CSVReader reader) throws IOException {
          }
 
+         @Override
          public Integer getColumnIndex(String name) {
             return null;
          }
@@ -187,7 +192,7 @@ public class BeanToCsvTest {
    }
 
    @Test
-   public void beanReturnsFalseOnEmptyList() {
+   public void beanReturnsFalseOnEmptyList() throws CsvBadConverterException {
       ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
@@ -199,7 +204,7 @@ public class BeanToCsvTest {
    }
 
    @Test
-   public void beanReturnsFalseOnNull() {
+   public void beanReturnsFalseOnNull() throws CsvBadConverterException {
       ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
@@ -211,7 +216,7 @@ public class BeanToCsvTest {
    }
 
    @Test
-   public void testWriteQuotes() throws IOException {
+   public void testWriteQuotes() throws IOException, CsvBadConverterException {
       ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
@@ -229,7 +234,7 @@ public class BeanToCsvTest {
    }
 
    @Test
-   public void testWriteQuotesWithAnnotatedBean() throws IOException {
+   public void testWriteQuotesWithAnnotatedBean() throws IOException, CsvBadConverterException {
       ColumnPositionMappingStrategy<SimpleAnnotatedMockBean> strat = new ColumnPositionMappingStrategy<>();
       strat.setType(SimpleAnnotatedMockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
@@ -247,7 +252,7 @@ public class BeanToCsvTest {
    }
 
    @Test
-   public void testWriteNulls() throws IOException {
+   public void testWriteNulls() throws IOException, CsvBadConverterException {
       ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<>();
       strat.setType(MockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};
@@ -265,7 +270,7 @@ public class BeanToCsvTest {
    }
 
    @Test
-   public void testWriteNullsWithAnnotatedBean() throws IOException {
+   public void testWriteNullsWithAnnotatedBean() throws IOException, CsvBadConverterException {
       ColumnPositionMappingStrategy<SimpleAnnotatedMockBean> strat = new ColumnPositionMappingStrategy<>();
       strat.setType(SimpleAnnotatedMockBean.class);
       String[] columns = new String[]{"name", "orderNumber", "num"};

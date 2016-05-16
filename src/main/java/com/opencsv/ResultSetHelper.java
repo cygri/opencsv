@@ -1,5 +1,5 @@
 package com.opencsv;
-/**
+/*
  Copyright 2005 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,48 +20,48 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Interface for the ResultSetHelperService.  Allows the user to define their own ResultSetHelper for use
- * in the CSVWriter.
+ * Interface for the ResultSetHelperService.
+ * Allows the user to define their own ResultSetHelper for use in the CSVWriter.
  */
 public interface ResultSetHelper {
     /**
-     * Returns the column Names from the ResultSet.
+     * Returns the column names from the ResultSet.
      *
-     * @param rs - ResultSet
-     * @return - string array containing the column names.
-     * @throws SQLException - thrown by the ResultSet.
+     * @param rs ResultSet
+     * @return String array containing the column names.
+     * @throws SQLException Thrown by the ResultSet.
      */
     String[] getColumnNames(ResultSet rs) throws SQLException;
 
     /**
      * Returns the column values from the result set.
-     * @param rs - the ResultSet containing the values.
-     * @return String Array containing the values.
-     * @throws SQLException - thrown by the ResultSet.
-     * @throws IOException - thrown by the ResultSet.
+     * @param rs The ResultSet containing the values.
+     * @return String array containing the values.
+     * @throws SQLException Thrown by the ResultSet.
+     * @throws IOException Thrown by the ResultSet.
      */
     String[] getColumnValues(ResultSet rs) throws SQLException, IOException;
 
     /**
      * Returns the column values from the result set with the values trimmed if desired.
-     * @param rs - the ResultSet containing the values.
-     * @param trim - values should have white spaces trimmed.
-     * @return String Array containing the values.
-     * @throws SQLException - thrown by the ResultSet.
-     * @throws IOException - thrown by the ResultSet.
+     * @param rs The ResultSet containing the values.
+     * @param trim Values should have white spaces trimmed.
+     * @return String array containing the values.
+     * @throws SQLException Thrown by the ResultSet.
+     * @throws IOException Thrown by the ResultSet.
      */
     String[] getColumnValues(ResultSet rs, boolean trim) throws SQLException, IOException;
 
     /**
      * Returns the column values from the result set with the values trimmed if desired.
      * Also format the date and time columns based on the format strings passed in.
-     * @param rs - the ResultSet containing the values.
-     * @param trim - values should have white spaces trimmed.
-     * @param dateFormatString - format String for dates.
-     * @param timeFormatString - format String for timestamps.
-     * @return String Array containing the values.
-     * @throws SQLException - thrown by the ResultSet.
-     * @throws IOException - thrown by the ResultSet.
+     * @param rs The ResultSet containing the values.
+     * @param trim Values should have white spaces trimmed.
+     * @param dateFormatString Format string for dates.
+     * @param timeFormatString Format string for timestamps.
+     * @return String array containing the values.
+     * @throws SQLException Thrown by the ResultSet.
+     * @throws IOException Thrown by the ResultSet.
      */
     String[] getColumnValues(ResultSet rs, boolean trim, String dateFormatString, String timeFormatString)
          throws SQLException, IOException;

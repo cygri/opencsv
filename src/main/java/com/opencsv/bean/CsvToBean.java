@@ -1,6 +1,6 @@
 package com.opencsv.bean;
 
-/**
+/*
  Copyright 2007 Kyle Miller.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package com.opencsv.bean;
  */
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.*;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -29,10 +30,11 @@ import java.util.*;
 /**
  * Converts CSV data to objects.
  *
- * @param <T> - class to convert the objects to.
+ * @param <T> Class to convert the objects to.
  */
 public class CsvToBean<T> extends AbstractCSVToBean {
    private Map<Class<?>, PropertyEditor> editorMap = null;
+   private List<CsvException> capturedExceptions = null;
 
    /**
     * Default constructor.
@@ -41,45 +43,112 @@ public class CsvToBean<T> extends AbstractCSVToBean {
    }
 
    /**
-    * parse the values from a csvReader constructed from the passed in Reader.
-    * @param mapper - mapping strategy for the bean.
-    * @param reader - Reader used to construct a CSVReader
+    * Parse the values from a CSVReader constructed from the Reader passed in.
+    * @param mapper Mapping strategy for the bean.
+    * @param reader Reader used to construct a CSVReader
     * @return List of Objects.
     */
 
    public List<T> parse(MappingStrategy<T> mapper, Reader reader) {
-      return parse(mapper, new CSVReader(reader));
+      return parse(mapper, new CSVReader(reader), null, true);
    }
 
    /**
-    * parse the values from a csvReader constructed from the passed in Reader.
-    * @param mapper - mapping strategy for the bean.
-    * @param reader - Reader used to construct a CSVReader
-    * @param filter - CsvToBeanFilter to apply - null if no filter.
+    * Parse the values from a CSVReader constructed from the Reader passed in.
+    * @param mapper Mapping strategy for the bean.
+    * @param reader Reader used to construct a CSVReader
+    * @param throwExceptions If false, exceptions internal to opencsv will not
+    *   be thrown, but can be accessed after processing is finished through
+    *   {@link #getCapturedExceptions()}.
+    * @return List of Objects.
+    */
+
+   public List<T> parse(MappingStrategy<T> mapper, Reader reader, boolean throwExceptions) {
+      return parse(mapper, new CSVReader(reader), null, throwExceptions);
+   }
+
+   /**
+    * Parse the values from a CSVReader constructed from the Reader passed in.
+    *
+    * @param mapper Mapping strategy for the bean.
+    * @param reader Reader used to construct a CSVReader
+    * @param filter CsvToBeanFilter to apply - null if no filter.
     * @return List of Objects.
     */
    public List<T> parse(MappingStrategy<T> mapper, Reader reader, CsvToBeanFilter filter) {
-      return parse(mapper, new CSVReader(reader), filter);
+      return parse(mapper, new CSVReader(reader), filter, true);
    }
 
    /**
-    * parse the values from the csvReader.
-    * @param mapper - mapping strategy for the bean.
-    * @param csv - CSVReader
+    * Parse the values from a CSVReader constructed from the Reader passed in.
+    * @param mapper Mapping strategy for the bean.
+    * @param reader Reader used to construct a CSVReader
+    * @param filter CsvToBeanFilter to apply - null if no filter.
+    * @param throwExceptions If false, exceptions internal to opencsv will not
+    *   be thrown, but can be accessed after processing is finished through
+    *   {@link #getCapturedExceptions()}.
+    * @return List of Objects.
+    */
+   public List<T> parse(MappingStrategy<T> mapper, Reader reader,
+                        CsvToBeanFilter filter, boolean throwExceptions) {
+      return parse(mapper, new CSVReader(reader), filter, throwExceptions);
+   }
+
+   /**
+    * Parse the values from the CSVReader.
+    * @param mapper Mapping strategy for the bean.
+    * @param csv CSVReader
     * @return List of Objects.
     */
    public List<T> parse(MappingStrategy<T> mapper, CSVReader csv) {
-      return parse(mapper, csv, null);
+      return parse(mapper, csv, null, true);
    }
 
    /**
-    * parse the values from the csvReader.
-    * @param mapper - mapping strategy for the bean.
-    * @param csv - CSVReader
-    * @param filter - CsvToBeanFilter to apply - null if no filter.
+    * Parse the values from the CSVReader.
+    * @param mapper Mapping strategy for the bean.
+    * @param csv CSVReader
+    * @param throwExceptions If false, exceptions internal to opencsv will not
+    *   be thrown, but can be accessed after processing is finished through
+    *   {@link #getCapturedExceptions()}.
     * @return List of Objects.
     */
-   public List<T> parse(MappingStrategy<T> mapper, CSVReader csv, CsvToBeanFilter filter) {
+   public List<T> parse(MappingStrategy<T> mapper, CSVReader csv, boolean throwExceptions) {
+      return parse(mapper, csv, null, throwExceptions);
+   }
+
+   /**
+    * Parse the values from the CSVReader.
+    * Throws exceptions for bad data and other sorts of problems relating
+    * directly to opencsv, as well as general exceptions from external code
+    * used.
+    *
+    * @param mapper Mapping strategy for the bean.
+    * @param csv    CSVReader
+    * @param filter CsvToBeanFilter to apply - null if no filter.
+    * @return List of Objects.
+    */
+   public List<T> parse(MappingStrategy<T> mapper, CSVReader csv,
+                        CsvToBeanFilter filter) {
+      return parse(mapper, csv, filter, true);
+   }
+
+   /**
+    * Parse the values from the CSVReader.
+    * Only throws general exceptions from external code used. Problems related
+    * to opencsv and the data provided to it are captured for later processing
+    * by user code and can be accessed through {@link #getCapturedExceptions()}.
+    *
+    * @param mapper          Mapping strategy for the bean.
+    * @param csv             CSVReader
+    * @param filter          CsvToBeanFilter to apply - null if no filter.
+    * @param throwExceptions If false, exceptions internal to opencsv will not
+    *                        be thrown, but can be accessed after processing is finished through
+    *                        {@link #getCapturedExceptions()}.
+    * @return List of Objects.
+    */
+   public List<T> parse(MappingStrategy<T> mapper, CSVReader csv,
+                        CsvToBeanFilter filter, boolean throwExceptions) {
       long lineProcessed = 0;
       String[] line = null;
 
@@ -90,10 +159,20 @@ public class CsvToBean<T> extends AbstractCSVToBean {
       }
 
       try {
-         List<T> list = new ArrayList<T>();
+         List<T> list = new ArrayList<>();
          while (null != (line = csv.readNext())) {
             lineProcessed++;
-            processLine(mapper, filter, line, list);
+            try {
+               processLine(mapper, filter, line, list);
+            } catch (CsvException e) {
+               CsvException csve = (CsvException) e;
+               csve.setLineNumber(lineProcessed);
+               if (throwExceptions) {
+                  throw csve;
+               } else {
+                    getCapturedExceptions().add(csve);
+                }
+            }
          }
          return list;
       } catch (Exception e) {
@@ -101,7 +180,11 @@ public class CsvToBean<T> extends AbstractCSVToBean {
       }
    }
 
-   private void processLine(MappingStrategy<T> mapper, CsvToBeanFilter filter, String[] line, List<T> list) throws IllegalAccessException, InvocationTargetException, InstantiationException, IntrospectionException {
+   private void processLine(MappingStrategy<T> mapper, CsvToBeanFilter filter, String[] line, List<T> list)
+           throws IllegalAccessException, InvocationTargetException,
+           InstantiationException, IntrospectionException,
+           CsvBadConverterException, CsvDataTypeMismatchException,
+           CsvRequiredFieldEmptyException, CsvConstraintViolationException {
       if (filter == null || filter.allowLine(line)) {
          T obj = processLine(mapper, line);
          list.add(obj);
@@ -109,16 +192,28 @@ public class CsvToBean<T> extends AbstractCSVToBean {
    }
 
    /**
-    * Creates a single object from a line from the csv file.
-    * @param mapper - MappingStrategy
-    * @param line  - array of Strings from the csv file.
-    * @return - object containing the values.
-    * @throws IllegalAccessException - thrown on error creating bean.
-    * @throws InvocationTargetException - thrown on error calling the setters.
-    * @throws InstantiationException - thrown on error creating bean.
-    * @throws IntrospectionException - thrown on error getting the PropertyDescriptor.
+    * Creates a single object from a line from the CSV file.
+    * @param mapper MappingStrategy
+    * @param line  Array of Strings from the CSV file.
+    * @return Object containing the values.
+    * @throws IllegalAccessException Thrown on error creating bean.
+    * @throws InvocationTargetException Thrown on error calling the setters.
+    * @throws InstantiationException Thrown on error creating bean.
+    * @throws IntrospectionException Thrown on error getting the PropertyDescriptor.
+    * @throws CsvBadConverterException If a custom converter cannot be
+    *   initialized properly
+    * @throws CsvDataTypeMismatchException If the source data cannot be converted
+    *   to the type of the destination field
+    * @throws CsvRequiredFieldEmptyException If a mandatory field is empty in
+    *   the input file
+    * @throws CsvConstraintViolationException When the internal structure of
+    *   data would be violated by the data in the CSV file
     */
-   protected T processLine(MappingStrategy<T> mapper, String[] line) throws IllegalAccessException, InvocationTargetException, InstantiationException, IntrospectionException {
+   protected T processLine(MappingStrategy<T> mapper, String[] line)
+           throws IllegalAccessException, InvocationTargetException,
+           InstantiationException, IntrospectionException,
+           CsvBadConverterException, CsvDataTypeMismatchException,
+           CsvRequiredFieldEmptyException, CsvConstraintViolationException {
       T bean = mapper.createBean();
       for (int col = 0; col < line.length; col++) {
          if (mapper.isAnnotationDriven()) {
@@ -130,7 +225,9 @@ public class CsvToBean<T> extends AbstractCSVToBean {
       return bean;
    }
 
-   private void processProperty(MappingStrategy<T> mapper, String[] line, T bean, int col) throws IntrospectionException, InstantiationException, IllegalAccessException, InvocationTargetException {
+   private void processProperty(MappingStrategy<T> mapper, String[] line, T bean, int col)
+           throws IntrospectionException, InstantiationException,
+           IllegalAccessException, InvocationTargetException, CsvBadConverterException {
       PropertyDescriptor prop = mapper.findDescriptor(col);
       if (null != prop) {
          String value = checkForTrim(line[col], prop);
@@ -139,7 +236,9 @@ public class CsvToBean<T> extends AbstractCSVToBean {
       }
    }
 
-   private void processField(MappingStrategy<T> mapper, String[] line, T bean, int col) throws IllegalAccessException {
+   private void processField(MappingStrategy<T> mapper, String[] line, T bean, int col)
+           throws CsvBadConverterException, CsvDataTypeMismatchException,
+           CsvRequiredFieldEmptyException, CsvConstraintViolationException {
       BeanField beanField = mapper.findField(col);
       if (beanField != null) {
          String value = line[col];
@@ -169,14 +268,7 @@ public class CsvToBean<T> extends AbstractCSVToBean {
    }
 
 
-   /**
-    * Attempt to find custom property editor on descriptor first, else try the propery editor manager.
-    *
-    * @param desc - PropertyDescriptor.
-    * @return - the PropertyEditor for the given PropertyDescriptor.
-    * @throws InstantiationException - thrown when getting the PropertyEditor for the class.
-    * @throws IllegalAccessException - thrown when getting the PropertyEditor for the class.
-    */
+   @Override
    protected PropertyEditor getPropertyEditor(PropertyDescriptor desc) throws InstantiationException, IllegalAccessException {
       Class<?> cls = desc.getPropertyEditorClass();
       if (null != cls) {
@@ -184,4 +276,14 @@ public class CsvToBean<T> extends AbstractCSVToBean {
       }
       return getPropertyEditorValue(desc.getPropertyType());
    }
+
+   /**
+    * @return The list of exceptions captured while processing the input file
+    */
+   public List<CsvException> getCapturedExceptions() {
+      if (capturedExceptions == null) {
+           capturedExceptions = new ArrayList<>();
+        }
+        return capturedExceptions;
+    }
 }

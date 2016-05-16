@@ -70,7 +70,7 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Constructs CSVWriter using a comma for the separator.
     *
-    * @param writer the writer to an underlying CSV source.
+    * @param writer The writer to an underlying CSV source.
     */
    public CSVWriter(Writer writer) {
       this(writer, DEFAULT_SEPARATOR);
@@ -79,8 +79,8 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Constructs CSVWriter with supplied separator.
     *
-    * @param writer    the writer to an underlying CSV source.
-    * @param separator the delimiter to use for separating entries.
+    * @param writer    The writer to an underlying CSV source.
+    * @param separator The delimiter to use for separating entries.
     */
    public CSVWriter(Writer writer, char separator) {
       this(writer, separator, DEFAULT_QUOTE_CHARACTER);
@@ -89,9 +89,9 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Constructs CSVWriter with supplied separator and quote char.
     *
-    * @param writer    the writer to an underlying CSV source.
-    * @param separator the delimiter to use for separating entries
-    * @param quotechar the character to use for quoted elements
+    * @param writer    The writer to an underlying CSV source.
+    * @param separator The delimiter to use for separating entries
+    * @param quotechar The character to use for quoted elements
     */
    public CSVWriter(Writer writer, char separator, char quotechar) {
       this(writer, separator, quotechar, DEFAULT_ESCAPE_CHARACTER);
@@ -100,10 +100,10 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Constructs CSVWriter with supplied separator and quote char.
     *
-    * @param writer     the writer to an underlying CSV source.
-    * @param separator  the delimiter to use for separating entries
-    * @param quotechar  the character to use for quoted elements
-    * @param escapechar the character to use for escaping quotechars or escapechars
+    * @param writer     The writer to an underlying CSV source.
+    * @param separator  The delimiter to use for separating entries
+    * @param quotechar  The character to use for quoted elements
+    * @param escapechar The character to use for escaping quotechars or escapechars
     */
    public CSVWriter(Writer writer, char separator, char quotechar, char escapechar) {
       this(writer, separator, quotechar, escapechar, DEFAULT_LINE_END);
@@ -113,10 +113,10 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Constructs CSVWriter with supplied separator and quote char.
     *
-    * @param writer    the writer to an underlying CSV source.
-    * @param separator the delimiter to use for separating entries
-    * @param quotechar the character to use for quoted elements
-    * @param lineEnd   the line feed terminator to use
+    * @param writer    The writer to an underlying CSV source.
+    * @param separator The delimiter to use for separating entries
+    * @param quotechar The character to use for quoted elements
+    * @param lineEnd   The line feed terminator to use
     */
    public CSVWriter(Writer writer, char separator, char quotechar, String lineEnd) {
       this(writer, separator, quotechar, DEFAULT_ESCAPE_CHARACTER, lineEnd);
@@ -126,11 +126,11 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Constructs CSVWriter with supplied separator, quote char, escape char and line ending.
     *
-    * @param writer     the writer to an underlying CSV source.
-    * @param separator  the delimiter to use for separating entries
-    * @param quotechar  the character to use for quoted elements
-    * @param escapechar the character to use for escaping quotechars or escapechars
-    * @param lineEnd    the line feed terminator to use
+    * @param writer     The writer to an underlying CSV source.
+    * @param separator  The delimiter to use for separating entries
+    * @param quotechar  The character to use for quoted elements
+    * @param escapechar The character to use for escaping quotechars or escapechars
+    * @param lineEnd    The line feed terminator to use
     */
    public CSVWriter(Writer writer, char separator, char quotechar, char escapechar, String lineEnd) {
       this.writer = writer;
@@ -162,14 +162,14 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
    /**
-    * Writes the entire list to a CSV file. The list is assumed to be a
-    * String[]
+    * Writes the entire list to a CSV file.
+    * The list is assumed to be a String[].
     *
-    * @param allLines         a List of String[], with each String[] representing a line of
+    * @param allLines         A List of String[] with each String[] representing a line of
     *                         the file.
-    * @param applyQuotesToAll true if all values are to be quoted.  false if quotes only
+    * @param applyQuotesToAll True if all values are to be quoted. False if quotes only
     *                         to be applied to values which contain the separator, escape,
-    *                         quote or new line characters.
+    *                         quote, or new line characters.
     */
    public void writeAll(List<String[]> allLines, boolean applyQuotesToAll) {
       writeAll((Iterable<String[]>)allLines, applyQuotesToAll);
@@ -194,10 +194,10 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
    /**
-    * Writes the entire list to a CSV file. The list is assumed to be a
-    * String[]
+    * Writes the entire list to a CSV file.
+    * The list is assumed to be a String[].
     *
-    * @param allLines a List of String[], with each String[] representing a line of
+    * @param allLines A List of String[] with each String[] representing a line of
     *                 the file.
     */
    public void writeAll(List<String[]> allLines) {
@@ -207,8 +207,8 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Writes the column names.
     *
-    * @param rs - ResultSet containing column names.
-    * @throws SQLException - thrown by ResultSet::getColumnNames
+    * @param rs ResultSet containing column names.
+    * @throws SQLException Thrown by {@link com.opencsv.ResultSetHelper#getColumnNames(java.sql.ResultSet)}
     */
    protected void writeColumnNames(ResultSet rs) throws SQLException {
       writeNext(resultService().getColumnNames(rs));
@@ -219,12 +219,12 @@ public class CSVWriter implements Closeable, Flushable {
     *
     * The caller is responsible for closing the ResultSet.
     *
-    * @param rs                 the result set to write
-    * @param includeColumnNames true if you want column names in the output, false otherwise
-    * @throws java.io.IOException   thrown by getColumnValue
-    * @throws java.sql.SQLException thrown by getColumnValue
+    * @param rs                 The result set to write
+    * @param includeColumnNames True if you want column names in the output, false otherwise
+    * @throws java.io.IOException   Thrown by ResultSetHelper.getColumnValues()
+    * @throws java.sql.SQLException Thrown by ResultSetHelper.getColumnValues()
     *
-    * @return number of lines written.
+    * @return Number of lines written.
     */
    public int writeAll(ResultSet rs, boolean includeColumnNames) throws SQLException, IOException {
       return writeAll(rs, includeColumnNames, false);
@@ -235,14 +235,14 @@ public class CSVWriter implements Closeable, Flushable {
     *
     * The caller is responsible for closing the ResultSet.
     *
-    * @param rs the Result set to write.
-    * @param includeColumnNames  include the column names in the output.
-    * @param trim remove spaces from the data before writing.
+    * @param rs The Result set to write.
+    * @param includeColumnNames Include the column names in the output.
+    * @param trim Remove spaces from the data before writing.
     *
-    * @throws java.io.IOException   thrown by getColumnValue
-    * @throws java.sql.SQLException thrown by getColumnValue
+    * @throws java.io.IOException   Thrown by ResultSetHelper.getColumnValues()
+    * @throws java.sql.SQLException Thrown by ResultSetHelper.getColumnValues()
     *
-    * @return number of lines written - including header.
+    * @return Number of lines written - including header.
     */
    public int writeAll(ResultSet rs, boolean includeColumnNames, boolean trim) throws SQLException, IOException {
       int linesWritten = 0;
@@ -263,10 +263,10 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Writes the next line to the file.
     *
-    * @param nextLine         a string array with each comma-separated element as a separate
+    * @param nextLine         A string array with each comma-separated element as a separate
     *                         entry.
-    * @param applyQuotesToAll true if all values are to be quoted.  false applies quotes only
-    *                         to values which contain the separator, escape, quote or new line characters.
+    * @param applyQuotesToAll True if all values are to be quoted. False applies quotes only
+    *                         to values which contain the separator, escape, quote, or new line characters.
     */
    public void writeNext(String[] nextLine, boolean applyQuotesToAll) {
       try {
@@ -330,7 +330,7 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Writes the next line to the file.
     *
-    * @param nextLine a string array with each comma-separated element as a separate
+    * @param nextLine A string array with each comma-separated element as a separate
     *                 entry.
     */
    public void writeNext(String[] nextLine) {
@@ -338,9 +338,9 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
    /**
-    * checks to see if the line contains special characters.
-    * @param line - element of data to check for special characters.
-    * @return true if the line contains the quote, escape, separator, newline or return.
+    * Checks to see if the line contains special characters.
+    * @param line Element of data to check for special characters.
+    * @return True if the line contains the quote, escape, separator, newline, or return.
     */
    protected boolean stringContainsSpecialCharacters(String line) {
       return line.indexOf(quotechar) != -1
@@ -352,7 +352,7 @@ public class CSVWriter implements Closeable, Flushable {
 
    /**
     * Processes all the characters in a line.
-    * @param nextElement - element to process.
+    * @param nextElement Element to process.
     * @param appendable - Appendable holding the processed data.
     * @throws IOException - IOException thrown by the writer supplied to the CSVWriter
     */
@@ -366,7 +366,7 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Appends the character to the StringBuilder adding the escape character if needed.
     * @param appendable - Appendable holding the processed data.
-    * @param nextChar - character to process
+    * @param nextChar Character to process
     * @throws IOException - IOException thrown by the writer supplied to the CSVWriter.
     */
    protected void processCharacter(Appendable appendable, char nextChar) throws IOException {
@@ -385,8 +385,9 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Flush underlying stream to writer.
     *
-    * @throws IOException if bad things happen
+    * @throws IOException If bad things happen
     */
+   @Override
    public void flush() throws IOException {
       writer.flush();
    }
@@ -394,8 +395,9 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Close the underlying stream writer flushing any buffered content.
     *
-    * @throws IOException if bad things happen
+    * @throws IOException If bad things happen
     */
+   @Override
    public void close() throws IOException {
       flush();
       writer.close();
@@ -404,7 +406,7 @@ public class CSVWriter implements Closeable, Flushable {
    /**
     * Flushes the buffer and checks to see if the there has been an error in the printstream.
     *
-    * @return <code>true</code> if the print stream has encountered an error,
+    * @return True if the print stream has encountered an error
     *          either on the underlying output stream or during a format
     *          conversion.
     */
@@ -421,7 +423,7 @@ public class CSVWriter implements Closeable, Flushable {
 
    /**
     * Sets the result service.
-    * @param resultService - the ResultSetHelper
+    * @param resultService The ResultSetHelper
     */
    public void setResultService(ResultSetHelper resultService) {
       this.resultService = resultService;
@@ -439,7 +441,7 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
    /**
-    * flushes the writer without throwing any exceptions.
+    * Flushes the writer without throwing any exceptions.
     */
    public void flushQuietly() {
       try {

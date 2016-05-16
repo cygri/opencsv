@@ -2,6 +2,7 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.*;
+import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
@@ -11,8 +12,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CsvToBeanTest {
    private static final String TEST_STRING = "name,orderNumber,num\n" +
@@ -50,6 +50,7 @@ public class CsvToBeanTest {
    private MappingStrategy createErrorHeaderMappingStrategy() {
       return new MappingStrategy() {
 
+         @Override
          public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
             return null;
          }
@@ -59,14 +60,17 @@ public class CsvToBeanTest {
             return null;
          }
 
+         @Override
          public Object createBean() throws InstantiationException, IllegalAccessException {
             return null;
          }
 
+         @Override
          public void captureHeader(CSVReader reader) throws IOException {
             throw new IOException("This is the test exception");
          }
 
+         @Override
          public Integer getColumnIndex(String name) {
             return null;
          }
@@ -81,6 +85,7 @@ public class CsvToBeanTest {
    private MappingStrategy createErrorLineMappingStrategy() {
       return new MappingStrategy() {
 
+         @Override
          public PropertyDescriptor findDescriptor(int col) throws IntrospectionException {
             return null;
          }
@@ -90,13 +95,16 @@ public class CsvToBeanTest {
             return null;
          }
 
+         @Override
          public Object createBean() throws InstantiationException, IllegalAccessException {
             throw new InstantiationException("this is a test Exception");
          }
 
+         @Override
          public void captureHeader(CSVReader reader) throws IOException {
          }
 
+         @Override
          public Integer getColumnIndex(String name) {
             return null;
          }
@@ -121,10 +129,10 @@ public class CsvToBeanTest {
    }
 
    @Test
-   public void parseBeanWithNoAnnotations() {
-      HeaderColumnNameMappingStrategy<MockBean> strategy = new HeaderColumnNameMappingStrategy<MockBean>();
+   public void parseBeanWithNoAnnotations() throws CsvBadConverterException {
+      HeaderColumnNameMappingStrategy<MockBean> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(MockBean.class);
-      CsvToBean<MockBean> bean = new CsvToBean<MockBean>();
+      CsvToBean<MockBean> bean = new CsvToBean<>();
 
       List<MockBean> beanList = bean.parse(strategy, createReader());
       assertEquals(2, beanList.size());
@@ -141,7 +149,7 @@ public class CsvToBeanTest {
    }
 
    @Test
-   public void parseBeanWithAnnotations() {
+   public void parseBeanWithAnnotations() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBean> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(SimpleAnnotatedMockBean.class);
       CsvToBean<SimpleAnnotatedMockBean> csvToBean = new CsvToBean<>();
@@ -160,7 +168,7 @@ public class CsvToBeanTest {
    }
 
    @Test
-   public void parseBeanWithSomeAnnotations() {
+   public void parseBeanWithSomeAnnotations() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<SimplePartiallyAnnotatedMockBean> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(SimplePartiallyAnnotatedMockBean.class);
       CsvToBean<SimplePartiallyAnnotatedMockBean> csvToBean = new CsvToBean<>();
@@ -173,12 +181,12 @@ public class CsvToBeanTest {
       for (SimplePartiallyAnnotatedMockBean bean : beanList) {
          assertTrue(expectedNames.contains(bean.getName()));
          assertTrue(expectedNums.contains(bean.getNum()));
-         assertTrue(bean.getOrderNumber() == null);
+         assertNull(bean.getOrderNumber());
       }
    }
 
    @Test
-   public void parseAnnotatedBeanWithAllValidDataTypes() {
+   public void parseAnnotatedBeanWithAllValidDataTypes() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<AnnotatedMockBean> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(AnnotatedMockBean.class);
       CsvToBean<AnnotatedMockBean> csvToBean = new CsvToBean<>();
@@ -199,7 +207,7 @@ public class CsvToBeanTest {
    }
 
    @Test
-   public void parseAnnotatedBeanWithPrivateField() {
+   public void parseAnnotatedBeanWithPrivateField() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBeanPrivateFields> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(SimpleAnnotatedMockBeanPrivateFields.class);
       CsvToBean<SimpleAnnotatedMockBeanPrivateFields> csvToBean = new CsvToBean<>();
@@ -213,7 +221,7 @@ public class CsvToBeanTest {
    }
 
    @Test
-   public void parseAnnotatedBeanWithFieldsOfAllAccessModifierTypes() {
+   public void parseAnnotatedBeanWithFieldsOfAllAccessModifierTypes() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBeanAllModifierTypes> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(SimpleAnnotatedMockBeanAllModifierTypes.class);
       CsvToBean<SimpleAnnotatedMockBeanAllModifierTypes> csvToBean = new CsvToBean<>();
@@ -229,7 +237,7 @@ public class CsvToBeanTest {
    }
 
    @Test(expected = RuntimeException.class)
-   public void throwRuntimeExceptionWhenUnsupportedDataTypeUsedInAnnotatedBean() {
+   public void throwRuntimeExceptionWhenUnsupportedDataTypeUsedInAnnotatedBean() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<UnbindableMockBean> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(UnbindableMockBean.class);
       CsvToBean<UnbindableMockBean> csvToBean = new CsvToBean<>();
@@ -238,7 +246,7 @@ public class CsvToBeanTest {
    }
 
    @Test(expected = RuntimeException.class)
-   public void throwRuntimeExceptionWhenRequiredFieldNotProvidedInAnnotatedBean() {
+   public void throwRuntimeExceptionWhenRequiredFieldNotProvidedInAnnotatedBean() throws CsvBadConverterException {
       HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBean> strategy = new HeaderColumnNameMappingStrategy<>();
       strategy.setType(SimpleAnnotatedMockBean.class);
       CsvToBean<SimpleAnnotatedMockBean> csvToBean = new CsvToBean<>();

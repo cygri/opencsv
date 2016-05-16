@@ -2,6 +2,7 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.MockBean;
+import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,12 +23,11 @@ public class IterableCSVToBeanTest {
     private IterableCSVToBeanBuilder<MockBean> builder;
     private HeaderColumnNameMappingStrategy<MockBean> strategy;
     private IterableCSVToBean<MockBean> bean;
-    private CsvToBeanFilter filter;
 
     @Before
-    public void setUp() {
-        builder = new IterableCSVToBeanBuilder<MockBean>();
-        strategy = new HeaderColumnNameMappingStrategy<MockBean>();
+    public void setUp() throws CsvBadConverterException {
+        builder = new IterableCSVToBeanBuilder<>();
+        strategy = new HeaderColumnNameMappingStrategy<>();
         strategy.setType(MockBean.class);
         bean = builder.withReader(createReader())
                 .withMapper(strategy)

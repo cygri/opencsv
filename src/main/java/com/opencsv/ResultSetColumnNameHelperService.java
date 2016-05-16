@@ -1,14 +1,14 @@
 package com.opencsv;
 
-/**
+/*
  * Copyright 2015 Scott Conway
- * <p/>
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,20 +25,24 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Helper class for processing JDBC ResultSet objects allowing the user to process a subset of columns
- * and set custom header names.
+ * Helper class for processing JDBC ResultSet objects allowing the user to
+ * process a subset of columns and set custom header names.
  */
 public class ResultSetColumnNameHelperService extends ResultSetHelperService implements ResultSetHelper {
     private String[] columnNames;
     private String[] columnHeaders;
-    private Map<String, Integer> columnNamePositionMap = new HashMap<String, Integer>();
+    private final Map<String, Integer> columnNamePositionMap = new HashMap<>();
+
+    public ResultSetColumnNameHelperService() {
+    }
 
     /**
-     * Set the JDBC column names to use, and the header-text for the CSV file
-     * @param columnNames the JDBC column names to export, in the desired order
-     * @param columnHeaders the column headers of the CSV file, in the desired order
-     * @throws UnsupportedOperationException if the number of headers is different than the number of columns, or if any
-     * of the columns or headers is blank or null.
+     * Set the JDBC column names to use, and the header text for the CSV file
+     * @param columnNames The JDBC column names to export, in the desired order
+     * @param columnHeaders The column headers of the CSV file, in the desired order
+     * @throws UnsupportedOperationException If the number of headers is different
+     * than the number of columns, or if any of the columns or headers is blank
+     * or null.
      */
     public void setColumnNames(String[] columnNames, String[] columnHeaders) {
         if (columnHeaders.length != columnNames.length) {
@@ -65,9 +69,9 @@ public class ResultSetColumnNameHelperService extends ResultSetHelperService imp
 
     /**
      * Returns the column names from the result set.
-     * @param rs - ResultSet
-     * @return - a string array containing the column names.
-     * @throws SQLException - thrown by the result set.
+     * @param rs ResultSet
+     * @return A string array containing the column names.
+     * @throws SQLException Thrown by the result set.
      */
     @Override
     public String[] getColumnNames(ResultSet rs) throws SQLException {
@@ -96,46 +100,46 @@ public class ResultSetColumnNameHelperService extends ResultSetHelperService imp
 
     /**
      * Get all the column values from the result set.
-     * @param rs - the ResultSet containing the values.
-     * @return - String array containing all the column values.
-     * @throws SQLException - thrown by the result set.
-     * @throws IOException - thrown by the result set.
+     * @param rs The ResultSet containing the values.
+     * @return String array containing all the column values.
+     * @throws SQLException Thrown by the result set.
+     * @throws IOException Thrown by the result set.
      */
     @Override
     public String[] getColumnValues(ResultSet rs) throws SQLException, IOException {
         if (columnNamePositionMap.isEmpty()) {
             populateColumnData(rs);
         }
-        String[] realColumnValues = super.getColumnValues(rs, false, super.DEFAULT_DATE_FORMAT, super.DEFAULT_TIMESTAMP_FORMAT);
+        String[] realColumnValues = super.getColumnValues(rs, false, DEFAULT_DATE_FORMAT, DEFAULT_TIMESTAMP_FORMAT);
         return getColumnValueSubset(realColumnValues);
     }
 
     /**
      * Get all the column values from the result set.
-     * @param rs - the ResultSet containing the values.
-     * @param trim - values should have white spaces trimmed.
-     * @return - String array containing all the column values.
-     * @throws SQLException - thrown by the result set.
-     * @throws IOException - thrown by the result set.
+     * @param rs The ResultSet containing the values.
+     * @param trim Values should have white spaces trimmed.
+     * @return String array containing all the column values.
+     * @throws SQLException Thrown by the result set.
+     * @throws IOException Thrown by the result set.
      */
     @Override
     public String[] getColumnValues(ResultSet rs, boolean trim) throws SQLException, IOException {
         if (columnNamePositionMap.isEmpty()) {
             populateColumnData(rs);
         }
-        String[] realColumnValues = super.getColumnValues(rs, trim, super.DEFAULT_DATE_FORMAT, super.DEFAULT_TIMESTAMP_FORMAT);
+        String[] realColumnValues = super.getColumnValues(rs, trim, DEFAULT_DATE_FORMAT, DEFAULT_TIMESTAMP_FORMAT);
         return getColumnValueSubset(realColumnValues);
     }
 
     /**
      * Get all the column values from the result set.
-     * @param rs - the ResultSet containing the values.
-     * @param trim - values should have white spaces trimmed.
-     * @param dateFormatString - format String for dates.
-     * @param timeFormatString - format String for timestamps.
-     * @return - String array containing all the column values.
-     * @throws SQLException - thrown by the result set.
-     * @throws IOException - thrown by the result set.
+     * @param rs The ResultSet containing the values.
+     * @param trim Values should have white spaces trimmed.
+     * @param dateFormatString Format string for dates.
+     * @param timeFormatString Format string for timestamps.
+     * @return String array containing all the column values.
+     * @throws SQLException Thrown by the result set.
+     * @throws IOException Thrown by the result set.
      */
     @Override
     public String[] getColumnValues(ResultSet rs, boolean trim, String dateFormatString, String timeFormatString) throws SQLException, IOException {
@@ -147,7 +151,7 @@ public class ResultSetColumnNameHelperService extends ResultSetHelperService imp
     }
 
     private String[] getColumnValueSubset(String[] realColumnValues) {
-        List<String> valueList = new ArrayList<String>(realColumnValues.length);
+        List<String> valueList = new ArrayList<>(realColumnValues.length);
         for (String columnName : columnNames) {
             valueList.add(realColumnValues[columnNamePositionMap.get(columnName)]);
         }
