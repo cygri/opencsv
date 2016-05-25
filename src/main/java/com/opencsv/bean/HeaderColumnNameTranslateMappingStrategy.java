@@ -35,7 +35,7 @@ public class HeaderColumnNameTranslateMappingStrategy<T> extends HeaderColumnNam
     * Default constructor.
     */
    public HeaderColumnNameTranslateMappingStrategy() {
-      columnMapping = new HashMap<>();
+      columnMapping = new HashMap<String, String>();
    }
 
    @Override

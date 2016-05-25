@@ -18,7 +18,6 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.MockBean;
-import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,12 +42,12 @@ public class HeaderColumnNameMappingStrategyTest {
 
    @Before
    public void setUp() {
-      strat = new HeaderColumnNameMappingStrategy<>();
+      strat = new HeaderColumnNameMappingStrategy<MockBean>();
    }
 
-   private List<MockBean> createTestParseResult(String parseString) throws CsvBadConverterException {
+   private List<MockBean> createTestParseResult(String parseString) {
       strat.setType(MockBean.class);
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       return csv.parse(strat, new StringReader(parseString));
    }
 
@@ -58,7 +57,7 @@ public class HeaderColumnNameMappingStrategyTest {
    }
 
    @Test
-   public void getColumnIndexAfterParse() throws CsvBadConverterException {
+   public void getColumnIndexAfterParse() {
       List<MockBean> list = createTestParseResult(TEST_STRING);
       assertEquals(0, strat.getColumnIndex("name").intValue());
       assertEquals(1, strat.getColumnIndex("orderNumber").intValue());
@@ -67,7 +66,7 @@ public class HeaderColumnNameMappingStrategyTest {
    }
 
    @Test
-   public void testParse() throws CsvBadConverterException {
+   public void testParse() {
       List<MockBean> list = createTestParseResult(TEST_STRING);
       assertNotNull(list);
       assertTrue(list.size() == 2);
@@ -78,7 +77,7 @@ public class HeaderColumnNameMappingStrategyTest {
    }
 
    @Test
-   public void testQuotedString() throws CsvBadConverterException {
+   public void testQuotedString() {
       List<MockBean> list = createTestParseResult(TEST_QUOTED_STRING);
       assertNotNull(list);
       assertTrue(list.size() == 2);
@@ -89,7 +88,7 @@ public class HeaderColumnNameMappingStrategyTest {
    }
 
    @Test
-   public void testParseWithSpacesInHeader() throws CsvBadConverterException {
+   public void testParseWithSpacesInHeader() {
       List<MockBean> list = createTestParseResult(TEST_STRING);
       assertNotNull(list);
       assertTrue(list.size() == 2);
@@ -100,9 +99,8 @@ public class HeaderColumnNameMappingStrategyTest {
    }
 
    @Test
-   public void verifyColumnNames() throws IOException, IntrospectionException,
-           CsvBadConverterException {
-      HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<>();
+   public void verifyColumnNames() throws IOException, IntrospectionException {
+      HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
       assertNull(strat.getColumnName(0));
       assertNull(strat.findDescriptor(0));

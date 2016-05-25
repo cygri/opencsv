@@ -17,7 +17,6 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.*;
-import com.opencsv.exceptions.CsvBadConverterException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
@@ -46,20 +45,18 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testGoodDataByName() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testGoodDataByName() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputfullgood.csv");
         testGoodData(strat, fin);
     }
 
     @Test
-    public void testGoodDataByPosition() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testGoodDataByPosition() throws FileNotFoundException {
         ColumnPositionMappingStrategy<AnnotatedMockBeanFull> strat =
-                new ColumnPositionMappingStrategy<>();
+                new ColumnPositionMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputposfullgood.csv");
         testGoodData(strat, fin);
@@ -136,20 +133,18 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testGoodDataCustomByName() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testGoodDataCustomByName() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanCustom> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanCustom>();
         strat.setType(AnnotatedMockBeanCustom.class);
         FileReader fin = new FileReader("src/test/resources/testinputcustomgood.csv");
         testGoodDataCustom(strat, fin);
     }
 
     @Test
-    public void testGoodDataCustomByPosition() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testGoodDataCustomByPosition() throws FileNotFoundException {
         ColumnPositionMappingStrategy<AnnotatedMockBeanCustom> strat =
-                new ColumnPositionMappingStrategy<>();
+                new ColumnPositionMappingStrategy<AnnotatedMockBeanCustom>();
         strat.setType(AnnotatedMockBeanCustom.class);
         FileReader fin = new FileReader("src/test/resources/testinputposcustomgood.csv");
         testGoodDataCustom(strat, fin);
@@ -244,20 +239,18 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testCase7() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase7() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputcase7.csv");
         testCases7And51(strat, fin);
     }
 
     @Test
-    public void testCase51() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase51() throws FileNotFoundException {
         ColumnPositionMappingStrategy<AnnotatedMockBeanFull> strat =
-                new ColumnPositionMappingStrategy<>();
+                new ColumnPositionMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputcase51.csv");
         testCases7And51(strat, fin);
@@ -280,20 +273,18 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testCase11() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase11() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputcase11.csv");
         testCases11And55(strat, fin);
     }
 
     @Test
-    public void testCase55() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase55() throws FileNotFoundException {
         ColumnPositionMappingStrategy<AnnotatedMockBeanFull> strat =
-                new ColumnPositionMappingStrategy<>();
+                new ColumnPositionMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputcase55.csv");
         testCases11And55(strat, fin);
@@ -317,20 +308,18 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testCase21() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase21() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<TestCases21And63> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<TestCases21And63>();
         strat.setType(TestCases21And63.class);
         CSVReader read = new CSVReader(new StringReader("list\ntrue false true"));
         testCases21And63(strat, read);
     }
 
     @Test
-    public void testCase63() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase63() throws FileNotFoundException {
         ColumnPositionMappingStrategy<TestCases21And63> strat =
-                new ColumnPositionMappingStrategy<>();
+                new ColumnPositionMappingStrategy<TestCases21And63>();
         strat.setType(TestCases21And63.class);
         CSVReader read = new CSVReader(new StringReader("true false true"));
         testCases21And63(strat, read);
@@ -352,10 +341,9 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testBadDataByName() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testBadDataByName() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull>();
         strat.setType(AnnotatedMockBeanFull.class);
         Reader fin = new FileReader("src/test/resources/testinputcase78.csv");
         CSVReader read = new CSVReader(fin, ';');
@@ -372,7 +360,7 @@ public class AnnotationTest {
         }
 
         HeaderColumnNameMappingStrategy<TestCase34> strat34 =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<TestCase34>();
         strat34.setType(TestCase34.class);
         read = new CSVReader(new StringReader("isnotdate\n19780115T063209"));
         try {
@@ -402,20 +390,18 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testCase16() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase16() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanCustom> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanCustom>();
         strat.setType(AnnotatedMockBeanCustom.class);
         Reader fin = new FileReader("src/test/resources/testinputcase16.csv");
         testCases16And60(strat, fin);
     }
 
     @Test
-    public void testCase60() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testCase60() throws FileNotFoundException {
         ColumnPositionMappingStrategy<AnnotatedMockBeanCustom> strat =
-                new ColumnPositionMappingStrategy<>();
+                new ColumnPositionMappingStrategy<AnnotatedMockBeanCustom>();
         strat.setType(AnnotatedMockBeanCustom.class);
         Reader fin = new FileReader("src/test/resources/testinputcase60.csv");
         testCases16And60(strat, fin);
@@ -440,10 +426,9 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testBadDataCustomByName() throws FileNotFoundException,
-            CsvBadConverterException {
+    public void testBadDataCustomByName() throws FileNotFoundException {
         HeaderColumnNameMappingStrategy<AnnotatedMockBeanCustom> strat =
-                new HeaderColumnNameMappingStrategy<>();
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanCustom>();
         strat.setType(AnnotatedMockBeanCustom.class);
 
         FileReader fin = new FileReader("src/test/resources/testinputcase38.csv");

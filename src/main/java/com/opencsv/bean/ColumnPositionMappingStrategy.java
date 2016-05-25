@@ -91,7 +91,7 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
     public void setType(Class<T> type) throws CsvBadConverterException {
         super.setType(type);
         if (!columnsExplicitlySet) {
-            SortedMap<Integer, BeanField> cols = new TreeMap<>();
+            SortedMap<Integer, BeanField> cols = new TreeMap<Integer, BeanField>();
             for (BeanField beanField : fieldMap.values()) {
                 if (beanField
                         .getField()
@@ -131,7 +131,7 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
 
     @Override
     protected void loadFieldMap() throws CsvBadConverterException {
-        fieldMap = new HashMap<>();
+        fieldMap = new HashMap<String, BeanField>();
 
         for (Field field : loadFields(getType())) {
             String columnName;
@@ -146,7 +146,14 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
                 BeanField bean;
                 try {
                     bean = converter.newInstance();
-                } catch (InstantiationException | IllegalAccessException oldEx) {
+                } catch (IllegalAccessException oldEx) {
+                    CsvBadConverterException newEx
+                            = new CsvBadConverterException(converter,
+                            "There was a problem instantiating the custom converter "
+                                    + converter.getCanonicalName());
+                    newEx.initCause(oldEx);
+                    throw newEx;
+                } catch (InstantiationException oldEx) {
                     CsvBadConverterException newEx
                             = new CsvBadConverterException(converter,
                             "There was a problem instantiating the custom converter "
@@ -181,7 +188,7 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
     }
 
     private List<Field> loadFields(Class<T> cls) {
-        List<Field> fields = new ArrayList<>();
+        List<Field> fields = new ArrayList<Field>();
         for (Field field : cls.getDeclaredFields()) {
             if (field.isAnnotationPresent(CsvBindByPosition.class)
                     || field.isAnnotationPresent(CsvCustomBindByPosition.class)

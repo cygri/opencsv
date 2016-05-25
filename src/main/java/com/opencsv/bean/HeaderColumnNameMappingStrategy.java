@@ -40,7 +40,7 @@ import java.util.Map;
 public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
 
     protected String[] header;
-    protected Map<String, Integer> indexLookup = new HashMap<>();
+    protected Map<String, Integer> indexLookup = new HashMap<String, Integer>();
     protected Map<String, PropertyDescriptor> descriptorMap = null;
     protected Map<String, BeanField> fieldMap = null;
     protected Class<T> type;
@@ -159,7 +159,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
      *                                about the bean.
      */
     protected Map<String, PropertyDescriptor> loadDescriptorMap() throws IntrospectionException {
-        Map<String, PropertyDescriptor> map = new HashMap<>();
+        Map<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
 
         PropertyDescriptor[] descriptors;
         descriptors = loadDescriptors(getType());
@@ -177,7 +177,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
      *                                  custom converter for an annotated field
      */
     protected void loadFieldMap() throws CsvBadConverterException {
-        fieldMap = new HashMap<>();
+        fieldMap = new HashMap<String, BeanField>();
 
         for (Field field : loadFields(getType())) {
             String columnName, locale;
@@ -191,7 +191,14 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
                 BeanField bean;
                 try {
                     bean = converter.newInstance();
-                } catch (InstantiationException | IllegalAccessException oldEx) {
+                } catch (IllegalAccessException oldEx) {
+                    CsvBadConverterException newEx =
+                            new CsvBadConverterException(converter,
+                                    "There was a problem instantiating the custom converter "
+                                            + converter.getCanonicalName());
+                    newEx.initCause(oldEx);
+                    throw newEx;
+                } catch (InstantiationException oldEx) {
                     CsvBadConverterException newEx =
                             new CsvBadConverterException(converter,
                                     "There was a problem instantiating the custom converter "
@@ -242,7 +249,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     }
 
     private List<Field> loadFields(Class<T> cls) {
-        List<Field> fields = new ArrayList<>();
+        List<Field> fields = new ArrayList<Field>();
         for (Field field : cls.getDeclaredFields()) {
             if (field.isAnnotationPresent(CsvBind.class)
                     || field.isAnnotationPresent(CsvBindByName.class)

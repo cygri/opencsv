@@ -34,15 +34,15 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
       String s = "n,o,foo\n" +
             "kyle,123456,emp123\n" +
             "jimmy,abcnum,cust09878";
-      HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<>();
+      HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
-      Map<String, String> map = new HashMap<>();
+      Map<String, String> map = new HashMap<String, String>();
       map.put("n", "name");
       map.put("o", "orderNumber");
       map.put("foo", "id");
       strat.setColumnMapping(map);
 
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       List<MockBean> list = csv.parse(strat, new StringReader(s));
       assertNotNull(list);
       assertTrue(list.size() == 2);
@@ -57,15 +57,15 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
       String s = "n,o,foo\n" +
             "kyle,123456,emp123\n" +
             "jimmy,abcnum,cust09878";
-      HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<>();
+      HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
-      Map<String, String> map = new HashMap<>();
+      Map<String, String> map = new HashMap<String, String>();
       map.put("n", "name");
       map.put("o", "orderNumber");
       map.put("foo", "id");
       strat.setColumnMapping(map);
 
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       csv.parse(strat, new StringReader(s));
 
       assertEquals("name", strat.getColumnName(0));
@@ -79,16 +79,16 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
       String s = "n,o,Foo\n" +
             "kyle,123456,emp123\n" +
             "jimmy,abcnum,cust09878";
-      HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<>();
+      HeaderColumnNameTranslateMappingStrategy<MockBean> strat = new HeaderColumnNameTranslateMappingStrategy<MockBean>();
       strat.setType(MockBean.class);
-      Map<String, String> map = new HashMap<>();
+      Map<String, String> map = new HashMap<String, String>();
       map.put("n", "name");
       map.put("o", "orderNumber");
       map.put("foo", "id");
       strat.setColumnMapping(map);
       assertNotNull(strat.getColumnMapping());
 
-      CsvToBean<MockBean> csv = new CsvToBean<>();
+      CsvToBean<MockBean> csv = new CsvToBean<MockBean>();
       csv.parse(strat, new StringReader(s));
 
       assertEquals("name", strat.getColumnName(0));

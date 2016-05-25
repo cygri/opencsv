@@ -31,7 +31,7 @@ import java.util.*;
 public class ResultSetColumnNameHelperService extends ResultSetHelperService implements ResultSetHelper {
     private String[] columnNames;
     private String[] columnHeaders;
-    private final Map<String, Integer> columnNamePositionMap = new HashMap<>();
+    private final Map<String, Integer> columnNamePositionMap = new HashMap<String, Integer>();
 
     public ResultSetColumnNameHelperService() {
     }
@@ -151,7 +151,7 @@ public class ResultSetColumnNameHelperService extends ResultSetHelperService imp
     }
 
     private String[] getColumnValueSubset(String[] realColumnValues) {
-        List<String> valueList = new ArrayList<>(realColumnValues.length);
+        List<String> valueList = new ArrayList<String>(realColumnValues.length);
         for (String columnName : columnNames) {
             valueList.add(realColumnValues[columnNamePositionMap.get(columnName)]);
         }

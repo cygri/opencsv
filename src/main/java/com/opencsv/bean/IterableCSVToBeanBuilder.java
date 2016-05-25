@@ -67,7 +67,7 @@ public class IterableCSVToBeanBuilder<T> {
         if (csvReader == null) {
             throw new RuntimeException(NO_READER_DEFINED);
         }
-        return new IterableCSVToBean<>(csvReader, mapper, filter);
+        return new IterableCSVToBean<T>(csvReader, mapper, filter);
     }
 
     /**

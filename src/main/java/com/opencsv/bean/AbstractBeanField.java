@@ -110,7 +110,21 @@ abstract public class AbstractBeanField<T> implements BeanField<T> {
                     csve.initCause(e);
                     throw csve;
                 }
-            } catch (NoSuchMethodException | SecurityException e1) {
+            } catch (NoSuchMethodException e1) {
+
+                // Otherwise set the field directly.
+                try {
+                    FieldUtils.writeField(field, bean, obj, true);
+                } catch (IllegalAccessException e2) {
+                    // Can only happen if the field is declared final.
+                    // I'll take the risk.
+                } catch (IllegalArgumentException e2) {
+                    CsvDataTypeMismatchException csve =
+                            new CsvDataTypeMismatchException(obj, fieldType);
+                    csve.initCause(e2);
+                    throw csve;
+                }
+            } catch (SecurityException e1) {
 
                 // Otherwise set the field directly.
                 try {

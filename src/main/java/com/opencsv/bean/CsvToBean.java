@@ -159,7 +159,7 @@ public class CsvToBean<T> extends AbstractCSVToBean {
       }
 
       try {
-         List<T> list = new ArrayList<>();
+         List<T> list = new ArrayList<T>();
          while (null != (line = csv.readNext())) {
             lineProcessed++;
             try {
@@ -282,7 +282,7 @@ public class CsvToBean<T> extends AbstractCSVToBean {
     */
    public List<CsvException> getCapturedExceptions() {
       if (capturedExceptions == null) {
-           capturedExceptions = new ArrayList<>();
+         capturedExceptions = new ArrayList<CsvException>();
         }
         return capturedExceptions;
     }

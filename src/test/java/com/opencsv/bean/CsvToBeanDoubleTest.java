@@ -2,7 +2,6 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.MockBean;
-import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -42,10 +41,10 @@ public class CsvToBeanDoubleTest {
     }
 
     @Test
-    public void parseBeanWithNoAnnotations() throws CsvBadConverterException {
-        HeaderColumnNameMappingStrategy<MockBean> strategy = new HeaderColumnNameMappingStrategy<>();
+    public void parseBeanWithNoAnnotations() {
+        HeaderColumnNameMappingStrategy<MockBean> strategy = new HeaderColumnNameMappingStrategy<MockBean>();
         strategy.setType(MockBean.class);
-        CsvToBean<MockBean> bean = new CsvToBean<>();
+        CsvToBean<MockBean> bean = new CsvToBean<MockBean>();
 
         List<MockBean> beanList = bean.parse(strategy, createReader());
         assertEquals(2, beanList.size());

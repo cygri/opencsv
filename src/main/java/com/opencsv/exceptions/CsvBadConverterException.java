@@ -22,7 +22,7 @@ package com.opencsv.exceptions;
  *
  * @author Andrew Rucker Jones
  */
-public class CsvBadConverterException extends CsvException {
+public class CsvBadConverterException extends RuntimeException {
     private final Class converterClass;
 
     /**
