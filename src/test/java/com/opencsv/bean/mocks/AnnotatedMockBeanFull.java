@@ -516,10 +516,9 @@ public class AnnotatedMockBeanFull {
      * <li>33</li>
      * </ul></p>
      */
-    // https://issues.apache.org/jira/browse/BEANUTILS-486
-//    @CsvBindByName(column = "date14", locale = "de_DE")
-//    @CsvBindByPosition(position = 46, locale = "de_DE")
-//    @CsvDate("dd. MMM yyyy")
+    @CsvBindByName(column = "date14", locale = "de_DE")
+    @CsvBindByPosition(position = 46, locale = "de_DE")
+    @CsvDate("dd. MMM yyyy")
     private GregorianCalendar gcalFormatSetLocale;
 
     /**

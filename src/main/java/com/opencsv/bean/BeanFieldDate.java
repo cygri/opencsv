@@ -19,6 +19,10 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.converters.*;
+import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
+import org.apache.commons.beanutils.locale.converters.SqlDateLocaleConverter;
+import org.apache.commons.beanutils.locale.converters.SqlTimeLocaleConverter;
+import org.apache.commons.beanutils.locale.converters.SqlTimestampLocaleConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -27,10 +31,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.lang.reflect.Field;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * This class converts an input to a date type.
@@ -60,17 +61,66 @@ public class BeanFieldDate extends AbstractBeanField {
         this.locale = locale;
     }
 
-    @Override
-    protected Object convert(String value) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-        if (required && StringUtils.isEmpty(value)) {
-            throw new CsvRequiredFieldEmptyException();
+    /**
+     * Converts the input string to a locale-specific date/time object.
+     * This is used only on destination objects that support locale-specific
+     * conversions and only when the locale has been specified.
+     *
+     * @param value     The string to be converted into a date/time type
+     * @param fieldType The class of the destination field
+     * @return The date/time object resulting from the conversion
+     * @throws CsvDataTypeMismatchException If a non-convertable type is
+     *                                      passed in, or if the conversion fails
+     */
+    private Object convertLocaleSpecific(String value, Class fieldType)
+            throws CsvDataTypeMismatchException {
+        DateLocaleConverter c;
+        Object o;
+        Locale l = new Locale(locale);
+
+        // Get the proper converter
+        if (fieldType == Date.class) {
+            c = new DateLocaleConverter(l, formatString);
+        } else if (fieldType == java.sql.Date.class) {
+            c = new SqlDateLocaleConverter(l, formatString);
+        } else if (fieldType == Time.class) {
+            c = new SqlTimeLocaleConverter(l, formatString);
+        } else if (fieldType == Timestamp.class) {
+            c = new SqlTimestampLocaleConverter(l, formatString);
+        } else {
+            throw new CsvDataTypeMismatchException(value, field.getType(),
+                    "@CsvDate annotation used on non-date field.");
         }
 
-        Class fieldType = field.getType();
-        Class conversionType = fieldType;
-        Object o;
-        DateTimeConverter c;
+        // Convert with respect to format string and locale
+        try {
+            o = c.convert(fieldType, (Object) value);
+        } catch (ConversionException e) {
+            CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+            csve.initCause(e);
+            throw csve;
+        }
 
+        return o;
+    }
+
+    /**
+     * Converts the input string to a date/time object.
+     * This is used on destination objects that don't support locale-specific
+     * conversions or when the locale hasn't been specified.
+     *
+     * @param value     The string to be converted into a date/time type
+     * @param fieldType The class of the destination field
+     * @return The date/time object resulting from the conversion
+     * @throws CsvDataTypeMismatchException If a non-convertable type is
+     *                                      passed in, or if the conversion fails
+     */
+    private Object convertLocaleInspecific(String value, Class fieldType)
+            throws CsvDataTypeMismatchException {
+        DateTimeConverter c;
+        Object o;
+        Class conversionType = fieldType;
+        
         // Get the proper converter
         if (fieldType == Date.class) {
             c = new DateConverter();
@@ -90,11 +140,8 @@ public class BeanFieldDate extends AbstractBeanField {
                     "@CsvDate annotation used on non-date field.");
         }
 
-        // Convert with respect to format string and possibly locale
+        // Convert with respect to format string
         c.setPattern(formatString);
-        if (StringUtils.isNotEmpty(locale)) {
-            c.setLocale(new Locale(locale));
-        }
         try {
             o = c.convert(conversionType, value);
         } catch (ConversionException e) {
@@ -132,6 +179,32 @@ public class BeanFieldDate extends AbstractBeanField {
                     throw ex;
                 }
             }
+        }
+
+        return o;
+    }
+
+    @Override
+    protected Object convert(String value) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        if (required && StringUtils.isEmpty(value)) {
+            throw new CsvRequiredFieldEmptyException();
+        }
+
+        Class fieldType = field.getType();
+        Object o;
+
+        // Send to the proper submethod
+        Collection<Class> localeFields = Arrays.<Class>asList(
+                Date.class, java.sql.Date.class, Time.class, Timestamp.class);
+        Collection<Class> nonlocaleFields = Arrays.<Class>asList(
+                Calendar.class, GregorianCalendar.class, XMLGregorianCalendar.class);
+        if (localeFields.contains(fieldType) && StringUtils.isNotEmpty(locale)) {
+            o = convertLocaleSpecific(value, fieldType);
+        } else if (nonlocaleFields.contains(fieldType) || localeFields.contains(fieldType)) {
+            o = convertLocaleInspecific(value, fieldType);
+        } else {
+            throw new CsvDataTypeMismatchException(value, field.getType(),
+                    "@CsvDate annotation used on non-date field.");
         }
 
         return o;

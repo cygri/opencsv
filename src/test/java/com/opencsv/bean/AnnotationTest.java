@@ -21,6 +21,9 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.beanutils.ConversionException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -39,6 +42,23 @@ import static org.junit.Assert.*;
  * @author Andrew Rucker Jones
  */
 public class AnnotationTest {
+
+    private static Locale systemLocale;
+
+    @BeforeClass
+    public static void storeSystemLocale() {
+        systemLocale = Locale.getDefault();
+    }
+
+    @Before
+    public void setSystemLocaleToGerman() {
+        Locale.setDefault(Locale.GERMAN);
+    }
+
+    @After
+    public void setSystemLocaleBackToDefault() {
+        Locale.setDefault(systemLocale);
+    }
 
     private static GregorianCalendar createDefaultTime() {
         return new GregorianCalendar(1978, Calendar.JANUARY, 15, 6, 32, 9);
@@ -118,8 +138,7 @@ public class AnnotationTest {
         assertEquals("1978-01-15", bean.getSqldateSetLocale().toString());
         assertEquals("test string", bean.getStringClass());
         assertEquals(new GregorianCalendar(1978, 0, 15).getTimeInMillis(), bean.getGcalFormatDefaultLocale().getTimeInMillis());
-        // https://issues.apache.org/jira/browse/BEANUTILS-486
-//        assertEquals(new GregorianCalendar(2018, 11, 13).getTimeInMillis(), bean.getGcalFormatSetLocale().getTimeInMillis());
+        assertEquals(new GregorianCalendar(2018, 11, 13).getTimeInMillis(), bean.getGcalFormatSetLocale().getTimeInMillis());
         assertEquals(1.01, bean.getFloatBadLocale(), 0.001);
         assertNull(bean.getColumnDoesntExist());
         assertNull(bean.getUnmapped());
