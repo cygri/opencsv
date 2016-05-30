@@ -31,6 +31,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.lang.reflect.Field;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -62,9 +64,76 @@ public class BeanFieldDate extends AbstractBeanField {
     }
 
     /**
+     * Converts the input string to a calendar object.
+     * <p>I would dearly love to use Apache Commons BeanUtils for this, but it
+     * doesn't seem to allow using format patterns and specified locales. The
+     * following types are explicitly supported:
+     * <ul><li>Calendar (always a GregorianCalendar)</li>
+     * <li>GregorianCalendar</li>
+     * <li>XMLGregorianCalendar</li></ul></p>
+     *
+     * @param value     The string to be converted into a date/time type
+     * @param fieldType The class of the destination field
+     * @return The calendar object resulting from the conversion
+     * @throws CsvDataTypeMismatchException If the conversion fails
+     */
+    private Object convertCalendar(String value, Class fieldType)
+            throws CsvDataTypeMismatchException {
+        Object o;
+
+        // Prepare SimpleDateFormat
+        SimpleDateFormat sdf;
+        if (StringUtils.isNotEmpty(locale)) {
+            Locale l = Locale.forLanguageTag(locale);
+            sdf = new SimpleDateFormat(formatString, l);
+        } else {
+            sdf = new SimpleDateFormat(formatString);
+        }
+
+        // Parse input
+        Date d;
+        try {
+            d = sdf.parse(value);
+        } catch (ParseException e) {
+            CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+            csve.initCause(e);
+            throw csve;
+        }
+
+        // Make a GregorianCalendar out of it, because this works for all
+        // supported types, at least as an intermediate step.
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime(d);
+        o = gc;
+
+        // XMLGregorianCalendar requires special processing.
+        if (fieldType == XMLGregorianCalendar.class) {
+            try {
+                o = DatatypeFactory
+                        .newInstance()
+                        .newXMLGregorianCalendar((GregorianCalendar) o);
+            } catch (DatatypeConfigurationException e) {
+                // I've never known how to handle this exception elegantly,
+                // especially since I can't conceive of the circumstances
+                // under which it is thrown.
+                CsvDataTypeMismatchException ex = new CsvDataTypeMismatchException(
+                        "It was not possible to initialize an XMLGregorianCalendar.");
+                ex.initCause(e);
+                throw ex;
+            }
+        }
+
+        return o;
+    }
+
+    /**
      * Converts the input string to a locale-specific date/time object.
      * This is used only on destination objects that support locale-specific
-     * conversions and only when the locale has been specified.
+     * conversions and only when the locale has been specified. The division
+     * between this and
+     * {@link #convertLocaleInspecific(java.lang.String, java.lang.Class)} is
+     * based around the division in the class hierarchy of Apache Commons
+     * BeanUtils, which I find counterintuitive and decidedly unhelpful.
      *
      * @param value     The string to be converted into a date/time type
      * @param fieldType The class of the destination field
@@ -76,7 +145,7 @@ public class BeanFieldDate extends AbstractBeanField {
             throws CsvDataTypeMismatchException {
         DateLocaleConverter c;
         Object o;
-        Locale l = new Locale(locale);
+        Locale l = Locale.forLanguageTag(locale);
 
         // Get the proper converter
         if (fieldType == Date.class) {
@@ -107,7 +176,11 @@ public class BeanFieldDate extends AbstractBeanField {
     /**
      * Converts the input string to a date/time object.
      * This is used on destination objects that don't support locale-specific
-     * conversions or when the locale hasn't been specified.
+     * conversions or when the locale hasn't been specified. The division
+     * between this and
+     * {@link #convertLocaleSpecific(java.lang.String, java.lang.Class)} is
+     * based around the division in the class hierarchy of Apache Commons
+     * BeanUtils, which I find counterintuitive and decidedly unhelpful.
      *
      * @param value     The string to be converted into a date/time type
      * @param fieldType The class of the destination field
@@ -124,11 +197,6 @@ public class BeanFieldDate extends AbstractBeanField {
         // Get the proper converter
         if (fieldType == Date.class) {
             c = new DateConverter();
-        } else if (fieldType == Calendar.class
-                || fieldType == GregorianCalendar.class
-                || fieldType == XMLGregorianCalendar.class) {
-            conversionType = Calendar.class;
-            c = new CalendarConverter();
         } else if (fieldType == java.sql.Date.class) {
             c = new SqlDateConverter();
         } else if (fieldType == Time.class) {
@@ -150,37 +218,6 @@ public class BeanFieldDate extends AbstractBeanField {
             throw csve;
         }
 
-        // Postprocess for special types
-        if (fieldType == GregorianCalendar.class
-                || fieldType == XMLGregorianCalendar.class) {
-            if (!(o instanceof GregorianCalendar)) {
-                Calendar cal = (Calendar) o;
-                o = new GregorianCalendar(
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH),
-                        cal.get(Calendar.HOUR_OF_DAY),
-                        cal.get(Calendar.MINUTE),
-                        cal.get(Calendar.SECOND)
-                );
-            }
-            if (fieldType == XMLGregorianCalendar.class) {
-                try {
-                    o = DatatypeFactory
-                            .newInstance()
-                            .newXMLGregorianCalendar((GregorianCalendar) o);
-                } catch (DatatypeConfigurationException e) {
-                    // I've never known how to handle this exception elegantly,
-                    // especially since I can't conceive of the circumstances
-                    // under which it is thrown.
-                    CsvDataTypeMismatchException ex = new CsvDataTypeMismatchException(
-                            "It was not possible to initialize an XMLGregorianCalendar.");
-                    ex.initCause(e);
-                    throw ex;
-                }
-            }
-        }
-
         return o;
     }
 
@@ -196,12 +233,16 @@ public class BeanFieldDate extends AbstractBeanField {
         // Send to the proper submethod
         Collection<Class> localeFields = Arrays.<Class>asList(
                 Date.class, java.sql.Date.class, Time.class, Timestamp.class);
-        Collection<Class> nonlocaleFields = Arrays.<Class>asList(
+        Collection<Class> calendarFields = Arrays.<Class>asList(
                 Calendar.class, GregorianCalendar.class, XMLGregorianCalendar.class);
-        if (localeFields.contains(fieldType) && StringUtils.isNotEmpty(locale)) {
-            o = convertLocaleSpecific(value, fieldType);
-        } else if (nonlocaleFields.contains(fieldType) || localeFields.contains(fieldType)) {
-            o = convertLocaleInspecific(value, fieldType);
+        if (localeFields.contains(fieldType)) {
+            if (StringUtils.isNotEmpty(locale)) {
+                o = convertLocaleSpecific(value, fieldType);
+            } else {
+                o = convertLocaleInspecific(value, fieldType);
+            }
+        } else if (calendarFields.contains(fieldType)) {
+            o = convertCalendar(value, fieldType);
         } else {
             throw new CsvDataTypeMismatchException(value, field.getType(),
                     "@CsvDate annotation used on non-date field.");

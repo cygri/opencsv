@@ -1,6 +1,6 @@
 package com.opencsv.bean;
 
-/**
+/*
  Copyright 2007 Kyle Miller.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@ package com.opencsv.bean;
  */
 
 import com.opencsv.bean.mocks.MockBean;
-import com.opencsv.exceptions.CsvBadConverterException;
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -30,7 +29,7 @@ import static org.junit.Assert.*;
 public class HeaderColumnNameTranslateMappingStrategyTest {
 
    @Test
-   public void testParse() throws CsvBadConverterException {
+   public void testParse() {
       String s = "n,o,foo\n" +
             "kyle,123456,emp123\n" +
             "jimmy,abcnum,cust09878";
@@ -53,7 +52,7 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
    }
 
    @Test
-   public void getColumnNameReturnsNullIfColumnNumberIsTooLarge() throws CsvBadConverterException {
+   public void getColumnNameReturnsNullIfColumnNumberIsTooLarge() {
       String s = "n,o,foo\n" +
             "kyle,123456,emp123\n" +
             "jimmy,abcnum,cust09878";
@@ -75,7 +74,7 @@ public class HeaderColumnNameTranslateMappingStrategyTest {
    }
 
    @Test
-   public void columnNameMappingShouldBeCaseInsensitive() throws CsvBadConverterException {
+   public void columnNameMappingShouldBeCaseInsensitive() {
       String s = "n,o,Foo\n" +
             "kyle,123456,emp123\n" +
             "jimmy,abcnum,cust09878";

@@ -1,0 +1,77 @@
+Test case,Test,Expected behavior,Status
+1,Mapping field of a destination object by @CsvBindByName with members of same name as columns,Members are filled correctly,pass
+2,Mapping field of a destination object by @CsvBindByName with members of different names than columns,Members are filled correctly,pass
+3,Unmapped field using header name strategy,Member is not filled,pass
+4,Mapping all primitive objects by @CsvBindByName,Members are filled correctly,pass
+5,Mapping all wrappers of primitive objects by @CsvBindByName,Members are filled correctly,pass
+6,Mapping required fields by @CsvBindByName with complete source data,Members are filled correctly,pass
+7,Mapping required fields by @CsvBindByName with missing source data,RuntimeException with inner exception CsvRequiredFieldEmptyException,pass
+8,Mapping optional fields by @CsvBindByName with complete source data,Members are filled correctly,pass
+9,Mapping optional primitive fields by @CsvBindByName with missing source data,Members contain VM defaults,pass
+10,Mapping optional object fields by @CsvBindByName with missing source data,Members are null,pass
+11,Mapping fields by @CsvBindByName with mismatching datatypes,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+12,Mapping fields of all wrapped primitive destination objects by @CsvCustomBindByName,Members are filled correctly,pass
+13,Mapping fields of all primitive destination types by @CsvCustomBindByName,Members are filled correctly,pass
+14,Mapping fields of a complex destination object by @CsvCustomBindByName,Members are filled correctly,pass
+15,Mapping fields of a wrapped primitive destination object by @CSVCustomBindByName with mismatching types,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+16,Mapping fields of a complex destination object by @CsvCustomBindByName with unassignable types,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+17,Mapping fields of a complex destination object by @CsvCustomBindByName with an assignable derived type,Members are filled correctly,pass
+18,Mapping fields annotated with @CsvBindByName and @CsvCustomBindByName,The custom converter is used,pass
+19,Mapping fields annotated with @CsvBindByName and @CsvCustomBindByName and @CsvBind,The custom converter is used,pass
+20,Mapping fields annotated with @CsvBindByName and @CsvBind,@CsvBindByName is used,pass
+21,Mapping to unbindable fields with @CsvBindByName,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+22,Mapping to primitive types with private access and no setter method with @CsvBindByName,Members are filled correctly,pass
+23,Mapping to complex destination objects with private access and no setter method with @CsvCustomBindByName,Members are filled correctly,pass
+24,Mapping to primitive types with private access and a public setter method with @CsvBindByName,Members are filled correctly by setter method,pass
+25,Mapping to complex destination objects with private access and a public setter method with @CsvCustomBindByName,Members are filled correctly by setter method,pass
+26,Mapping to primitive types with private access and a private setter method with @CsvBindByName,Members are filled correctly,pass
+27,Mapping to complex destination objects with private access and a private setter method with @CsvCustomBindByName,Members are filled correctly,pass
+28,Mapping all locale-specific fields using a different locale,Members are filled correctly,pass
+29,Mapping BigDecimal and BigInteger without a locale,Members are filled correctly,pass
+30,Mapping all the date types using the default format string and no locale,Members are filled correctly,pass
+31,Mapping all the date types using the default format string and a locale,Members are filled correctly,pass
+32,Mapping a date type using a specified format string and no locale,Members are filled correctly,pass
+33,Mapping a date type using a specified format string and a locale,Members are filled correctly,pass
+34,Using @CsvDate on a non-date object,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+35,Using a non-existant locale,Members are filled correctly,pass
+36,Mapping with ConvertGermanToBoolean using all available values,Members are filled correctly,pass
+37,Mapping with ConvertGermanToBoolean using an empty input,Members contain VM defaults,pass
+38,Mapping with ConvertGermanToBoolean using an invalid string,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+39,Mapping with ConvertGermanToBooleanRequired using all available values,Members are filled correctly,pass
+40,Mapping with ConvertGermanToBooleanRequired using an empty input,RuntimeException with inner exception CsvRequiredFieldEmptyException,pass
+41,Mapping with ConvertGermanToBooleanRequired using an invalid string,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+42,"Mapping with ConvertSplitOnWhitespace using multiple whitespace-separated values (space, tab)",Members are filled correctly,pass
+43,Mapping with ConvertSplitOnWhitespace using a null input string,Member is null,pass
+44,Mapping with ConvertSplitOnWhitespace using a single string with no whitespace,Members are filled correctly,pass
+45,Mapping with ConvertSplitOnWhitespace using an input string of only whitespace characters,Empty list,pass
+47,Unmapped field using column number strategy,Only mapped members are filled correctly,pass
+48,Mapping all primitive objects by @CsvBindByPosition,Members are filled correctly,pass
+49,Mapping all wrappers of primitive objects by @CsvBindByPosition,Members are filled correctly,pass
+50,Mapping required fields by @CsvBindByPosition with complete source data,Members are filled correctly,pass
+51,Mapping required fields by @CsvBindByPosition with missing source data,RuntimeException with inner exception CsvRequiredFieldEmptyException,pass
+52,Mapping optional fields by @CsvBindByPosition with complete source data,Members are filled correctly,pass
+53,Mapping optional primitive fields by @CsvBindByPosition with missing source data,Members contain VM defaults,pass
+54,Mapping optional object fields by @CsvBindByPosition with missing source data,Members are null,pass
+55,Mapping fields by @CsvBindByPosition with mismatching datatypes,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+56,Mapping fields of all wrapped primitive destination objects by @CsvCustomBindByPosition,Members are filled correctly,pass
+57,Mapping fields of all primitive destination types by @CsvCustomBindByPosition,Members are filled correctly,pass
+58,Mapping fields of a complex destination object by @CsvCustomBindByPosition,Members are filled correctly,pass
+59,Mapping fields of a wrapped primitive destination object by @CSVCustomBindByPosition with mismatching types,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+60,Mapping fields of a complex destination object by @CsvCustomBindByPosition with unassignable types,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+61,Mapping fields of a complex destination object by @CsvCustomBindByPosition with an assignable derived type,Members are filled correctly,pass
+62,Mapping fields annotated with @CsvBindByPosition and @CsvCustomBindByPosition,The custom converter is used,pass
+63,Mapping to unbindable fields with @CsvBindByPosition,RuntimeException with inner exception CsvDataTypeMismatchException,pass
+64,Mapping to primitive types with private access and no setter method with @CsvBindByPosition,Members are filled correctly,pass
+65,Mapping to complex destination objects with private access and no setter method with @CsvCustomBindByPosition,Members are filled correctly,pass
+66,Mapping to primitive types with private access and a public setter method with @CsvBindByPosition,Members are filled correctly by setter method,pass
+67,Mapping to complex destination objects with private access and a public setter method with @CsvCustomBindByPosition,Members are filled correctly by setter method,pass
+68,Mapping to primitive types with private access and a private setter method with @CsvBindByPosition,Members are filled correctly,pass
+69,Mapping to complex destination objects with private access and a private setter method with @CsvCustomBindByPosition,Members are filled correctly,pass
+70,Mapping a time before noon,Members are filled correctly,pass
+71,Mapping a time after noon,Members are filled correctly,pass
+72,Error in input on line x,RuntimeException with inner CsvException with line number x,pass
+73,Errors in input file with exceptions suppressed,"No exceptions thrown, but exception list not empty",pass
+76,Annotating a column with @CsvBindByName with a column name that is not in the input,Member is not filled,pass
+77,Annotating a column with @CsvBindByPosition with a column number that is not in the input,Member is not filled,pass
+78,Required date field with empty input,RuntimeException with inner exception CsvRequiredFieldEmptyException,pass
+79,"Verify that reflection is being used for setter, and not introspection",Members are filled correctly,pass

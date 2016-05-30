@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Converts CSV strings to objects.
@@ -182,7 +183,7 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
             @Override
             public T next() {
                 if (!hasNext()) {
-                    return null;
+                    throw new NoSuchElementException();
                 }
 
                 T holder = nextBean;

@@ -75,9 +75,9 @@ public class MockResultSetBuilder {
             when(rs.getInt(index)).thenReturn(value != null ? new Integer(value) : 0);
             wnrl.add(value == null);
             break;
-         case ResultSetHelperService.NVARCHAR: // todo : use rs.getNString
-         case ResultSetHelperService.NCHAR: // todo : use rs.getNString
-         case ResultSetHelperService.LONGNVARCHAR: // todo : use rs.getNString
+         case Types.NVARCHAR: // todo : use rs.getNString
+         case Types.NCHAR: // todo : use rs.getNString
+         case Types.LONGNVARCHAR: // todo : use rs.getNString
          case Types.LONGVARCHAR:
          case Types.VARCHAR:
          case Types.CHAR:
@@ -95,7 +95,7 @@ public class MockResultSetBuilder {
             Timestamp ts = createTimeStampFromMilliSeconds(value);
             when(rs.getTimestamp(index)).thenReturn(ts);
             break;
-         case ResultSetHelperService.NCLOB: // todo : use rs.getNClob
+         case Types.NCLOB: // todo : use rs.getNClob
          case Types.CLOB:
             Clob c = createClobFromString(value);
             when(rs.getClob(index)).thenReturn(c);

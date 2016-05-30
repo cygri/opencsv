@@ -2,6 +2,7 @@ package com.opencsv;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Provides an Iterator over the data found in opencsv.
@@ -43,7 +44,7 @@ public class CSVIterator implements Iterator<String[]> {
       try {
          nextLine = reader.readNext();
       } catch (IOException e) {
-         throw new RuntimeException(e);
+         throw new NoSuchElementException();
       }
       return temp;
    }

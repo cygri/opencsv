@@ -336,9 +336,8 @@ public class CSVParser {
                 String s = pending;
                 pending = null;
                 return new String[]{s};
-            } else {
-                return null;
             }
+            return null;
         }
 
         List<String> tokensOnThisLine = new ArrayList<String>();
@@ -375,7 +374,7 @@ public class CSVParser {
                                 nextLine.charAt(i + 1) != this.separator //not at the	end of an escape sequence
                                 ) {
 
-                            if (ignoreLeadingWhiteSpace && sb.length() > 0 && isAllWhiteSpace(sb)) {
+                            if (ignoreLeadingWhiteSpace && sb.length() > 0 && StringUtils.isWhitespace(sb)) {
                                 sb.setLength(0);
                             } else {
                                 sb.append(c);
@@ -536,18 +535,6 @@ public class CSVParser {
         return inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
                 && nextLine.length() > (i + 1)  // there is indeed another character to check.
                 && isCharacterEscapable(nextLine.charAt(i + 1));
-    }
-
-    /**
-     * Checks if every element is the character sequence is whitespace.
-     *
-     * Precondition: sb.length() is greater than 0.
-     *
-     * @param sb A sequence of characters to examine
-     * @return True if every character in the sequence is whitespace
-     */
-    protected boolean isAllWhiteSpace(CharSequence sb) {
-        return StringUtils.isWhitespace(sb);
     }
 
     /**

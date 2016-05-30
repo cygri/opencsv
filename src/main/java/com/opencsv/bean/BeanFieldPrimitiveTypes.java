@@ -82,7 +82,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         ByteConverter c = new ByteConverter();
                         o = c.convert(Byte.class, value.trim());
                     } else {
-                        ByteLocaleConverter c = new ByteLocaleConverter(new Locale(locale));
+                        ByteLocaleConverter c = new ByteLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(Double.TYPE) || fieldType.equals(Double.class)) {
@@ -90,7 +90,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         DoubleConverter c = new DoubleConverter();
                         o = c.convert(Double.class, value.trim());
                     } else {
-                        DoubleLocaleConverter c = new DoubleLocaleConverter(new Locale(locale));
+                        DoubleLocaleConverter c = new DoubleLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(Float.TYPE) || fieldType.equals(Float.class)) {
@@ -98,7 +98,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         FloatConverter c = new FloatConverter();
                         o = c.convert(Float.class, value.trim());
                     } else {
-                        FloatLocaleConverter c = new FloatLocaleConverter(new Locale(locale));
+                        FloatLocaleConverter c = new FloatLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(Integer.TYPE) || fieldType.equals(Integer.class)) {
@@ -106,7 +106,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         IntegerConverter c = new IntegerConverter();
                         o = c.convert(Integer.class, value.trim());
                     } else {
-                        IntegerLocaleConverter c = new IntegerLocaleConverter(new Locale(locale));
+                        IntegerLocaleConverter c = new IntegerLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(Long.TYPE) || fieldType.equals(Long.class)) {
@@ -114,7 +114,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         LongConverter c = new LongConverter();
                         o = c.convert(Long.class, value.trim());
                     } else {
-                        LongLocaleConverter c = new LongLocaleConverter(new Locale(locale));
+                        LongLocaleConverter c = new LongLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(Short.TYPE) || fieldType.equals(Short.class)) {
@@ -122,7 +122,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         ShortConverter c = new ShortConverter();
                         o = c.convert(Short.class, value.trim());
                     } else {
-                        ShortLocaleConverter c = new ShortLocaleConverter(new Locale(locale));
+                        ShortLocaleConverter c = new ShortLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(Character.TYPE) || fieldType.equals(Character.class)) {
@@ -133,7 +133,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         BigDecimalConverter c = new BigDecimalConverter();
                         o = c.convert(BigDecimal.class, value.trim());
                     } else {
-                        BigDecimalLocaleConverter c = new BigDecimalLocaleConverter(new Locale(locale));
+                        BigDecimalLocaleConverter c = new BigDecimalLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.equals(BigInteger.class)) {
@@ -141,7 +141,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
                         BigIntegerConverter c = new BigIntegerConverter();
                         o = c.convert(BigInteger.class, value.trim());
                     } else {
-                        BigIntegerLocaleConverter c = new BigIntegerLocaleConverter(new Locale(locale));
+                        BigIntegerLocaleConverter c = new BigIntegerLocaleConverter(Locale.forLanguageTag(locale));
                         o = c.convert(value.trim());
                     }
                 } else if (fieldType.isAssignableFrom(String.class)) {

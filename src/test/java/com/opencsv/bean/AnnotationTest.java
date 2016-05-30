@@ -51,8 +51,8 @@ public class AnnotationTest {
     }
 
     @Before
-    public void setSystemLocaleToGerman() {
-        Locale.setDefault(Locale.GERMAN);
+    public void setSystemLocaleToValueNotGerman() {
+        Locale.setDefault(Locale.US);
     }
 
     @After

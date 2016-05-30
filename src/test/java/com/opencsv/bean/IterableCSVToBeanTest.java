@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 
@@ -97,8 +98,11 @@ public class IterableCSVToBeanTest {
         assertEquals(456, mockBean.getNum());
 
         assertFalse(iterator.hasNext());
-        mockBean = iterator.next();
-        assertNull(mockBean);
+        try {
+            iterator.next();
+            assertFalse(true);
+        } catch (NoSuchElementException e) {
+        }
         assertFalse(iterator.hasNext());
     }
 
@@ -118,8 +122,11 @@ public class IterableCSVToBeanTest {
         assertEquals(456, mockBean.getNum());
 
         assertFalse(iterator.hasNext());
-        mockBean = iterator.next();
-        assertNull(mockBean);
+        try {
+            iterator.next();
+            assertFalse(true);
+        } catch (NoSuchElementException e) {
+        }
         assertFalse(iterator.hasNext());
     }
 }

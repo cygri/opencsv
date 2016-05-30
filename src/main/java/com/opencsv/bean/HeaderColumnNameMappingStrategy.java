@@ -43,7 +43,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     protected Map<String, Integer> indexLookup = new HashMap<String, Integer>();
     protected Map<String, PropertyDescriptor> descriptorMap = null;
     protected Map<String, BeanField> fieldMap = null;
-    protected Class<T> type;
+    protected Class<? extends T> type;
     protected boolean annotationDriven;
 
     /**
@@ -243,12 +243,12 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
         }
     }
 
-    private PropertyDescriptor[] loadDescriptors(Class<T> cls) throws IntrospectionException {
+    private PropertyDescriptor[] loadDescriptors(Class<? extends T> cls) throws IntrospectionException {
         BeanInfo beanInfo = Introspector.getBeanInfo(cls);
         return beanInfo.getPropertyDescriptors();
     }
 
-    private List<Field> loadFields(Class<T> cls) {
+    private List<Field> loadFields(Class<? extends T> cls) {
         List<Field> fields = new ArrayList<Field>();
         for (Field field : cls.getDeclaredFields()) {
             if (field.isAnnotationPresent(CsvBind.class)
@@ -271,7 +271,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
      *
      * @return Class of the object that mapper will create.
      */
-    public Class<T> getType() {
+    public Class<? extends T> getType() {
         return type;
     }
 
@@ -285,7 +285,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
      *                                  using custom converters that you have written yourself, it should be
      *                                  safe to catch this exception and ignore it.
      */
-    public void setType(Class<T> type) throws CsvBadConverterException {
+    public void setType(Class<? extends T> type) throws CsvBadConverterException {
         this.type = type;
         loadFieldMap();
     }

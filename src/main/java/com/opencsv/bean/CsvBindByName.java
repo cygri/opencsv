@@ -60,9 +60,11 @@ public @interface CsvBindByName {
      * <li>{@link java.math.BigDecimal}</li>
      * <li>{@link java.math.BigInteger}</li>
      * <li>All time data types supported by {@link com.opencsv.bean.CsvDate}</li></ul>
+     * <p>The locale must be in a format accepted by
+     * {@link java.util.Locale#forLanguageTag(java.lang.String)}</p>
      * <p>Caution must be exercized with the default locale, for the default
      * locale for numerical types does not mean the locale of the running
-     * program, such as en_US or de_DE, but rather <em>no</em> locale. Numbers
+     * program, such as en-US or de-DE, but rather <em>no</em> locale. Numbers
      * will be parsed more or less the way the Java compiler would parse them.
      * That means, for instance, that thousands separators in long numbers are
      * not permitted, even if the locale of the running program would accept

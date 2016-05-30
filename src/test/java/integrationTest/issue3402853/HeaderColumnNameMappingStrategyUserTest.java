@@ -1,6 +1,6 @@
 package integrationTest.issue3402853;
 
-/**
+/*
  Copyright 2007 Kyle Miller.
 
  Licensed under the Apache License, Version 2.0 (the "License");

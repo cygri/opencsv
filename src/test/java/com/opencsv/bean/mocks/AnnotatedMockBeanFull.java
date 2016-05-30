@@ -516,8 +516,8 @@ public class AnnotatedMockBeanFull {
      * <li>33</li>
      * </ul></p>
      */
-    @CsvBindByName(column = "date14", locale = "de_DE")
-    @CsvBindByPosition(position = 46, locale = "de_DE")
+    @CsvBindByName(column = "date14", locale = "de-DE")
+    @CsvBindByPosition(position = 46, locale = "de-DE")
     @CsvDate("dd. MMM yyyy")
     private GregorianCalendar gcalFormatSetLocale;
 
@@ -536,8 +536,8 @@ public class AnnotatedMockBeanFull {
      * <li>31</li>
      * </ul></p>
      */
-    @CsvBindByName(column = "date16", locale = "de_DE")
-    @CsvBindByPosition(position = 48, locale = "de_DE")
+    @CsvBindByName(column = "date16", locale = "de-DE")
+    @CsvBindByPosition(position = 48, locale = "de-DE")
     @CsvDate()
     private java.sql.Date sqldateSetLocale;
 

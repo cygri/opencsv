@@ -88,7 +88,7 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
      * @throws CsvBadConverterException {@inheritDoc}
      */
     @Override
-    public void setType(Class<T> type) throws CsvBadConverterException {
+    public void setType(Class<? extends T> type) throws CsvBadConverterException {
         super.setType(type);
         if (!columnsExplicitlySet) {
             SortedMap<Integer, BeanField> cols = new TreeMap<Integer, BeanField>();
@@ -187,7 +187,7 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
         }
     }
 
-    private List<Field> loadFields(Class<T> cls) {
+    private List<Field> loadFields(Class<? extends T> cls) {
         List<Field> fields = new ArrayList<Field>();
         for (Field field : cls.getDeclaredFields()) {
             if (field.isAnnotationPresent(CsvBindByPosition.class)
