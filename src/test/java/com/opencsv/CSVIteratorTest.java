@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -21,7 +22,7 @@ public class CSVIteratorTest {
         iterator = new CSVIterator(mockReader);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = NoSuchElementException.class)
     public void readerExceptionCausesRunTimeException() throws IOException {
         when(mockReader.readNext()).thenThrow(new IOException("reader threw test exception"));
         iterator.next();

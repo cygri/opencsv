@@ -4,24 +4,23 @@ import spock.lang.Specification
 
 class CSVIteratorSpec extends Specification {
 
-//  def 'reader exception should cause runtime exception'() {
-//    given:
-//      CSVReader reader = Mock(CSVReader)
-//      CSVIterator iterator = new CSVIterator(reader)
-//
-//    and:
-//      def exceptionMsg = 'reader threw test exception'
-//      reader.readNext() >> {
-//        throw new IOException(exceptionMsg)
-//      }
-//
-//    when:
-//      iterator.next()
-//
-//    then:
-//      def e = thrown(RuntimeException)
-//      e.cause.message == exceptionMsg
-//  }
+    def 'reader exception should cause runtime exception'() {
+        given:
+        CSVReader reader = Mock(CSVReader)
+        CSVIterator iterator = new CSVIterator(reader)
+
+        and:
+        def exceptionMsg = 'reader threw test exception'
+        reader.readNext() >> {
+            throw new IOException(exceptionMsg)
+        }
+
+        when:
+        iterator.next()
+
+        then:
+        thrown(NoSuchElementException)
+    }
 
     def 'call to remove() results in UnsupportedOperationException thrown'() {
         given:
