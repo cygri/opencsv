@@ -19,19 +19,13 @@ package com.opencsv;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import java.io.*;
-import java.nio.CharBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class CSVReaderTest {
 
@@ -560,22 +554,6 @@ public class CSVReaderTest {
     @Test
     public void canCreateIteratorFromReader() {
         assertNotNull(csvr.iterator());
-    }
-
-    @Test
-    public void creatingIteratorForReaderWithNullDataThrowsRuntimeException() throws IOException {
-        try {
-            Reader mockReader = mock(Reader.class);
-            when(mockReader.read(Matchers.<CharBuffer>any())).thenThrow(new IOException("test io exception"));
-            when(mockReader.read()).thenThrow(new IOException("test io exception"));
-            when(mockReader.read((char[]) notNull())).thenThrow(new IOException("test io exception"));
-            when(mockReader.read((char[]) notNull(), anyInt(), anyInt())).thenThrow(new IOException("test io exception"));
-            csvr = new CSVReader(mockReader);
-            csvr.iterator();
-
-        } catch (Throwable t) {
-            fail("No exception should be thrown! Message: " + t.getMessage());
-        }
     }
 
     @Test
