@@ -147,6 +147,8 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
                 try {
                     bean = converter.newInstance();
                 } catch (IllegalAccessException oldEx) {
+                    // Combine this block with the next one as soon as Java 7
+                    // is the minimum supported version.
                     CsvBadConverterException newEx
                             = new CsvBadConverterException(converter,
                             "There was a problem instantiating the custom converter "

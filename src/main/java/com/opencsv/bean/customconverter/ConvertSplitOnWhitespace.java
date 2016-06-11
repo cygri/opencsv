@@ -16,6 +16,7 @@
 package com.opencsv.bean.customconverter;
 
 import com.opencsv.bean.AbstractBeanField;
+import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.lang3.StringUtils;
@@ -45,10 +46,13 @@ public class ConvertSplitOnWhitespace extends AbstractBeanField {
      * that were separated in the input by whitespace
      * @throws CsvDataTypeMismatchException   Is not thrown by this implementation
      * @throws CsvRequiredFieldEmptyException Is not thrown by this implementation
+     * @throws CsvConstraintViolationException Is not thrown by this implementation
+     * 
      */
     @Override
     protected Object convert(String value)
-            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException,
+            CsvConstraintViolationException {
         List<String> l = null;
         if (!StringUtils.isEmpty(value)) {
             l = new ArrayList<String>(Arrays.asList(value.split("\\s+")));

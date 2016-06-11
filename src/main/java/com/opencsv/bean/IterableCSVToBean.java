@@ -165,7 +165,7 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
 
                 try {
                     nextBean = bean.nextLine();
-                } catch (IllegalAccessException e) {
+                } catch (IllegalAccessException e) { // Replace with a multi-catch as soon as we support Java 7
                     e.printStackTrace();
                 } catch (InstantiationException e) {
                     e.printStackTrace();

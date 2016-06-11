@@ -111,34 +111,39 @@ abstract public class AbstractBeanField<T> implements BeanField<T> {
                     throw csve;
                 }
             } catch (NoSuchMethodException e1) {
-
+                // Replace with a multi-catch as soon as we support Java 7
                 // Otherwise set the field directly.
-                try {
-                    FieldUtils.writeField(field, bean, obj, true);
-                } catch (IllegalAccessException e2) {
-                    // Can only happen if the field is declared final.
-                    // I'll take the risk.
-                } catch (IllegalArgumentException e2) {
-                    CsvDataTypeMismatchException csve =
-                            new CsvDataTypeMismatchException(obj, fieldType);
-                    csve.initCause(e2);
-                    throw csve;
-                }
+                writeWithoutSetter(bean, obj);
             } catch (SecurityException e1) {
-
                 // Otherwise set the field directly.
-                try {
-                    FieldUtils.writeField(field, bean, obj, true);
-                } catch (IllegalAccessException e2) {
-                    // Can only happen if the field is declared final.
-                    // I'll take the risk.
-                } catch (IllegalArgumentException e2) {
-                    CsvDataTypeMismatchException csve =
-                            new CsvDataTypeMismatchException(obj, fieldType);
-                    csve.initCause(e2);
-                    throw csve;
-                }
+                writeWithoutSetter(bean, obj);
             }
+        }
+    }
+
+    /**
+     * Sets a field in a bean if there is no setter available.
+     * Turns off all accessibility checking to accomplish the goal, and handles
+     * errors as best it can.
+     *
+     * @param <T>  Type of the bean
+     * @param bean The bean in which the field is located
+     * @param obj  The data to be assigned to this field of the destination bean
+     * @throws CsvDataTypeMismatchException If the data to be assigned cannot
+     *                                      be assigned
+     */
+    private <T> void writeWithoutSetter(T bean, Object obj) throws CsvDataTypeMismatchException {
+        try {
+            FieldUtils.writeField(field, bean, obj, true);
+        } catch (IllegalAccessException e2) {
+            // The Apache Commons Lang Javadoc claims this can be thrown
+            // if the field is final, but it's not true if we override
+            // accessibility. This is never thrown.
+        } catch (IllegalArgumentException e2) {
+            CsvDataTypeMismatchException csve =
+                    new CsvDataTypeMismatchException(obj, field.getType());
+            csve.initCause(e2);
+            throw csve;
         }
     }
 

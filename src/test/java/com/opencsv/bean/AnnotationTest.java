@@ -16,10 +16,9 @@
 package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
+import com.opencsv.bean.customconverter.BadIntConverter;
 import com.opencsv.bean.mocks.*;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.opencsv.exceptions.*;
 import org.apache.commons.beanutils.ConversionException;
 import org.junit.After;
 import org.junit.Before;
@@ -30,8 +29,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -314,7 +315,7 @@ public class AnnotationTest {
         CsvToBean ctb = new CsvToBean();
         try {
             ctb.parse(strat, read);
-            assertTrue(false); // Not reached
+            fail("The parse should have thrown an Exception.");
         } catch (RuntimeException e) {
             assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
             CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
@@ -348,7 +349,7 @@ public class AnnotationTest {
         CsvToBean ctb = new CsvToBean();
         try {
             ctb.parse(strat, read);
-            assertTrue(false); // Not reached
+            fail("The parse should have thrown an Exception.");
         } catch (RuntimeException e) {
             assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
             CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
@@ -376,6 +377,51 @@ public class AnnotationTest {
             assertEquals(1, csve.getLineNumber());
             assertEquals(AnnotatedMockBeanFull.class, csve.getBeanClass());
             assertEquals("dateDefaultLocale", csve.getDestinationField().getName());
+        }
+
+        String unparsable = "unparsable";
+
+        fin = new FileReader("src/test/resources/testinputcase81.csv");
+        read = new CSVReader(fin, ';');
+        try {
+            ctb.parse(strat, read);
+            fail("Expected parse to throw exception.");
+        } catch (RuntimeException e) {
+            assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
+            CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
+            assertEquals(1, csve.getLineNumber());
+            assertEquals(GregorianCalendar.class, csve.getDestinationClass());
+            assertEquals(unparsable, (String) csve.getSourceObject());
+            assertTrue(csve.getCause() instanceof ParseException);
+        }
+
+
+        fin = new FileReader("src/test/resources/testinputcase82.csv");
+        read = new CSVReader(fin, ';');
+        try {
+            ctb.parse(strat, read);
+            fail("Expected parse to throw exception.");
+        } catch (RuntimeException e) {
+            assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
+            CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
+            assertEquals(1, csve.getLineNumber());
+            assertEquals(Date.class, csve.getDestinationClass());
+            assertEquals(unparsable, (String) csve.getSourceObject());
+            assertTrue(csve.getCause() instanceof ConversionException);
+        }
+
+        fin = new FileReader("src/test/resources/testinputcase83.csv");
+        read = new CSVReader(fin, ';');
+        try {
+            ctb.parse(strat, read);
+            fail("Expected parse to throw exception.");
+        } catch (RuntimeException e) {
+            assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
+            CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
+            assertEquals(1, csve.getLineNumber());
+            assertEquals(Date.class, csve.getDestinationClass());
+            assertEquals(unparsable, (String) csve.getSourceObject());
+            assertTrue(csve.getCause() instanceof ConversionException);
         }
 
         HeaderColumnNameMappingStrategy<TestCase34> strat34 =
@@ -494,4 +540,57 @@ public class AnnotationTest {
 
     }
 
+    @Test
+    public void testBadConverter() {
+        HeaderColumnNameMappingStrategy<TestCase80> strath =
+                new HeaderColumnNameMappingStrategy<TestCase80>();
+        try {
+            strath.setType(TestCase80.class);
+            fail("HeaderColumnNameMappingStrategy.setType() should have thrown an Exception.");
+        } catch (CsvBadConverterException e) {
+            assertEquals(BadIntConverter.class, e.getConverterClass());
+        }
+
+        ColumnPositionMappingStrategy<TestCase80> stratc =
+                new ColumnPositionMappingStrategy<TestCase80>();
+        try {
+            stratc.setType(TestCase80.class);
+            fail("The parse should have thrown an Exception.");
+        } catch (CsvBadConverterException e) {
+            assertEquals(BadIntConverter.class, e.getConverterClass());
+        }
+    }
+
+    @Test
+    public void codeCoverageExceptions() throws NoSuchFieldException {
+        Class c = TestCase80.class;
+        Field f = c.getField("test");
+        CsvRequiredFieldEmptyException e1 = new CsvRequiredFieldEmptyException(c, f);
+        assertEquals(TestCase80.class, e1.getBeanClass());
+        assertEquals(f, e1.getDestinationField());
+
+        String err = "Test";
+        CsvDataTypeMismatchException e2 = new CsvDataTypeMismatchException();
+        assertNull(e2.getDestinationClass());
+        assertNull(e2.getSourceObject());
+        e2 = new CsvDataTypeMismatchException(err);
+        assertEquals(err, e2.getMessage());
+
+        CsvBadConverterException e3 = new CsvBadConverterException();
+        assertNull(e3.getConverterClass());
+        e3 = new CsvBadConverterException(c);
+        assertEquals(c, e3.getConverterClass());
+        e3 = new CsvBadConverterException(err);
+        assertEquals(err, e3.getMessage());
+
+        CsvConstraintViolationException e4 = new CsvConstraintViolationException();
+        assertNull(e4.getSourceObject());
+        e4 = new CsvConstraintViolationException(f);
+        assertEquals(f, e4.getSourceObject());
+        e4 = new CsvConstraintViolationException(err);
+        assertEquals(err, e4.getMessage());
+        e4 = new CsvConstraintViolationException(f, err);
+        assertEquals(f, e4.getSourceObject());
+        assertEquals(err, e4.getMessage());
+    }
 }
