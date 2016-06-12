@@ -46,6 +46,7 @@ public class BeanFieldDate extends AbstractBeanField {
     private final boolean required;
     private final String formatString;
     private final String locale;
+    private static final String NOT_DATE = "@CsvDate annotation used on non-date field.";
 
     /**
      * @param field        A {@link java.lang.reflect.Field} object.
@@ -158,7 +159,7 @@ public class BeanFieldDate extends AbstractBeanField {
             c = new SqlTimestampLocaleConverter(l, formatString);
         } else {
             throw new CsvDataTypeMismatchException(value, field.getType(),
-                    "@CsvDate annotation used on non-date field.");
+                    NOT_DATE);
         }
 
         // Convert with respect to format string and locale
@@ -205,7 +206,7 @@ public class BeanFieldDate extends AbstractBeanField {
             c = new SqlTimestampConverter();
         } else {
             throw new CsvDataTypeMismatchException(value, field.getType(),
-                    "@CsvDate annotation used on non-date field.");
+                    NOT_DATE);
         }
 
         // Convert with respect to format string
@@ -245,7 +246,7 @@ public class BeanFieldDate extends AbstractBeanField {
             o = convertCalendar(value, fieldType);
         } else {
             throw new CsvDataTypeMismatchException(value, field.getType(),
-                    "@CsvDate annotation used on non-date field.");
+                    NOT_DATE);
         }
 
         return o;

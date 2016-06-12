@@ -143,26 +143,7 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
                 Class<? extends AbstractBeanField> converter = field
                         .getAnnotation(CsvCustomBindByPosition.class)
                         .converter();
-                BeanField bean;
-                try {
-                    bean = converter.newInstance();
-                } catch (IllegalAccessException oldEx) {
-                    // Combine this block with the next one as soon as Java 7
-                    // is the minimum supported version.
-                    CsvBadConverterException newEx
-                            = new CsvBadConverterException(converter,
-                            "There was a problem instantiating the custom converter "
-                                    + converter.getCanonicalName());
-                    newEx.initCause(oldEx);
-                    throw newEx;
-                } catch (InstantiationException oldEx) {
-                    CsvBadConverterException newEx
-                            = new CsvBadConverterException(converter,
-                            "There was a problem instantiating the custom converter "
-                                    + converter.getCanonicalName());
-                    newEx.initCause(oldEx);
-                    throw newEx;
-                }
+                BeanField bean = instantiateCustomConverter(converter);
                 bean.setField(field);
                 fieldMap.put(columnName, bean);
             }

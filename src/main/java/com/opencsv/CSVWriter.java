@@ -376,6 +376,14 @@ public class CSVWriter implements Closeable, Flushable {
       appendable.append(nextChar);
    }
 
+   /**
+    * Checks whether the next character that is to be written out is a special
+    * character that must be quoted.
+    * The quote character, escape charater, and separator are special characters.
+    *
+    * @param nextChar The next character to be written
+    * @return Whether the character needs to be quoted or not
+    */
    protected boolean checkCharactersToEscape(char nextChar) {
       return quotechar == NO_QUOTE_CHARACTER
               ? (nextChar == quotechar || nextChar == escapechar || nextChar == separator)

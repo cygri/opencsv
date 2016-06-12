@@ -51,9 +51,8 @@ public class CsvSample {
    /**
     * This approach seems to work correctly, even with embedded newlines.
     *
-    * @param originalCommentText
-    * @throws FileNotFoundException
-    * @throws IOException
+    * @param originalCommentText No idea
+    * @throws IOException But not really
     */
    protected void testRawCsvRead(String originalCommentText) throws IOException {
       CSVReader reader = new CSVReader(new FileReader(filePath));
@@ -88,8 +87,8 @@ public class CsvSample {
     * This approach seems to fail with embedded newlines; that might be a weakness of
     * the mapping strategy support classes.
     *
-    * @param originalCommentText
-    * @throws FileNotFoundException
+    * @param originalCommentText No idea
+    * @throws FileNotFoundException But not really
     */
    protected void testMappingStrategyRead(String originalCommentText)
            throws FileNotFoundException {

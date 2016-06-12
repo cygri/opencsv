@@ -22,10 +22,12 @@ import com.opencsv.exceptions.*;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Converts CSV data to objects.
@@ -245,28 +247,6 @@ public class CsvToBean<T> extends AbstractCSVToBean {
          beanField.setFieldValue(bean, value);
       }
    }
-
-   private PropertyEditor getPropertyEditorValue(Class<?> cls) {
-      if (editorMap == null) {
-         editorMap = new HashMap<Class<?>, PropertyEditor>();
-      }
-
-      PropertyEditor editor = editorMap.get(cls);
-
-      if (editor == null) {
-         editor = PropertyEditorManager.findEditor(cls);
-         addEditorToMap(cls, editor);
-      }
-
-      return editor;
-   }
-
-   private void addEditorToMap(Class<?> cls, PropertyEditor editor) {
-      if (editor != null) {
-         editorMap.put(cls, editor);
-      }
-   }
-
 
    @Override
    protected PropertyEditor getPropertyEditor(PropertyDescriptor desc) throws InstantiationException, IllegalAccessException {

@@ -37,6 +37,7 @@ public class OpencsvTest {
 
    /**
     * Test the full cycle of write-read
+    * @throws IOException But not really
     */
    @Test
    public void testWriteRead() throws IOException {

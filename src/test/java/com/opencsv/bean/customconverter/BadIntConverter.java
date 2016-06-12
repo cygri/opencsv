@@ -19,7 +19,6 @@ import com.opencsv.bean.AbstractBeanField;
 
 /**
  * The sole purpose of this converter is to throw an exception on instantiation.
- *
  * @author Andrew Rucker Jones
  */
 public class BadIntConverter extends AbstractBeanField {

@@ -33,6 +33,9 @@ public class ResultSetColumnNameHelperService extends ResultSetHelperService imp
     private String[] columnHeaders;
     private final Map<String, Integer> columnNamePositionMap = new HashMap<String, Integer>();
 
+    /**
+     * Silence code style checker by adding a useless constructor.
+     */
     public ResultSetColumnNameHelperService() {
     }
 

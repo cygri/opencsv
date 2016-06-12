@@ -294,7 +294,7 @@ public class CSVReaderTest {
     /**
      * Test a normal non quoted line with three elements
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testNormalParsedLine() throws IOException {
@@ -318,7 +318,7 @@ public class CSVReaderTest {
      * Same as testADoubleQuoteAsDataElement but I changed the quotechar to a
      * single quote.
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testASingleQuoteAsDataElement() throws IOException {
@@ -342,7 +342,7 @@ public class CSVReaderTest {
      * Same as testADoubleQuoteAsDataElement but I changed the quotechar to a
      * single quote.  Also the middle field is empty.
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testASingleQuoteAsDataElementWithEmptyField() throws IOException {
@@ -415,7 +415,7 @@ public class CSVReaderTest {
      * quote character is the default double quote.  The expected result is two
      * single quotes.
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testSingleQuoteWhenDoubleQuoteIsQuoteChar() throws IOException {
@@ -438,7 +438,7 @@ public class CSVReaderTest {
     /**
      * Test a normal line with three elements and all elements are quoted
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testQuotedParsedLine() throws IOException {

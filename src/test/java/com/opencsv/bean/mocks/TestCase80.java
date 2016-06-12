@@ -21,7 +21,6 @@ import com.opencsv.bean.customconverter.BadIntConverter;
 
 /**
  * Tests what happens when a bad converter is passed in.
- *
  * @author Andrew Rucker Jones
  */
 public class TestCase80 {

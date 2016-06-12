@@ -13,8 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * I created this class to test out all the issues that is being seen with the isClosed
  * that was introduced in the CSVReader for version 3.
- * <p/>
- * Created by scott on 7/28/15.
+ * <p>Created by scott on 7/28/15.</p>
  */
 public class isClosedTest {
 

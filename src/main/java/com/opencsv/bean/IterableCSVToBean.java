@@ -21,12 +21,9 @@ import com.opencsv.CSVReader;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -40,7 +37,6 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
     private final MappingStrategy<T> strategy;
     private final CSVReader csvReader;
     private final CsvToBeanFilter filter;
-    private Map<Class<?>, PropertyEditor> editorMap = null;
     private boolean hasHeader;
 
     /**
@@ -125,29 +121,6 @@ public class IterableCSVToBean<T> extends AbstractCSVToBean implements Iterable<
         }
         return getPropertyEditorValue(desc.getPropertyType());
     }
-
-
-    private PropertyEditor getPropertyEditorValue(Class<?> cls) {
-        if (editorMap == null) {
-            editorMap = new HashMap<Class<?>, PropertyEditor>();
-        }
-
-        PropertyEditor editor = editorMap.get(cls);
-
-        if (editor == null) {
-            editor = PropertyEditorManager.findEditor(cls);
-            addEditorToMap(cls, editor);
-        }
-
-        return editor;
-    }
-
-    private void addEditorToMap(Class<?> cls, PropertyEditor editor) {
-        if (editor != null) {
-            editorMap.put(cls, editor);
-        }
-    }
-
     @Override
     public Iterator<T> iterator() {
         return iterator(this);

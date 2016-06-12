@@ -2,12 +2,17 @@ package com.opencsv.bean;
 
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Converts CSV data to objects.
  */
 public abstract class AbstractCSVToBean {
 
+    private Map<Class<?>, PropertyEditor> editorMap = null;
+    
     /**
      * Attempt to find custom property editor on descriptor first, else try the
      * propery editor manager.
@@ -58,5 +63,34 @@ public abstract class AbstractCSVToBean {
         }
         return obj;
     }
+
+    /**
+     * Returns the PropertyEditor for the given class.
+     * Should be more efficient if used often, because it caches PropertyEditors.
+     *
+     * @param cls The class for which the property editor is desired
+     * @return The PropertyEditor for the given class
+     */
+    protected PropertyEditor getPropertyEditorValue(Class<?> cls) {
+        if (editorMap == null) {
+            editorMap = new HashMap<Class<?>, PropertyEditor>();
+        }
+
+        PropertyEditor editor = editorMap.get(cls);
+
+        if (editor == null) {
+            editor = PropertyEditorManager.findEditor(cls);
+            addEditorToMap(cls, editor);
+        }
+
+        return editor;
+    }
+
+    private void addEditorToMap(Class<?> cls, PropertyEditor editor) {
+        if (editor != null) {
+            editorMap.put(cls, editor);
+        }
+    }
+
 
 }

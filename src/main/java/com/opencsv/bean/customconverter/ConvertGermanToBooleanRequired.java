@@ -28,6 +28,12 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 public class ConvertGermanToBooleanRequired extends ConvertGermanToBoolean {
 
     /**
+     * Silence code style checker by adding a useless constructor.
+     */
+    public ConvertGermanToBooleanRequired() {
+    }
+
+    /**
      * @throws CsvRequiredFieldEmptyException If the input is empty
      */
     // The rest of the JavaDoc is automatically inherited from the base class.

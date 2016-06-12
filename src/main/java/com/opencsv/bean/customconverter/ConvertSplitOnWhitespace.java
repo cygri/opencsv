@@ -33,6 +33,12 @@ import java.util.List;
 public class ConvertSplitOnWhitespace extends AbstractBeanField {
 
     /**
+     * Silence code style checker by adding a useless constructor.
+     */
+    public ConvertSplitOnWhitespace() {
+    }
+
+    /**
      * Takes a string that is a list of substrings separated by whitespace and
      * returns a list of the substrings.
      * For example, the string "Jones Smith Cartwright Cooper" would be

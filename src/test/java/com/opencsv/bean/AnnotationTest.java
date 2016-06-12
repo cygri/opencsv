@@ -44,7 +44,10 @@ import static org.junit.Assert.*;
  */
 public class AnnotationTest {
 
+    private static final String UNPARSABLE = "unparsable";
+
     private static Locale systemLocale;
+
 
     @BeforeClass
     public static void storeSystemLocale() {
@@ -379,8 +382,6 @@ public class AnnotationTest {
             assertEquals("dateDefaultLocale", csve.getDestinationField().getName());
         }
 
-        String unparsable = "unparsable";
-
         fin = new FileReader("src/test/resources/testinputcase81.csv");
         read = new CSVReader(fin, ';');
         try {
@@ -391,7 +392,7 @@ public class AnnotationTest {
             CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
             assertEquals(1, csve.getLineNumber());
             assertEquals(GregorianCalendar.class, csve.getDestinationClass());
-            assertEquals(unparsable, (String) csve.getSourceObject());
+            assertEquals(UNPARSABLE, (String) csve.getSourceObject());
             assertTrue(csve.getCause() instanceof ParseException);
         }
 
@@ -406,7 +407,7 @@ public class AnnotationTest {
             CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
             assertEquals(1, csve.getLineNumber());
             assertEquals(Date.class, csve.getDestinationClass());
-            assertEquals(unparsable, (String) csve.getSourceObject());
+            assertEquals(UNPARSABLE, (String) csve.getSourceObject());
             assertTrue(csve.getCause() instanceof ConversionException);
         }
 
@@ -420,7 +421,50 @@ public class AnnotationTest {
             CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
             assertEquals(1, csve.getLineNumber());
             assertEquals(Date.class, csve.getDestinationClass());
-            assertEquals(unparsable, (String) csve.getSourceObject());
+            assertEquals(UNPARSABLE, (String) csve.getSourceObject());
+            assertTrue(csve.getCause() instanceof ConversionException);
+        }
+
+        fin = new FileReader("src/test/resources/testinputcase81.csv");
+        read = new CSVReader(fin, ';');
+        try {
+            ctb.parse(strat, read);
+            fail("Expected parse to throw exception.");
+        } catch (RuntimeException e) {
+            assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
+            CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
+            assertEquals(1, csve.getLineNumber());
+            assertEquals(GregorianCalendar.class, csve.getDestinationClass());
+            assertEquals(UNPARSABLE, (String) csve.getSourceObject());
+            assertTrue(csve.getCause() instanceof ParseException);
+        }
+
+
+        fin = new FileReader("src/test/resources/testinputcase82.csv");
+        read = new CSVReader(fin, ';');
+        try {
+            ctb.parse(strat, read);
+            fail("Expected parse to throw exception.");
+        } catch (RuntimeException e) {
+            assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
+            CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
+            assertEquals(1, csve.getLineNumber());
+            assertEquals(Date.class, csve.getDestinationClass());
+            assertEquals(UNPARSABLE, (String) csve.getSourceObject());
+            assertTrue(csve.getCause() instanceof ConversionException);
+        }
+
+        fin = new FileReader("src/test/resources/testinputcase83.csv");
+        read = new CSVReader(fin, ';');
+        try {
+            ctb.parse(strat, read);
+            fail("Expected parse to throw exception.");
+        } catch (RuntimeException e) {
+            assertTrue(e.getCause() instanceof CsvDataTypeMismatchException);
+            CsvDataTypeMismatchException csve = (CsvDataTypeMismatchException) e.getCause();
+            assertEquals(1, csve.getLineNumber());
+            assertEquals(Date.class, csve.getDestinationClass());
+            assertEquals(UNPARSABLE, (String) csve.getSourceObject());
             assertTrue(csve.getCause() instanceof ConversionException);
         }
 

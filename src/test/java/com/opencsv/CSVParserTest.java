@@ -251,7 +251,7 @@ public class CSVParserTest {
     /**
      * Shows that without the strict quotes opencsv will read until the separator or the end of the line.
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testNotStrictQuoteWithSpacesAndTabs() throws IOException {
@@ -305,19 +305,21 @@ public class CSVParserTest {
                 false);
         String testString = "Bob,test\",Beaumont,TX";
 
-        String[] nextLine = csvParser.parseLine(testString);
+        csvParser.parseLine(testString);
     }
 
     /**
-     * This is an interesting issue where the data does not use quotes but IS using a quote within the field as a
-     * inch symbol.  So we want to keep that quote as part of the field and not as the start or end of a field.
-     * <p/>
-     * Test data is as follows.
-     * <p/>
+     * This is an interesting issue where the data does not use quotes but IS
+     * using a quote within the field as an inch symbol.
+     * <p>So we want to keep that quote as part of the field and not as the
+     * start or end of a field.</p>
+     * <p>Test data are as follows.
+     * {@code
      * RPO;2012;P; ; ; ;SDX;ACCESSORY WHEEL, 16", ALUMINUM, DESIGN 1
-     * RPO;2012;P; ; ; ;SDZ;ACCESSORY WHEEL - 17" - ALLOY - DESIGN 1
+     * RPO;2012;P; ; ; ;SDZ;ACCESSORY WHEEL - 17" - ALLOY - DESIGN 1}
+     * </p>
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testIssue3314579() throws IOException {
@@ -343,10 +345,9 @@ public class CSVParserTest {
 
     /**
      * Test issue 2263439 where an escaped quote was causing the parse to fail.
-     * <p/>
      * Special thanks to Chris Morris for fixing this (id 1979054)
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testIssue2263439() throws IOException {
@@ -368,7 +369,7 @@ public class CSVParserTest {
      * Test issue 2859181 where an escaped character before a character
      * that did not need escaping was causing the parse to fail.
      *
-     * @throws IOException
+     * @throws IOException But not really
      */
     @Test
     public void testIssue2859181() throws IOException {
@@ -384,12 +385,13 @@ public class CSVParserTest {
     }
 
     /**
-     * Test issue 2726363
-     * <p/>
-     * Data given:
-     * <p/>
+     * Test issue 2726363.
+     * <p>Data given:
+     * {@code
      * "804503689","London",""London""shop","address","116.453182","39.918884"
      * "453074125","NewYork","brief","address"","121.514683","31.228511"
+     * }</p>
+     * @throws IOException But not really
      */
     @Test
     public void testIssue2726363() throws IOException {

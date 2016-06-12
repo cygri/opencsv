@@ -92,6 +92,13 @@ public class IterableCSVToBeanTest {
             // Good
         }
 
+        try {
+            iterator.remove();
+            assertTrue(false); // not reached
+        } catch (UnsupportedOperationException e) {
+            // Good
+        }
+
         assertTrue(iterator.hasNext());
         MockBean mockBean = iterator.next();
         assertEquals("kyle", mockBean.getName());

@@ -33,6 +33,12 @@ import org.apache.commons.lang3.StringUtils;
 public class ConvertGermanToBoolean extends AbstractBeanField {
 
     /**
+     * Silence code style checker by adding a useless constructor.
+     */
+    public ConvertGermanToBoolean() {
+    }
+
+    /**
      * Converts German text into a Boolean.
      * The comparisons are case-insensitive. The recognized pairs are
      * wahr/falsch, w/f, ja/nein, j/n, 1/0.

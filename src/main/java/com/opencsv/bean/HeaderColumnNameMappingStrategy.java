@@ -45,6 +45,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     protected Map<String, BeanField> fieldMap = null;
     protected Class<? extends T> type;
     protected boolean annotationDriven;
+    private static final String CANNOT_INSTANTIATE = "There was a problem instantiating the custom converter ";
 
     /**
      * Default constructor.
@@ -171,6 +172,34 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     }
 
     /**
+     * Attempts to instantiate the class of the custom converter specified.
+     *
+     * @param converter The class for a custom converter
+     * @return The custom converter
+     * @throws CsvBadConverterException If the class cannot be instantiated
+     */
+    protected BeanField instantiateCustomConverter(Class<? extends AbstractBeanField> converter)
+            throws CsvBadConverterException {
+        try {
+            return converter.newInstance();
+        } catch (IllegalAccessException oldEx) {
+            // Combine this block with the next one as soon as Java 7
+            // is the minimum supported version.
+            CsvBadConverterException newEx =
+                    new CsvBadConverterException(converter,
+                            CANNOT_INSTANTIATE + converter.getCanonicalName());
+            newEx.initCause(oldEx);
+            throw newEx;
+        } catch (InstantiationException oldEx) {
+            CsvBadConverterException newEx =
+                    new CsvBadConverterException(converter,
+                            CANNOT_INSTANTIATE + converter.getCanonicalName());
+            newEx.initCause(oldEx);
+            throw newEx;
+        }
+    }
+
+    /**
      * Builds a map of fields for the bean.
      *
      * @throws CsvBadConverterException If there is a problem instantiating the
@@ -180,7 +209,8 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
         fieldMap = new HashMap<String, BeanField>();
 
         for (Field field : loadFields(getType())) {
-            String columnName, locale;
+            String columnName;
+            String locale;
 
             // Always check for a custom converter first.
             if (field.isAnnotationPresent(CsvCustomBindByName.class)) {
@@ -188,26 +218,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
                 Class<? extends AbstractBeanField> converter = field
                         .getAnnotation(CsvCustomBindByName.class)
                         .converter();
-                BeanField bean;
-                try {
-                    bean = converter.newInstance();
-                } catch (IllegalAccessException oldEx) {
-                    // Combine this block with the next one as soon as Java 7
-                    // is the minimum supported version.
-                    CsvBadConverterException newEx =
-                            new CsvBadConverterException(converter,
-                                    "There was a problem instantiating the custom converter "
-                                            + converter.getCanonicalName());
-                    newEx.initCause(oldEx);
-                    throw newEx;
-                } catch (InstantiationException oldEx) {
-                    CsvBadConverterException newEx =
-                            new CsvBadConverterException(converter,
-                                    "There was a problem instantiating the custom converter "
-                                            + converter.getCanonicalName());
-                    newEx.initCause(oldEx);
-                    throw newEx;
-                }
+                BeanField bean = instantiateCustomConverter(converter);
                 bean.setField(field);
                 fieldMap.put(columnName, bean);
             }

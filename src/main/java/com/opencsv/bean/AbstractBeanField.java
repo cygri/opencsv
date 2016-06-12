@@ -125,7 +125,7 @@ abstract public class AbstractBeanField<T> implements BeanField<T> {
      * Sets a field in a bean if there is no setter available.
      * Turns off all accessibility checking to accomplish the goal, and handles
      * errors as best it can.
-     *
+     * 
      * @param <T>  Type of the bean
      * @param bean The bean in which the field is located
      * @param obj  The data to be assigned to this field of the destination bean
