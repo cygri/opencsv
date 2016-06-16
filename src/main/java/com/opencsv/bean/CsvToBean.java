@@ -27,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Converts CSV data to objects.
@@ -35,7 +34,6 @@ import java.util.Map;
  * @param <T> Class to convert the objects to.
  */
 public class CsvToBean<T> extends AbstractCSVToBean {
-   private Map<Class<?>, PropertyEditor> editorMap = null;
    private List<CsvException> capturedExceptions = null;
 
    /**

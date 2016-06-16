@@ -27,6 +27,8 @@ public class BeanToCsvTest {
          + "\"null\",\"null\",\"2\"\n";
 
    private List<MockBean> testData;
+   private MockBean mb1;
+   private MockBean mb2;
    private List<SimpleAnnotatedMockBean> annotatedTestData;
    private List<MockBean> nullData;
    private List<SimpleAnnotatedMockBean> nullAnnotatedData;
@@ -42,16 +44,16 @@ public class BeanToCsvTest {
    @Before
    public void setTestData() {
       testData = new ArrayList<MockBean>();
+      testData.add(createMockBean("kyle", "abc123456", 123));
+      testData.add(createMockBean("jimmy", "def098765", 456));
+   }
+
+   private MockBean createMockBean(String name, String orderNumber, int number) {
       MockBean mb = new MockBean();
-      mb.setName("kyle");
-      mb.setOrderNumber("abc123456");
-      mb.setNum(123);
-      testData.add(mb);
-      mb = new MockBean();
-      mb.setName("jimmy");
-      mb.setOrderNumber("def098765");
-      mb.setNum(456);
-      testData.add(mb);
+      mb.setName(name);
+      mb.setOrderNumber(orderNumber);
+      mb.setNum(number);
+      return mb;
    }
 
    @Before
@@ -230,6 +232,48 @@ public class BeanToCsvTest {
       String content = sw.getBuffer().toString();
       assertNotNull(content);
       assertEquals(TEST_STRING, content);
+   }
+
+   @Test
+   public void writeBeansOneAtATime() {
+      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
+      strat.setType(MockBean.class);
+      String[] columns = new String[]{"name", "orderNumber", "num"};
+      strat.setColumnMapping(columns);
+
+      StringWriter sw = new StringWriter();
+      CSVWriter writer = new CSVWriter(sw);
+      boolean needToWriteHeader = true;
+
+      for (MockBean mb : testData) {
+         boolean value = bean.write(strat, writer, mb, needToWriteHeader);
+         needToWriteHeader &= false;
+         assertTrue(value);
+      }
+
+      String content = sw.getBuffer().toString();
+      assertNotNull(content);
+      assertEquals(TEST_STRING, content);
+   }
+
+   @Test
+   public void writeSingleBeanMethodReturnsFalseIfNullPassedIn() {
+      ColumnPositionMappingStrategy<MockBean> strat = new ColumnPositionMappingStrategy<MockBean>();
+      strat.setType(MockBean.class);
+      String[] columns = new String[]{"name", "orderNumber", "num"};
+      strat.setColumnMapping(columns);
+
+      StringWriter sw = new StringWriter();
+      CSVWriter writer = new CSVWriter(sw);
+
+      assertFalse(bean.write(strat, writer, null, false));
+   }
+
+   @Test(expected = RuntimeException.class)
+   public void handleException() {
+      StringWriter sw = new StringWriter();
+      CSVWriter writer = new CSVWriter(sw);
+      bean.write(createErrorMappingStrategy(), writer, testData.get(0), false);
    }
 
    @Test

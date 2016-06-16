@@ -55,6 +55,34 @@ public class BeanToCsv<T> {
     }
 
     /**
+     * Writes an single object allowing users to write large number of objects without worrying about
+     * a large collection filling up memory.  However it is up to the user to determine if the Header needs
+     * to be written or not.
+     *
+     * @param mapper      Mapping Strategy for the bean
+     * @param csv         CSVWriter
+     * @param bean        Object to be written.
+     * @param writeHeader If the header needs to be written or not.
+     * @return False if no object is written (null object) true otherwise.
+     */
+    public boolean write(MappingStrategy<T> mapper, CSVWriter csv, T bean, boolean writeHeader) {
+        if (bean == null) {
+            return false;
+        }
+
+        try {
+            if (writeHeader) {
+                csv.writeNext(processHeader(mapper));
+            }
+            String[] line = processObject(findGetters(mapper), bean);
+            csv.writeNext(line);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Error writing Bean!", e);
+        }
+    }
+
+    /**
      * Writes all the objects, one at a time, to the CSVWriter using the passed
      * in Strategy.
      * @param mapper Mapping strategy for the bean.
@@ -154,4 +182,5 @@ public class BeanToCsv<T> {
         }
         return readers;
     }
+
 }
