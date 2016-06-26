@@ -20,7 +20,7 @@ public class UniCodeTest {
    private static final String[] MIXED_ARRAY = {"eins, 1", "ichi", FIRST_STRING, SECOND_STRING};
    private static final String[] ASCII_ARRAY = {"foo", "bar"};
    private static final String ASCII_STRING_WITH_QUOTES = "\"foo\",\"bar\"";
-   CSVParser csvParser;
+   ICSVParser csvParser;
 
    @Test
    public void canParseUnicode() throws IOException {

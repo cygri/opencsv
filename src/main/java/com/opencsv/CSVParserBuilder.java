@@ -33,12 +33,12 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
  */
 public class CSVParserBuilder {
 
-    private char separator = CSVParser.DEFAULT_SEPARATOR;
-    private char quoteChar = CSVParser.DEFAULT_QUOTE_CHARACTER;
-    private char escapeChar = CSVParser.DEFAULT_ESCAPE_CHARACTER;
-    private boolean strictQuotes = CSVParser.DEFAULT_STRICT_QUOTES;
-    private boolean ignoreLeadingWhiteSpace = CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
-    private boolean ignoreQuotations = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
+    private char separator = ICSVParser.DEFAULT_SEPARATOR;
+    private char quoteChar = ICSVParser.DEFAULT_QUOTE_CHARACTER;
+    private char escapeChar = ICSVParser.DEFAULT_ESCAPE_CHARACTER;
+    private boolean strictQuotes = ICSVParser.DEFAULT_STRICT_QUOTES;
+    private boolean ignoreLeadingWhiteSpace = ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
+    private boolean ignoreQuotations = ICSVParser.DEFAULT_IGNORE_QUOTATIONS;
     private CSVReaderNullFieldIndicator nullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER;
 
     /**
@@ -128,7 +128,7 @@ public class CSVParserBuilder {
      * Constructs CSVParser.
      * @return A new CSVParser with defined settings.
      */
-    public CSVParser build() {
+    public ICSVParser build() {
         return new CSVParser(
                 separator,
                 quoteChar,

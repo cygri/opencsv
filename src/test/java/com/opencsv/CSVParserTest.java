@@ -53,7 +53,7 @@ public class CSVParserTest {
 
     @Test
     public void parseSimpleQuotedStringWithSpaces() throws IOException {
-        CSVParser parser = new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER,
+        ICSVParser parser = new CSVParser(ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_ESCAPE_CHARACTER,
                 true, false);
 
         String[] nextLine = parser.parseLine(" \"a\" , \"b\" , \"c\" ");
@@ -193,7 +193,7 @@ public class CSVParserTest {
     }
 
     private String setUpMultiLineInsideQuotes() {
-        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(ICSVParser.INITIAL_READ_SIZE);
 
         sb.append("Small test,\"This is a test across \ntwo lines.\"");
 
@@ -279,11 +279,11 @@ public class CSVParserTest {
 
     @Test
     public void testCanIgnoreQuotations() throws IOException {
-        csvParser = new CSVParser(CSVParser.DEFAULT_SEPARATOR,
-                CSVParser.DEFAULT_QUOTE_CHARACTER,
-                CSVParser.DEFAULT_ESCAPE_CHARACTER,
-                CSVParser.DEFAULT_STRICT_QUOTES,
-                CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
+        csvParser = new CSVParser(ICSVParser.DEFAULT_SEPARATOR,
+                ICSVParser.DEFAULT_QUOTE_CHARACTER,
+                ICSVParser.DEFAULT_ESCAPE_CHARACTER,
+                ICSVParser.DEFAULT_STRICT_QUOTES,
+                ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
                 true);
         String testString = "Bob,test\",Beaumont,TX";
 
@@ -297,11 +297,11 @@ public class CSVParserTest {
 
     @Test(expected = IOException.class)
     public void testFalseIgnoreQuotations() throws IOException {
-        csvParser = new CSVParser(CSVParser.DEFAULT_SEPARATOR,
-                CSVParser.DEFAULT_QUOTE_CHARACTER,
-                CSVParser.DEFAULT_ESCAPE_CHARACTER,
-                CSVParser.DEFAULT_STRICT_QUOTES,
-                CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
+        csvParser = new CSVParser(ICSVParser.DEFAULT_SEPARATOR,
+                ICSVParser.DEFAULT_QUOTE_CHARACTER,
+                ICSVParser.DEFAULT_ESCAPE_CHARACTER,
+                ICSVParser.DEFAULT_STRICT_QUOTES,
+                ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
                 false);
         String testString = "Bob,test\",Beaumont,TX";
 
@@ -324,10 +324,10 @@ public class CSVParserTest {
     @Test
     public void testIssue3314579() throws IOException {
         csvParser = new CSVParser(';',
-                CSVParser.DEFAULT_QUOTE_CHARACTER,
-                CSVParser.DEFAULT_ESCAPE_CHARACTER,
-                CSVParser.DEFAULT_STRICT_QUOTES,
-                CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
+                ICSVParser.DEFAULT_QUOTE_CHARACTER,
+                ICSVParser.DEFAULT_ESCAPE_CHARACTER,
+                ICSVParser.DEFAULT_STRICT_QUOTES,
+                ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
                 true);
         String testString = "RPO;2012;P; ; ; ;SDX;ACCESSORY WHEEL, 16\", ALUMINUM, DESIGN 1";
 
@@ -462,7 +462,7 @@ public class CSVParserTest {
 
     @Test
     public void spacesAtEndOfQuotedStringDoNotCountIfStrictQuotesIsTrue() throws IOException {
-        CSVParser parser = new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER, true);
+        ICSVParser parser = new CSVParser(ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_ESCAPE_CHARACTER, true);
         String[] nextLine = parser.parseLine("\"Line with\", \"spaces at end\"  ");
 
         assertEquals(2, nextLine.length);
@@ -512,7 +512,7 @@ public class CSVParserTest {
 
     @Test
     public void testIssue2958242WithoutQuotes() throws IOException {
-        CSVParser testParser = new CSVParser('\t');
+        ICSVParser testParser = new CSVParser('\t');
         String[] nextItem = testParser.parseLine("zo\"\"har\"\"at\t10-04-1980\t29\tC:\\\\foo.txt");
         assertEquals(4, nextItem.length);
         assertEquals("zo\"har\"at", nextItem[0]);
@@ -523,27 +523,27 @@ public class CSVParserTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void quoteAndEscapeCannotBeTheSame() {
-        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER);
+        new CSVParser(ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_QUOTE_CHARACTER);
     }
 
     @Test
     public void quoteAndEscapeCanBeTheSameIfNull() {
-        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.NULL_CHARACTER, CSVParser.NULL_CHARACTER);
+        new CSVParser(ICSVParser.DEFAULT_SEPARATOR, ICSVParser.NULL_CHARACTER, ICSVParser.NULL_CHARACTER);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void separatorCharacterCannotBeNull() {
-        new CSVParser(CSVParser.NULL_CHARACTER);
+        new CSVParser(ICSVParser.NULL_CHARACTER);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void separatorAndEscapeCannotBeTheSame() {
-        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_SEPARATOR);
+        new CSVParser(ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_SEPARATOR);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void separatorAndQuoteCannotBeTheSame() {
-        new CSVParser(CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER);
+        new CSVParser(ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_ESCAPE_CHARACTER);
     }
 
     @Test
@@ -556,12 +556,12 @@ public class CSVParserTest {
 
     @Test
     public void featureRequest60ByDefaultEmptyFieldsAreBlank() throws IOException {
-        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(ICSVParser.INITIAL_READ_SIZE);
 
         sb.append(",,,\"\",");
 
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.build();
+        ICSVParser parser = builder.build();
 
         String item[] = parser.parseLine(sb.toString());
 
@@ -576,12 +576,12 @@ public class CSVParserTest {
     @Test
     public void featureRequest60TreatEmptyFieldsAsNull() throws IOException {
 
-        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(ICSVParser.INITIAL_READ_SIZE);
 
         sb.append(", ,,\"\",");
 
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS).build();
+        ICSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS).build();
 
         String item[] = parser.parseLine(sb.toString());
 
@@ -596,12 +596,12 @@ public class CSVParserTest {
 
     @Test
     public void featureRequest60TreatEmptyDelimitedFieldsAsNull() throws IOException {
-        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(ICSVParser.INITIAL_READ_SIZE);
 
         sb.append(",\" \",,\"\",");
 
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
+        ICSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
 
         String item[] = parser.parseLine(sb.toString());
 
@@ -616,12 +616,12 @@ public class CSVParserTest {
     @Test
     public void featureRequest60TreatEmptyFieldsDelimitedOrNotAsNull() throws IOException {
 
-        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(ICSVParser.INITIAL_READ_SIZE);
 
         sb.append(",,,\"\",");
 
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.BOTH).build();
+        ICSVParser parser = builder.withFieldAsNull(CSVReaderNullFieldIndicator.BOTH).build();
 
         String item[] = parser.parseLine(sb.toString());
 
@@ -637,7 +637,7 @@ public class CSVParserTest {
     @Test
     public void testStrictQuotesEndsFieldAtQuote() throws IOException {
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withStrictQuotes(true).build();
+        ICSVParser parser = builder.withStrictQuotes(true).build();
         // "one","t"wo,"three"
         String[] nextLine = parser.parseLineMulti("\"one\",\"t\"wo,\"three\"");
 
@@ -651,7 +651,7 @@ public class CSVParserTest {
     @Test
     public void testStrictQuotesEndsFieldAtQuoteWithEscapedQuoteInMiddle() throws IOException {
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withStrictQuotes(true).build();
+        ICSVParser parser = builder.withStrictQuotes(true).build();
         // "one","t""w"o,"three"
         String[] nextLine = parser.parseLineMulti("\"one\",\"t\"\"w\"o,\"three\"");
 
@@ -665,7 +665,7 @@ public class CSVParserTest {
     @Test
     public void testNotStrictQuotesAllowsEmbeddedEscapedQuote() throws IOException {
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withStrictQuotes(false).build();
+        ICSVParser parser = builder.withStrictQuotes(false).build();
         // "one","t"wo","three"
         String[] nextLine = parser.parseLineMulti("\"one\",\"t\"\"wo\",\"three\"");
 
@@ -679,7 +679,7 @@ public class CSVParserTest {
     @Test
     public void testNotStrictQuotesAllowsEmbeddedQuote() throws IOException {
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withStrictQuotes(false).build();
+        ICSVParser parser = builder.withStrictQuotes(false).build();
         // "one",t""wo,"three"
         String[] nextLine = parser.parseLineMulti("\"one\",t\"\"wo,\"three\"");
 
@@ -693,7 +693,7 @@ public class CSVParserTest {
     @Test
     public void issue93ParsingEmptyDoubleQuoteField() throws IOException {
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withStrictQuotes(false).build();
+        ICSVParser parser = builder.withStrictQuotes(false).build();
         // "",2
         String[] nextLine = parser.parseLineMulti("\"\",2");
 
@@ -707,7 +707,7 @@ public class CSVParserTest {
     @Test
     public void tryAndParseExcelGeneratedString() throws IOException {
         CSVParserBuilder builder = new CSVParserBuilder();
-        CSVParser parser = builder.withStrictQuotes(true).build();
+        ICSVParser parser = builder.withStrictQuotes(true).build();
 
         // \" \ \ " ",
         String[] nextLine = parser.parseLineMulti("\"\\\"\"\",\\,\\,\"\"\"\",\"\"\",\"");

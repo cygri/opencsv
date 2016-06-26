@@ -40,7 +40,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      */
     public static final int DEFAULT_SKIP_LINES = 0;
     public static final int READ_AHEAD_LIMIT = Character.SIZE / Byte.SIZE;
-    protected CSVParser parser;
+    protected ICSVParser parser;
     protected int skipLines;
     protected BufferedReader br;
     protected LineReader lineReader;
@@ -58,7 +58,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param reader The reader to an underlying CSV source.
      */
     public CSVReader(Reader reader) {
-        this(reader, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER);
+        this(reader, ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_ESCAPE_CHARACTER);
     }
 
     /**
@@ -68,7 +68,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param separator The delimiter to use for separating entries.
      */
     public CSVReader(Reader reader, char separator) {
-        this(reader, separator, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER);
+        this(reader, separator, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_ESCAPE_CHARACTER);
     }
 
     /**
@@ -79,7 +79,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param quotechar The character to use for quoted elements
      */
     public CSVReader(Reader reader, char separator, char quotechar) {
-        this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES);
+        this(reader, separator, quotechar, ICSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES, ICSVParser.DEFAULT_STRICT_QUOTES);
     }
 
     /**
@@ -92,7 +92,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param strictQuotes Sets if characters outside the quotes are ignored
      */
     public CSVReader(Reader reader, char separator, char quotechar, boolean strictQuotes) {
-        this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES, strictQuotes);
+        this(reader, separator, quotechar, ICSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES, strictQuotes);
     }
 
     /**
@@ -106,7 +106,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
 
     public CSVReader(Reader reader, char separator,
                      char quotechar, char escape) {
-        this(reader, separator, quotechar, escape, DEFAULT_SKIP_LINES, CSVParser.DEFAULT_STRICT_QUOTES);
+        this(reader, separator, quotechar, escape, DEFAULT_SKIP_LINES, ICSVParser.DEFAULT_STRICT_QUOTES);
     }
 
     /**
@@ -118,7 +118,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param line      The number of lines to skip before reading
      */
     public CSVReader(Reader reader, char separator, char quotechar, int line) {
-        this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, line, CSVParser.DEFAULT_STRICT_QUOTES);
+        this(reader, separator, quotechar, ICSVParser.DEFAULT_ESCAPE_CHARACTER, line, ICSVParser.DEFAULT_STRICT_QUOTES);
     }
 
     /**
@@ -131,7 +131,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param line      The number of lines to skip before reading
      */
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line) {
-        this(reader, separator, quotechar, escape, line, CSVParser.DEFAULT_STRICT_QUOTES);
+        this(reader, separator, quotechar, escape, line, ICSVParser.DEFAULT_STRICT_QUOTES);
     }
 
     /**
@@ -145,7 +145,7 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      * @param strictQuotes Sets if characters outside the quotes are ignored
      */
     public CSVReader(Reader reader, char separator, char quotechar, char escape, int line, boolean strictQuotes) {
-        this(reader, separator, quotechar, escape, line, strictQuotes, CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
+        this(reader, separator, quotechar, escape, line, strictQuotes, ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
     }
 
     /**
@@ -188,10 +188,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      *
      * @param reader    The reader to an underlying CSV source.
      * @param line      The number of lines to skip before reading
-     * @param csvParser The parser to use to parse input
+     * @param ICSVParser The parser to use to parse input
      */
-    public CSVReader(Reader reader, int line, CSVParser csvParser) {
-        this(reader, line, csvParser, DEFAULT_KEEP_CR, DEFAULT_VERIFY_READER);
+    public CSVReader(Reader reader, int line, ICSVParser ICSVParser) {
+        this(reader, line, ICSVParser, DEFAULT_KEEP_CR, DEFAULT_VERIFY_READER);
     }
 
     /**
@@ -199,25 +199,25 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      *
      * @param reader    The reader to an underlying CSV source.
      * @param line      The number of lines to skip before reading
-     * @param csvParser The parser to use to parse input
+     * @param ICSVParser The parser to use to parse input
      * @param keepCR    True to keep carriage returns in data read, false otherwise
      * @param verifyReader   True to verify reader before each read, false otherwise
      */
-    CSVReader(Reader reader, int line, CSVParser csvParser, boolean keepCR, boolean verifyReader) {
+    CSVReader(Reader reader, int line, ICSVParser ICSVParser, boolean keepCR, boolean verifyReader) {
         this.br =
                 (reader instanceof BufferedReader ?
                         (BufferedReader) reader :
                         new BufferedReader(reader));
         this.lineReader = new LineReader(br, keepCR);
         this.skipLines = line;
-        this.parser = csvParser;
+        this.parser = ICSVParser;
         this.keepCR = keepCR;
         this.verifyReader = verifyReader;
     }
     /**
      * @return The CSVParser used by the reader.
      */
-    public CSVParser getParser() {
+    public ICSVParser getParser() {
         return parser;
     }
 

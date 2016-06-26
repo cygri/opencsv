@@ -50,7 +50,7 @@ public class CSVReaderBuilderTest {
 
    @Test
    public void testWithCSVParser() {
-      final CSVParser csvParser = mock(CSVParser.class);
+       final ICSVParser csvParser = mock(CSVParser.class);
 
       builder.withCSVParser(csvParser);
 

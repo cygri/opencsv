@@ -1,9 +1,9 @@
 package integrationTest.issue3189428;
 
 
-import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.ICSVParser;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 
@@ -98,7 +98,7 @@ public class CsvSample {
       mappingStrategy.setColumnMapping(columns);
 
       CsvToBean csv = new CsvToBean();
-      CSVReader reader = new CSVReader(new FileReader(filePath), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER, 0, false, false);
+      CSVReader reader = new CSVReader(new FileReader(filePath), ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, ICSVParser.DEFAULT_ESCAPE_CHARACTER, 0, false, false);
       List<MyBean> list = csv.parse(mappingStrategy, reader);
 
       if (list.size() != 3) {

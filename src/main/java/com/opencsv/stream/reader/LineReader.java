@@ -1,6 +1,6 @@
 package com.opencsv.stream.reader;
 
-import com.opencsv.CSVParser;
+import com.opencsv.ICSVParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class LineReader {
     }
 
     private String readUntilNewline() throws IOException {
-        StringBuilder sb = new StringBuilder(CSVParser.INITIAL_READ_SIZE);
+        StringBuilder sb = new StringBuilder(ICSVParser.INITIAL_READ_SIZE);
         for (int c = reader.read(); c > -1 && c != '\n'; c = reader.read()) {
             sb.append((char) c);
         }

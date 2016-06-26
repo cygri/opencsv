@@ -1,8 +1,8 @@
 package integrationTest.SR34;
 
-import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.ICSVParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class SR34Test {
     @Test
     public void usingNullAsDelimeterWillFailBecauseYouAreEscapingTheQuote() throws IOException {
         BufferedReader bufferedStringReader1 = new BufferedReader(new InputStreamReader(new FileInputStream(TEST_FILE), "UTF-8"));
-        CSVReader reader1 = new CSVReader(bufferedStringReader1, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
+        CSVReader reader1 = new CSVReader(bufferedStringReader1, ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
 
         List<String[]> rawTokens1;
         rawTokens1 = reader1.readAll();
@@ -76,7 +76,7 @@ public class SR34Test {
     @Test
     public void youNeedToEscapeTheNullCharactersIfUsingNullAsEscape() throws IOException {
         BufferedReader bufferedStringReader1 = new BufferedReader(new InputStreamReader(new FileInputStream(DOUBLE_NULL_FILE), "UTF-8"));
-        CSVReader reader1 = new CSVReader(bufferedStringReader1, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
+        CSVReader reader1 = new CSVReader(bufferedStringReader1, ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
 
         List<String[]> rawTokens1;
         rawTokens1 = reader1.readAll();

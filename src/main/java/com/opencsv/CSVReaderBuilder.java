@@ -46,7 +46,7 @@ public class CSVReaderBuilder {
     private final CSVParserBuilder parserBuilder = new CSVParserBuilder();
     private final Reader reader;
     private int skipLines = CSVReader.DEFAULT_SKIP_LINES;
-    /*@Nullable*/private CSVParser csvParser = null;
+    /*@Nullable*/private ICSVParser ICSVParser = null;
     private boolean keepCR;
     private boolean verifyReader = CSVReader.DEFAULT_VERIFY_READER;
     private CSVReaderNullFieldIndicator nullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER;
@@ -87,8 +87,8 @@ public class CSVReaderBuilder {
      *
      * @return The CSVParser used by the builder.
      */
-    protected CSVParser getCsvParser() {
-        return csvParser;
+    protected ICSVParser getCsvParser() {
+        return ICSVParser;
     }
 
     /**
@@ -107,12 +107,12 @@ public class CSVReaderBuilder {
     /**
      * Sets the parser to use to parse the input.
      *
-     * @param csvParser The parser to use to parse the input.
+     * @param ICSVParser The parser to use to parse the input.
      * @return The CSVReaderBuilder with the CSVParser set.
     */
     public CSVReaderBuilder withCSVParser(
-         final /*@Nullable*/ CSVParser csvParser) {
-      this.csvParser = csvParser;
+            final /*@Nullable*/ ICSVParser ICSVParser) {
+        this.ICSVParser = ICSVParser;
        return this;
    }
 
@@ -122,8 +122,8 @@ public class CSVReaderBuilder {
      * @return The CSVReader based on the set criteria.
      */
     public CSVReader build() {
-      final CSVParser parser =
-              (csvParser != null ? csvParser : parserBuilder.withFieldAsNull(nullFieldIndicator).build());
+        final ICSVParser parser =
+                (ICSVParser != null ? ICSVParser : parserBuilder.withFieldAsNull(nullFieldIndicator).build());
        return new CSVReader(reader, skipLines, parser, keepCR, verifyReader);
    }
 

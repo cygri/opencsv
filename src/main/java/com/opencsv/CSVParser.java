@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.opencsv.enums.CSVReaderNullFieldIndicator.NEITHER;
-
 /**
  * A very simple CSV parser released under a commercial-friendly license.
  * This just implements splitting a single line into fields.
@@ -32,53 +30,7 @@ import static com.opencsv.enums.CSVReaderNullFieldIndicator.NEITHER;
  * @author Glen Smith
  * @author Rainer Pruy
  */
-public class CSVParser {
-
-    /**
-     * The default separator to use if none is supplied to the constructor.
-     */
-    public static final char DEFAULT_SEPARATOR = ',';
-    /**
-     * The average size of a line read by opencsv (used for setting the size of StringBuilders).
-     */
-    public static final int INITIAL_READ_SIZE = 1024;
-    /**
-     * In most cases we know the size of the line we want to read.  In that case we will set the initial read
-     * to that plus an buffer size.
-     */
-    public static final int READ_BUFFER_SIZE = 128;
-    /**
-     * The default quote character to use if none is supplied to the
-     * constructor.
-     */
-    public static final char DEFAULT_QUOTE_CHARACTER = '"';
-    /**
-     * The default escape character to use if none is supplied to the
-     * constructor.
-     */
-    public static final char DEFAULT_ESCAPE_CHARACTER = '\\';
-    /**
-     * The default strict quote behavior to use if none is supplied to the
-     * constructor.
-     */
-    public static final boolean DEFAULT_STRICT_QUOTES = false;
-    /**
-     * The default leading whitespace behavior to use if none is supplied to the
-     * constructor.
-     */
-    public static final boolean DEFAULT_IGNORE_LEADING_WHITESPACE = true;
-    /**
-     * If the quote character is set to null then there is no quote character.
-     */
-    public static final boolean DEFAULT_IGNORE_QUOTATIONS = false;
-    /**
-     * This is the "null" character - if a value is set to this then it is ignored.
-     */
-    public static final char NULL_CHARACTER = '\0';
-    /**
-     * Denotes what field contents will cause the parser to return null:  EMPTY_SEPARATORS, EMPTY_QUOTES, BOTH, NEITHER (default)
-     */
-    public static final CSVReaderNullFieldIndicator DEFAULT_NULL_FIELD_INDICATOR = NEITHER;
+public class CSVParser implements ICSVParser {
 
     /**
      * This is the character that the CSVParser will treat as the separator.
@@ -223,6 +175,7 @@ public class CSVParser {
     /**
      * @return The default separator for this parser.
      */
+    @Override
     public char getSeparator() {
         return separator;
     }
@@ -230,6 +183,7 @@ public class CSVParser {
     /**
      * @return The default quotation character for this parser.
      */
+    @Override
     public char getQuotechar() {
         return quotechar;
     }
@@ -237,6 +191,7 @@ public class CSVParser {
     /**
      * @return The default escape character for this parser.
      */
+    @Override
     public char getEscape() {
         return escape;
     }
@@ -244,6 +199,7 @@ public class CSVParser {
     /**
      * @return The default strictQuotes setting for this parser.
      */
+    @Override
     public boolean isStrictQuotes() {
         return strictQuotes;
     }
@@ -251,6 +207,7 @@ public class CSVParser {
     /**
      * @return The default ignoreLeadingWhiteSpace setting for this parser.
      */
+    @Override
     public boolean isIgnoreLeadingWhiteSpace() {
         return ignoreLeadingWhiteSpace;
     }
@@ -258,6 +215,7 @@ public class CSVParser {
     /**
      * @return The default ignoreQuotation setting for this parser.
      */
+    @Override
     public boolean isIgnoreQuotations() {
         return ignoreQuotations;
     }
@@ -289,6 +247,7 @@ public class CSVParser {
     /**
      * @return True if something was left over from last call(s)
      */
+    @Override
     public boolean isPending() {
         return pending != null;
     }
@@ -301,6 +260,7 @@ public class CSVParser {
      * @return The comma-tokenized list of elements, or null if nextLine is null
      * @throws IOException If bad things happen during the read
      */
+    @Override
     public String[] parseLineMulti(String nextLine) throws IOException {
         return parseLine(nextLine, true);
     }
@@ -313,6 +273,7 @@ public class CSVParser {
      * @return The comma-tokenized list of elements, or null if nextLine is null
      * @throws IOException If bad things happen during the read
      */
+    @Override
     public String[] parseLine(String nextLine) throws IOException {
         return parseLine(nextLine, false);
     }
@@ -540,6 +501,7 @@ public class CSVParser {
     /**
      * @return The null field indicator.
      */
+    @Override
     public CSVReaderNullFieldIndicator nullFieldIndicator() {
         return nullFieldIndicator;
     }

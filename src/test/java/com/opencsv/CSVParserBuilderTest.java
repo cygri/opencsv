@@ -18,43 +18,43 @@ public class CSVParserBuilderTest {
    @Test
    public void testDefaultBuilder() {
       assertEquals(
-            CSVParser.DEFAULT_SEPARATOR,
+              ICSVParser.DEFAULT_SEPARATOR,
               builder.getSeparator());
       assertEquals(
-            CSVParser.DEFAULT_QUOTE_CHARACTER,
+              ICSVParser.DEFAULT_QUOTE_CHARACTER,
               builder.getQuoteChar());
       assertEquals(
-            CSVParser.DEFAULT_ESCAPE_CHARACTER,
+              ICSVParser.DEFAULT_ESCAPE_CHARACTER,
               builder.getEscapeChar());
       assertEquals(
-            CSVParser.DEFAULT_STRICT_QUOTES,
+              ICSVParser.DEFAULT_STRICT_QUOTES,
               builder.isStrictQuotes());
       assertEquals(
-            CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
+              ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
               builder.isIgnoreLeadingWhiteSpace());
       assertEquals(
-            CSVParser.DEFAULT_IGNORE_QUOTATIONS,
+              ICSVParser.DEFAULT_IGNORE_QUOTATIONS,
               builder.isIgnoreQuotations());
        assertEquals(CSVReaderNullFieldIndicator.NEITHER, builder.nullFieldIndicator());
 
-      CSVParser parser = builder.build();
+       ICSVParser parser = builder.build();
       assertEquals(
-            CSVParser.DEFAULT_SEPARATOR,
+              ICSVParser.DEFAULT_SEPARATOR,
               parser.getSeparator());
       assertEquals(
-            CSVParser.DEFAULT_QUOTE_CHARACTER,
+              ICSVParser.DEFAULT_QUOTE_CHARACTER,
               parser.getQuotechar());
       assertEquals(
-            CSVParser.DEFAULT_ESCAPE_CHARACTER,
+              ICSVParser.DEFAULT_ESCAPE_CHARACTER,
               parser.getEscape());
       assertEquals(
-            CSVParser.DEFAULT_STRICT_QUOTES,
+              ICSVParser.DEFAULT_STRICT_QUOTES,
               parser.isStrictQuotes());
       assertEquals(
-            CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
+              ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE,
               parser.isIgnoreLeadingWhiteSpace());
       assertEquals(
-            CSVParser.DEFAULT_IGNORE_QUOTATIONS,
+              ICSVParser.DEFAULT_IGNORE_QUOTATIONS,
               parser.isIgnoreQuotations());
        assertEquals(CSVReaderNullFieldIndicator.NEITHER, parser.nullFieldIndicator());
    }
