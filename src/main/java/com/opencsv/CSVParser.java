@@ -27,6 +27,14 @@ import java.util.List;
  * A very simple CSV parser released under a commercial-friendly license.
  * This just implements splitting a single line into fields.
  *
+ * The purpose of the CSVParser is to take a single string and parse it into
+ * its elements based on the delimiter, quote and escape characters.
+ *
+ * The CSVParser has grown organically based on user requests and does not truely match
+ * any current requirements (though it can be configured to match or come close).  There
+ * is no plans to change this as it will break existing requirements.  Consider using
+ * the RFC4180Parser for less configurablility but closer match to the RFC4180 requirements.
+ *
  * @author Glen Smith
  * @author Rainer Pruy
  */
@@ -191,7 +199,6 @@ public class CSVParser implements ICSVParser {
     /**
      * @return The default escape character for this parser.
      */
-    @Override
     public char getEscape() {
         return escape;
     }
@@ -199,7 +206,6 @@ public class CSVParser implements ICSVParser {
     /**
      * @return The default strictQuotes setting for this parser.
      */
-    @Override
     public boolean isStrictQuotes() {
         return strictQuotes;
     }
@@ -207,7 +213,6 @@ public class CSVParser implements ICSVParser {
     /**
      * @return The default ignoreLeadingWhiteSpace setting for this parser.
      */
-    @Override
     public boolean isIgnoreLeadingWhiteSpace() {
         return ignoreLeadingWhiteSpace;
     }
@@ -215,7 +220,6 @@ public class CSVParser implements ICSVParser {
     /**
      * @return The default ignoreQuotation setting for this parser.
      */
-    @Override
     public boolean isIgnoreQuotations() {
         return ignoreQuotations;
     }
@@ -270,7 +274,7 @@ public class CSVParser implements ICSVParser {
      * This method is used when all data is contained in a single line.
      *
      * @param nextLine Line to be parsed.
-     * @return The comma-tokenized list of elements, or null if nextLine is null
+     * @return The list of elements, or null if nextLine is null
      * @throws IOException If bad things happen during the read
      */
     @Override
@@ -283,7 +287,7 @@ public class CSVParser implements ICSVParser {
      *
      * @param nextLine The string to parse
      * @param multi Does it take multiple lines to form a single record.
-     * @return The comma-tokenized list of elements, or null if nextLine is null
+     * @return The list of elements, or null if nextLine is null
      * @throws IOException If bad things happen during the read
      */
     protected String[] parseLine(String nextLine, boolean multi) throws IOException {
@@ -308,7 +312,7 @@ public class CSVParser implements ICSVParser {
         if (pending != null) {
             sb.append(pending);
             pending = null;
-            inQuotes = !this.ignoreQuotations;//true;
+            inQuotes = !this.ignoreQuotations;
         }
         for (int i = 0; i < nextLine.length(); i++) {
 
@@ -360,7 +364,7 @@ public class CSVParser implements ICSVParser {
 
         }
         // line is done - check status
-        if ((inQuotes && !ignoreQuotations)) {
+        if (inQuotes && !ignoreQuotations) {
             if (multi) {
                 // continuing a quoted section, re-append newline
                 sb.append('\n');

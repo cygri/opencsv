@@ -332,16 +332,25 @@ public class CSVWriterTest {
    public void testStreamFlushing() throws IOException {
 
       String WRITE_FILE = "myfile.csv";
+      File tester = new File(WRITE_FILE);
+
+      assertFalse(tester.exists());
 
       String[] nextLine = new String[]{"aaaa", "bbbb", "cccc", "dddd"};
 
       FileWriter fileWriter = new FileWriter(WRITE_FILE);
+
       CSVWriter writer = new CSVWriter(fileWriter);
 
       writer.writeNext(nextLine);
 
       // If this line is not executed, it is not written in the file.
       writer.close();
+
+      assertTrue(tester.exists());
+      // cleanup
+      tester.delete();
+
    }
 
    @Test(expected = IOException.class)

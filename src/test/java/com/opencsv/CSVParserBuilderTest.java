@@ -37,7 +37,7 @@ public class CSVParserBuilderTest {
               builder.isIgnoreQuotations());
        assertEquals(CSVReaderNullFieldIndicator.NEITHER, builder.nullFieldIndicator());
 
-       ICSVParser parser = builder.build();
+       CSVParser parser = builder.build();
       assertEquals(
               ICSVParser.DEFAULT_SEPARATOR,
               parser.getSeparator());

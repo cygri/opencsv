@@ -60,14 +60,6 @@ public interface ICSVParser {
 
     char getQuotechar();
 
-    char getEscape();
-
-    boolean isStrictQuotes();
-
-    boolean isIgnoreLeadingWhiteSpace();
-
-    boolean isIgnoreQuotations();
-
     boolean isPending();
 
     String[] parseLineMulti(String nextLine) throws IOException;

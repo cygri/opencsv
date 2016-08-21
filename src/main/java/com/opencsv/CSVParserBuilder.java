@@ -20,7 +20,7 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
 /**
  * Builder for creating a CSVParser.
- *<p>Example code for using this class:<br><br>
+ * <p>Example code for using this class:<br><br>
  * <code>
  * final CSVParser parser =<br>
  * new CSVParserBuilder()<br>
@@ -40,6 +40,7 @@ public class CSVParserBuilder {
     private boolean ignoreLeadingWhiteSpace = ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
     private boolean ignoreQuotations = ICSVParser.DEFAULT_IGNORE_QUOTATIONS;
     private CSVReaderNullFieldIndicator nullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER;
+
 
     /**
      * Default constructor.
@@ -126,9 +127,11 @@ public class CSVParserBuilder {
 
     /**
      * Constructs CSVParser.
+     *
      * @return A new CSVParser with defined settings.
      */
-    public ICSVParser build() {
+    public CSVParser build() {
+
         return new CSVParser(
                 separator,
                 quoteChar,
