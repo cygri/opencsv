@@ -3,6 +3,18 @@ package com.opencsv;
 
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
+/**
+ * Builder for creating a RFC4180Parser.
+ * <p>Example code for using this class:<br><br>
+ * <code>
+ * final RFC4180Parser parser =<br>
+ * new RFC4180ParserBuilder()<br>
+ * .withSeparator('\t')<br>
+ * .build();<br>
+ * </code></p>
+ *
+ * @see RFC4180Parser
+ */
 public class RFC4180ParserBuilder {
 
     private char separator = ICSVParser.DEFAULT_SEPARATOR;
@@ -12,6 +24,12 @@ public class RFC4180ParserBuilder {
     private boolean ignoreLeadingWhiteSpace = ICSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
     private boolean ignoreQuotations = ICSVParser.DEFAULT_IGNORE_QUOTATIONS;
     private CSVReaderNullFieldIndicator nullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER;
+
+    /**
+     * default constructor
+     */
+    public RFC4180ParserBuilder() {
+    }
 
     /**
      * @return The defined separator.

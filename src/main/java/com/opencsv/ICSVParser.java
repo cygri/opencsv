@@ -56,15 +56,43 @@ public interface ICSVParser {
      */
     CSVReaderNullFieldIndicator DEFAULT_NULL_FIELD_INDICATOR = NEITHER;
 
+    /**
+     * @return The default separator for this parser.
+     */
     char getSeparator();
 
+    /**
+     * @return The default quotation character for this parser.
+     */
     char getQuotechar();
 
+    /**
+     * @return True if something was left over from last call(s)
+     */
     boolean isPending();
 
+    /**
+     * Parses an incoming String and returns an array of elements.
+     * This method is used when the data spans multiple lines.
+     *
+     * @param nextLine Current line to be processed
+     * @return The comma-tokenized list of elements, or null if nextLine is null
+     * @throws IOException If bad things happen during the read
+     */
     String[] parseLineMulti(String nextLine) throws IOException;
 
+    /**
+     * Parses an incoming String and returns an array of elements.
+     * This method is used when all data is contained in a single line.
+     *
+     * @param nextLine Line to be parsed.
+     * @return The list of elements, or null if nextLine is null
+     * @throws IOException If bad things happen during the read
+     */
     String[] parseLine(String nextLine) throws IOException;
 
+    /**
+     * @return The null field indicator.
+     */
     CSVReaderNullFieldIndicator nullFieldIndicator();
 }

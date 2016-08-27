@@ -35,7 +35,7 @@ public abstract class AbstractCSVToBean {
      * will return the string with the beginning and end whitespace removed.
      */
     protected String checkForTrim(String s, PropertyDescriptor prop) {
-        return trimmableProperty(prop) ? s.trim() : s;
+        return s != null && trimmableProperty(prop) ? s.trim() : s;
     }
 
     private boolean trimmableProperty(PropertyDescriptor prop) {

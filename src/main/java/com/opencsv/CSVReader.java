@@ -188,10 +188,10 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      *
      * @param reader    The reader to an underlying CSV source.
      * @param line      The number of lines to skip before reading
-     * @param ICSVParser The parser to use to parse input
+     * @param icsvParser The parser to use to parse input
      */
-    public CSVReader(Reader reader, int line, ICSVParser ICSVParser) {
-        this(reader, line, ICSVParser, DEFAULT_KEEP_CR, DEFAULT_VERIFY_READER);
+    public CSVReader(Reader reader, int line, ICSVParser icsvParser) {
+        this(reader, line, icsvParser, DEFAULT_KEEP_CR, DEFAULT_VERIFY_READER);
     }
 
     /**
@@ -199,18 +199,18 @@ public class CSVReader implements Closeable, Iterable<String[]> {
      *
      * @param reader    The reader to an underlying CSV source.
      * @param line      The number of lines to skip before reading
-     * @param ICSVParser The parser to use to parse input
+     * @param icsvParser The parser to use to parse input
      * @param keepCR    True to keep carriage returns in data read, false otherwise
      * @param verifyReader   True to verify reader before each read, false otherwise
      */
-    CSVReader(Reader reader, int line, ICSVParser ICSVParser, boolean keepCR, boolean verifyReader) {
+    CSVReader(Reader reader, int line, ICSVParser icsvParser, boolean keepCR, boolean verifyReader) {
         this.br =
                 (reader instanceof BufferedReader ?
                         (BufferedReader) reader :
                         new BufferedReader(reader));
         this.lineReader = new LineReader(br, keepCR);
         this.skipLines = line;
-        this.parser = ICSVParser;
+        this.parser = icsvParser;
         this.keepCR = keepCR;
         this.verifyReader = verifyReader;
     }

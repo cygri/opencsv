@@ -1,7 +1,11 @@
 package com.opencsv.bean;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.bean.mocks.*;
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
@@ -233,6 +237,27 @@ public class CsvToBeanTest {
       assertTrue("secondValue".equals(bean.getPrivateField()));
       assertTrue("thirdValue".equals(bean.getProtectedField()));
       assertTrue("fourthValue".equals(bean.getPackagePrivateField()));
+   }
+
+   @Test
+   public void bug133ShouldNotThrowNullPointerExceptionWhenProcessingEmptyWithNoAnnotations() {
+      HeaderColumnNameMappingStrategy<Bug133Bean> strategy = new HeaderColumnNameMappingStrategy<Bug133Bean>();
+      strategy.setType(Bug133Bean.class);
+
+      StringReader reader = new StringReader("one;two;three\n" +
+              "kyle;;123\n" +
+              "jimmy;;456 ");
+
+      CSVParserBuilder parserBuilder = new CSVParserBuilder();
+      CSVReaderBuilder readerBuilder = new CSVReaderBuilder(reader);
+
+      CSVParser parser = parserBuilder.withFieldAsNull(CSVReaderNullFieldIndicator.BOTH).withSeparator(';').build();
+      CSVReader csvReader = readerBuilder.withCSVParser(parser).build();
+
+      CsvToBean<Bug133Bean> bean = new CsvToBean<Bug133Bean>();
+
+      List<Bug133Bean> beanList = bean.parse(strategy, csvReader);
+      assertEquals(2, beanList.size());
    }
 
    @Test(expected = RuntimeException.class)
