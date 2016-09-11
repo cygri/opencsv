@@ -96,7 +96,7 @@ public class RFC4180Parser implements ICSVParser {
     public String[] parseLine(String nextLine) throws IOException {
         String[] elements;
         if (!nextLine.contains(Character.toString(quotechar))) {
-            elements = nextLine.split(Character.toString(separator));
+            elements = StringUtils.split(nextLine, separator);
         } else {
             elements = splitWhileNotInQuotes(nextLine);
             for (int i = 0; i < elements.length; i++) {
