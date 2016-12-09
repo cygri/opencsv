@@ -1,5 +1,7 @@
 package integrationTest.issue3402853;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class MockUserBean {
     public static final String DEFAULT_BLANK_FIELD = "";
     private String first_name = DEFAULT_BLANK_FIELD;
@@ -40,11 +42,12 @@ public class MockUserBean {
         this.last_name = lastName;
     }
 
+    @Override
     public String toString() {
-        String userId = isEmpty(getProfile_Id()) ? "" : getProfile_Id().trim();
-        String firstname = isEmpty(getFirst_Name()) ? "" : getFirst_Name().trim();
-        String lastname = isEmpty(getLast_Name()) ? "" : getLast_Name().trim();
-        String email = isEmpty(getEmail()) ? "" : getEmail().trim();
+        String userId = StringUtils.isEmpty(getProfile_Id()) ? "" : getProfile_Id().trim();
+        String firstname = StringUtils.isEmpty(getFirst_Name()) ? "" : getFirst_Name().trim();
+        String lastname = StringUtils.isEmpty(getLast_Name()) ? "" : getLast_Name().trim();
+        String email = StringUtils.isEmpty(getEmail()) ? "" : getEmail().trim();
         StringBuilder value = new StringBuilder();
         value.append(",user id:").append(userId);
         value.append(",email:").append(email);
@@ -86,15 +89,4 @@ public class MockUserBean {
     public void setSecondary_Email(String secondaryEmail) {
         this.secondary_email = secondaryEmail;
     }
-
-    /**
-     * This method simply check if a String is null or blank
-     *
-     * @param value
-     * @return
-     */
-    public boolean isEmpty(final String value) {
-        return (null == value) || (value.trim().length() == 0);
-    }
-
 }

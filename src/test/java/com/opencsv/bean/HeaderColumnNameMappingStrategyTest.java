@@ -112,6 +112,20 @@ public class HeaderColumnNameMappingStrategyTest {
 
       assertEquals("name", strat.getColumnName(0));
       assertEquals(strat.findDescriptor(0), strat.findDescriptor("name"));
-      assertTrue(strat.matches("name", strat.findDescriptor("name")));
+      assertEquals("name", strat.findDescriptor("name").getName());
+   }
+   
+   @Test
+   public void throwsIllegalStateExceptionIfTypeNotSet() throws IOException {
+      HeaderColumnNameMappingStrategy<MockBean> strat = new HeaderColumnNameMappingStrategy<MockBean>();
+      StringReader reader = new StringReader(TEST_STRING);
+      CSVReader csvReader = new CSVReader(reader);
+      CsvToBean csvtb = new CsvToBean();
+      try {
+          csvtb.parse(strat, csvReader);
+      }
+      catch(RuntimeException e) {
+          assertEquals(IllegalStateException.class, e.getCause().getClass());
+      }
    }
 }

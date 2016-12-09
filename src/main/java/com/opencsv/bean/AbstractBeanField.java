@@ -15,14 +15,15 @@
  */
 package com.opencsv.bean;
 
+import com.opencsv.exceptions.CsvBeanIntrospectionException;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  * This base bean takes over the responsibility of converting the supplied
@@ -31,10 +32,18 @@ import java.lang.reflect.Method;
  *
  * @param <T> Type of the bean being populated
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 abstract public class AbstractBeanField<T> implements BeanField<T> {
-
+    
+    /** The field this class represents. */
     protected Field field;
+    
+    /**
+     * This is just to avoid instantiating a new PropertyUtilsBean for every
+     * time it needs to be used.
+     */
+    private PropertyUtilsBean propUtils;
 
     /**
      * Default nullary constructor, so derived classes aren't forced to create
@@ -45,7 +54,7 @@ abstract public class AbstractBeanField<T> implements BeanField<T> {
     }
 
     /**
-     * @param field A java.lang.reflect.Field object.
+     * @param field A {@link java.lang.reflect.Field} object.
      */
     public AbstractBeanField(Field field) {
         this.field = field;
@@ -153,8 +162,8 @@ abstract public class AbstractBeanField<T> implements BeanField<T> {
      * This method must be specified in all non-abstract derived classes.
      *
      * @param value The string from the selected field of the CSV file
-     * @return An Object representing the input data converted into the proper
-     * type
+     * @return An {@link java.lang.Object} representing the input data converted
+     *   into the proper type
      * @throws CsvDataTypeMismatchException    If the input string cannot be converted into
      *                                         the proper type
      * @throws CsvRequiredFieldEmptyException  If the field is mandatory but the input is
@@ -165,4 +174,86 @@ abstract public class AbstractBeanField<T> implements BeanField<T> {
     protected abstract Object convert(String value)
             throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException,
             CsvConstraintViolationException;
+    
+    /**
+     * This method takes the current value of the field in question in the bean
+     * passed in and converts it to a string.
+     * It is actually a stub that calls {@link #convertToWrite(java.lang.Object)}
+     * for the actual conversion, and itself performs validation and handles
+     * exceptions thrown by {@link #convertToWrite(java.lang.Object)}. The
+     * validation consists of verifying that both {@code bean} and {@link #field}
+     * are not null before calling {@link #convertToWrite(java.lang.Object)}.
+     */
+    // The rest of the JavaDoc is automatically inherited
+    @Override
+    public final String write(T bean) throws CsvDataTypeMismatchException,
+            CsvRequiredFieldEmptyException {
+        String result = null;
+        if(bean != null && field != null) {
+            if(propUtils == null) {
+                propUtils = new PropertyUtilsBean();
+            }
+            try {
+                Object value = propUtils.getSimpleProperty(bean, field.getName());
+                result = convertToWrite(value);
+            }
+            catch(CsvDataTypeMismatchException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(
+                        bean, field.getType(), e.getMessage());
+                csve.initCause(e.getCause());
+                throw csve;
+            }
+            catch(CsvRequiredFieldEmptyException e) {
+                CsvRequiredFieldEmptyException csve = new CsvRequiredFieldEmptyException(
+                        bean.getClass(), field, e.getMessage());
+                csve.initCause(csve.getCause());
+                throw csve;
+            }
+            // Replace with multi-catch once we support Java 7
+            catch(IllegalAccessException e) {
+                CsvBeanIntrospectionException csve = new CsvBeanIntrospectionException(bean, field);
+                csve.initCause(e);
+                throw csve;
+            }
+            catch(InvocationTargetException e) {
+                CsvBeanIntrospectionException csve = new CsvBeanIntrospectionException(bean, field);
+                csve.initCause(e);
+                throw csve;
+            }
+            catch(NoSuchMethodException e) {
+                CsvBeanIntrospectionException csve = new CsvBeanIntrospectionException(bean, field);
+                csve.initCause(e);
+                throw csve;
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * This is the method that actually performs the conversion from field to
+     * string for {@link #write(java.lang.Object)} and should be overridden in
+     * derived classes.
+     * <p>The default implementation simply calls {@code toString()} on the
+     * object in question. Derived classes will, in most cases, want to override
+     * this method. Alternatively, for complex types, overriding the
+     * {@code toString()} method in the type of the field in question would also
+     * work fine.</p>
+     * 
+     * @param value The contents of the field currently being processed from the
+     *   bean to be written. Can be null.
+     * @return A string representation of the value of the field in question in
+     *   the bean passed in, or an empty string if {@code value} is null
+     * @throws CsvDataTypeMismatchException This implementation does not throw
+     *   this exception
+     * @throws CsvRequiredFieldEmptyException If this field has been marked as
+     *   required, but is null
+     * @since 3.9
+     * @see #write(java.lang.Object) 
+     */
+    protected String convertToWrite(Object value)
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        // Since we have no concept of which field is required at this level,
+        // we can't check for null and throw an exeception.
+        return value==null?"":value.toString();
+    }
 }

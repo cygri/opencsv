@@ -23,9 +23,12 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
  * except that it throws {@link com.opencsv.exceptions.CsvRequiredFieldEmptyException}
  * if the input is empty.
  *
+ * @param <T> Type of the bean to be manipulated
+ * 
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
-public class ConvertGermanToBooleanRequired extends ConvertGermanToBoolean {
+public class ConvertGermanToBooleanRequired<T> extends ConvertGermanToBoolean<T> {
 
     /**
      * Silence code style checker by adding a useless constructor.
@@ -46,5 +49,18 @@ public class ConvertGermanToBooleanRequired extends ConvertGermanToBoolean {
         }
         return o;
     }
-
+    
+    /**
+     * @throws CsvRequiredFieldEmptyException If value is null, because this
+     *   converter requires a value
+     */
+    // The rest of the JavaDoc is automatically inherited from the base class.
+    @Override
+    protected String convertToWrite(Object value)
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        if(value == null) {
+            throw new CsvRequiredFieldEmptyException();
+        }
+        return super.convertToWrite(value);
+    }
 }

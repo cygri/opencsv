@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
  * the CSV file.
  *
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 public class CsvRequiredFieldEmptyException extends CsvException {
     private final Class beanClass;

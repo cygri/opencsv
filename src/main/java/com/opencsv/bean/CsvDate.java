@@ -32,6 +32,7 @@ import java.lang.annotation.*;
  * or {@link com.opencsv.bean.CsvBindByPosition}, otherwise it is ignored.
  *
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

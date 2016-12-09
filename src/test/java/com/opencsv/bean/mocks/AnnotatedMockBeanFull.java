@@ -38,7 +38,8 @@ import java.util.GregorianCalendar;
 public class AnnotatedMockBeanFull {
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>2</li>
      * <li>5</li>
      * <li>8</li>
@@ -47,18 +48,25 @@ public class AnnotatedMockBeanFull {
      * <li>52</li>
      * <li>54</li>
      * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
+     * </ul></p>
      */
     @CsvBindByName(column = "bool1")
     @CsvBindByPosition(position = 1)
     private Boolean boolWrapped;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>1</li>
      * <li>4</li>
      * <li>9</li>
      * <li>48</li>
      * <li>53</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName()
@@ -66,11 +74,15 @@ public class AnnotatedMockBeanFull {
     private boolean boolPrimitive;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>11</li>
      * <li>49</li>
      * <li>55</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
      * </ul></p>
      */
     @CsvBindByName(column = "byte1")
@@ -78,12 +90,18 @@ public class AnnotatedMockBeanFull {
     private Byte byteWrappedDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>6</li>
      * <li>28</li>
      * <li>7</li>
      * <li>50</li>
      * <li>51</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>24</li>
+     * <li>29</li>
+     * <li>32</li>
      * </ul></p>
      */
     @CsvBindByName(required = true, column = "byte2", locale = "de")
@@ -91,9 +109,13 @@ public class AnnotatedMockBeanFull {
     private Byte byteWrappedSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>48</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(required = true, column = "byte3")
@@ -101,7 +123,8 @@ public class AnnotatedMockBeanFull {
     private byte bytePrimitiveDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -110,9 +133,13 @@ public class AnnotatedMockBeanFull {
     private byte bytePrimitiveSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>49</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
      * </ul></p>
      */
     @CsvBindByName(column = "double1", locale = "en_US")
@@ -120,7 +147,8 @@ public class AnnotatedMockBeanFull {
     private Double doubleWrappedDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -129,9 +157,13 @@ public class AnnotatedMockBeanFull {
     private Double doubleWrappedSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>48</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(column = "double3")
@@ -139,7 +171,8 @@ public class AnnotatedMockBeanFull {
     private double doublePrimitiveDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -148,9 +181,14 @@ public class AnnotatedMockBeanFull {
     private double doublePrimitiveSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>49</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
+     * <li>25</li>
      * </ul></p>
      */
     @CsvBindByName(column = "float1")
@@ -158,7 +196,8 @@ public class AnnotatedMockBeanFull {
     private Float floatWrappedDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -167,11 +206,15 @@ public class AnnotatedMockBeanFull {
     private Float floatWrappedSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>22</li>
      * <li>48</li>
      * <li>64</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(column = "float3")
@@ -179,7 +222,8 @@ public class AnnotatedMockBeanFull {
     private float floatPrimitiveDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -188,9 +232,13 @@ public class AnnotatedMockBeanFull {
     private float floatPrimitiveSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>49</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
      * </ul></p>
      */
     @CsvBindByName(column = "integer1")
@@ -198,7 +246,8 @@ public class AnnotatedMockBeanFull {
     private Integer integerWrappedDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -207,11 +256,15 @@ public class AnnotatedMockBeanFull {
     private Integer integerWrappedSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>24</li>
      * <li>48</li>
      * <li>66</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(column = "integer3")
@@ -220,7 +273,8 @@ public class AnnotatedMockBeanFull {
     private int integerPrimitiveDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -229,9 +283,13 @@ public class AnnotatedMockBeanFull {
     private int integerPrimitiveSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>49</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
      * </ul></p>
      */
     @CsvBindByName(column = "long1")
@@ -239,7 +297,8 @@ public class AnnotatedMockBeanFull {
     private Long longWrappedDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -248,11 +307,15 @@ public class AnnotatedMockBeanFull {
     private Long longWrappedSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>26</li>
      * <li>48</li>
      * <li>68</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(column = "long3")
@@ -260,7 +323,8 @@ public class AnnotatedMockBeanFull {
     private long longPrimitiveDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -269,9 +333,13 @@ public class AnnotatedMockBeanFull {
     private long longPrimitiveSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>49</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
      * </ul></p>
      */
     @CsvBindByName(column = "short1")
@@ -279,7 +347,8 @@ public class AnnotatedMockBeanFull {
     private Short shortWrappedDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -288,9 +357,13 @@ public class AnnotatedMockBeanFull {
     private Short shortWrappedSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>48</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(column = "short3")
@@ -298,7 +371,8 @@ public class AnnotatedMockBeanFull {
     private short shortPrimitiveDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -307,9 +381,13 @@ public class AnnotatedMockBeanFull {
     private short shortPrimitiveSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>5</li>
      * <li>49</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>2</li>
      * </ul></p>
      */
     @CsvBindByName(column = "char1")
@@ -317,9 +395,13 @@ public class AnnotatedMockBeanFull {
     private Character characterWrapped;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>48</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>1</li>
      * </ul></p>
      */
     @CsvBindByName(column = "char2")
@@ -327,8 +409,12 @@ public class AnnotatedMockBeanFull {
     private char characterPrimitive;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>29</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>3</li>
      * </ul></p>
      */
     @CsvBindByName(column = "bigdecimal1")
@@ -336,7 +422,8 @@ public class AnnotatedMockBeanFull {
     private BigDecimal bigdecimalDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -345,8 +432,12 @@ public class AnnotatedMockBeanFull {
     private BigDecimal bigdecimalSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>29</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>3</li>
      * </ul></p>
      */
     @CsvBindByName(column = "biginteger1")
@@ -354,7 +445,8 @@ public class AnnotatedMockBeanFull {
     private BigInteger bigintegerDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * </ul></p>
      */
@@ -363,72 +455,86 @@ public class AnnotatedMockBeanFull {
     private BigInteger bigintegerSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
      * <li>78</li>
      * <li>83</li>
      * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>26</li>
+     * <li>32</li>
+     * </ul></p>
      */
     @CsvBindByName(column = "date1", required = true)
     @CsvBindByPosition(position = 33, required = true)
-    @CsvDate()
+    @CsvDate
     private Date dateDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
      * <li>70</li>
      * <li>71</li>
-     * <li>81</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date2")
     @CsvBindByPosition(position = 34)
-    @CsvDate()
+    @CsvDate
     private GregorianCalendar gcalDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
+     * <li>80</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>27</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date3")
     @CsvBindByPosition(position = 35)
-    @CsvDate()
+    @CsvDate
     private Calendar calDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date4")
     @CsvBindByPosition(position = 36)
-    @CsvDate()
+    @CsvDate
     private XMLGregorianCalendar xmlcalDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date5")
     @CsvBindByPosition(position = 37)
-    @CsvDate()
+    @CsvDate
     private Time sqltimeDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date6")
     @CsvBindByPosition(position = 38)
-    @CsvDate()
+    @CsvDate
     private Timestamp sqltimestampDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * <li>31</li>
      * <li>82</li>
@@ -436,68 +542,77 @@ public class AnnotatedMockBeanFull {
      */
     @CsvBindByName(column = "date7", locale = "de")
     @CsvBindByPosition(position = 39, locale = "de")
-    @CsvDate()
+    @CsvDate
     private Date dateSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * <li>31</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date8", locale = "de")
     @CsvBindByPosition(position = 40, locale = "de")
-    @CsvDate()
+    @CsvDate
     private GregorianCalendar gcalSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * <li>31</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date9", locale = "de")
     @CsvBindByPosition(position = 41, locale = "de")
-    @CsvDate()
+    @CsvDate
     private Calendar calSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * <li>31</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date10", locale = "de")
     @CsvBindByPosition(position = 42, locale = "de")
-    @CsvDate()
+    @CsvDate
     private XMLGregorianCalendar xmlcalSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * <li>31</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date11", locale = "de")
     @CsvBindByPosition(position = 43, locale = "de")
-    @CsvDate()
+    @CsvDate
     private Time sqltimeSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>28</li>
      * <li>31</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date12", locale = "de")
     @CsvBindByPosition(position = 44, locale = "de")
-    @CsvDate()
+    @CsvDate
     private Timestamp sqltimestampSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>4</li>
      * <li>48</li>
+     * </ul></p>
+     * <p>Used for the following test cases, writing:<ul>
+     * <li>3</li>
      * </ul></p>
      */
     @CsvBindByName(column = "string1")
@@ -505,7 +620,8 @@ public class AnnotatedMockBeanFull {
     private String stringClass;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>32</li>
      * </ul></p>
      */
@@ -515,7 +631,8 @@ public class AnnotatedMockBeanFull {
     private GregorianCalendar gcalFormatDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>33</li>
      * </ul></p>
      */
@@ -525,27 +642,30 @@ public class AnnotatedMockBeanFull {
     private GregorianCalendar gcalFormatSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>30</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date15")
     @CsvBindByPosition(position = 47)
-    @CsvDate()
+    @CsvDate
     private java.sql.Date sqldateDefaultLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>31</li>
      * </ul></p>
      */
     @CsvBindByName(column = "date16", locale = "de-DE")
     @CsvBindByPosition(position = 48, locale = "de-DE")
-    @CsvDate()
+    @CsvDate
     private java.sql.Date sqldateSetLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>35</li>
      * </ul></p>
      */
@@ -554,7 +674,8 @@ public class AnnotatedMockBeanFull {
     private float floatBadLocale;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>76</li>
      * <li>77</li>
      * </ul></p>
@@ -564,7 +685,8 @@ public class AnnotatedMockBeanFull {
     private String columnDoesntExist;
 
     /**
-     * <p>Used for the following test cases:<ul>
+     * Field for annotation tests.
+     * <p>Used for the following test cases, reading:<ul>
      * <li>3</li>
      * <li>31</li>
      * <li>47</li>
@@ -581,7 +703,7 @@ public class AnnotatedMockBeanFull {
     }
 
     /*
-    For test case 79. I have read that introspection is used on beans, and
+    For reading test case 79. I have read that introspection is used on beans, and
     that beans are only allowed a single setter method for any member variable
     that must have the same type as the member variable. Introspection fails to
     find the setter otherwise. See:
@@ -683,7 +805,7 @@ public class AnnotatedMockBeanFull {
         return floatPrimitiveDefaultLocale;
     }
 
-    /* Commented out for test case 22.
+    /* Commented out for reading test case 22.
     public void setFloatPrimitiveDefaultLocale(float floatPrimitiveDefaultLocale) {
         this.floatPrimitiveDefaultLocale = floatPrimitiveDefaultLocale;
     }

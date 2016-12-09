@@ -15,18 +15,44 @@
  */
 package com.opencsv.bean.mocks;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 /**
- * The members of this class are not annotated, but the entire class is
- * intended to be annotated in a containing class.
  *
  * @author Andrew Rucker Jones
  */
-public class ComplexClassForCustomAnnotation {
-    public int i;
-    public char c;
-    public String s;
+public class MinimalCsvBindByPositionBeanForWriting {
     
-    public int getI() {return i;} public void setI(int i) {this.i = i;}
-    public char getC() {return c;} public void setC(char c) {this.c = c;}
-    public String getS() {return s;} public void setS(String s) {this.s = s;}
+    @CsvBindByPosition(position = 1)
+    private int b;
+    
+    @CsvBindByPosition(position = 2)
+    private int c;
+    
+    @CsvBindByPosition(position = 3)
+    private int a;
+
+    public int getB() {
+        return b;
+    }
+
+    public void setB(int b) {
+        this.b = b;
+    }
+
+    public int getC() {
+        return c;
+    }
+
+    public void setC(int c) {
+        this.c = c;
+    }
+
+    public int getA() {
+        return a;
+    }
+
+    public void setA(int a) {
+        this.a = a;
+    }
 }

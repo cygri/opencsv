@@ -2,8 +2,6 @@ package com.opencsv.bean;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvBadConverterException;
-import org.apache.commons.lang3.StringUtils;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -14,6 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /*
  * Copyright 2007 Kyle Miller.
@@ -39,12 +42,45 @@ import java.util.Map;
  */
 public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
 
+    // header and indexLookup should be replaced with a BidiMap from Apache
+    // Commons Collections once Apache Commons BeanUtils supports Collections
+    // version 4.0 or newer. Until then I don't like BidiMaps, because they
+    // aren't done with Generics, meaning everything is an Object and there is
+    // no type safety.
+    /**
+     * An ordered array of the headers for the columns of a CSV input.
+     * When reading, this array is automatically populated from the input source.
+     * When writing, it is guessed from annotations, or, lacking any annotations,
+     * from the names of the variables in the bean to be written.
+     */
     protected String[] header;
+    
+    /** This map makes finding the column index of a header name easy. */
     protected Map<String, Integer> indexLookup = new HashMap<String, Integer>();
+    
+    /**
+     * Given a header name, this map allows one to find the corresponding
+     * property descriptor.
+     */
     protected Map<String, PropertyDescriptor> descriptorMap = null;
+    
+    /**
+     * Given a header name, this map allows one to find the corresponding
+     * {@link BeanField}.
+     */
     protected Map<String, BeanField> fieldMap = null;
+    
+    /** This is the class of the bean to be manipulated. */
     protected Class<? extends T> type;
+    
+    /**
+     * Whether or not annotations were found and should be used for determining
+     * the binding between columns in a CSV source or destination and fields in
+     * a bean.
+     */
     protected boolean annotationDriven;
+    
+    /** An error message that is used when a custom converter cannot be instantiated. */
     private static final String CANNOT_INSTANTIATE = "There was a problem instantiating the custom converter ";
 
     /**
@@ -56,6 +92,36 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     @Override
     public void captureHeader(CSVReader reader) throws IOException {
         header = reader.readNext();
+    }
+    
+    /**
+     * This method generates a header that can be used for writing beans of the
+     * type provided back to a file.
+     * The ordering of the headers is alphabetically ascending.
+     * @return An array of header names for the output file, or an empty array
+     *   if no header should be written
+     */
+    @Override
+    public String[] generateHeader() {
+        // Always take what's been given or previously determined first.
+        if(header == null) {
+
+            // We will have to generate a new header, which means this instance
+            // has not been used for importing data.
+            if(fieldMap == null) {
+                loadFields(type);
+            }
+            
+            // To make testing simpler and because not all receivers are
+            // guaranteed to be as flexible with column order as opencsv,
+            // make the column ordering deterministic by sorting the column
+            // headers alphabetically.
+            SortedSet<String> set = new TreeSet(fieldMap.keySet());
+            header = set.toArray(new String[fieldMap.size()]);
+        }
+        
+        // Clone so no one has direct access to internal data structures
+        return ArrayUtils.clone(header);
     }
 
     /**
@@ -99,7 +165,14 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     @Override
     public BeanField findField(int col) throws CsvBadConverterException {
         String columnName = getColumnName(col);
-        return (StringUtils.isNotBlank(columnName)) ? findField(columnName) : null;
+        return (StringUtils.isNotBlank(columnName)) ?
+                fieldMap.get(columnName.toUpperCase().trim()) :
+                null;
+    }
+    
+    @Override
+    public int findMaxFieldIndex() {
+        return header == null ? -1 : header.length-1;
     }
 
     /**
@@ -129,30 +202,6 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     }
 
     /**
-     * Find the field for a given column.
-     *
-     * @param name The column name to look up.
-     * @return BeanField containing the field for the column.
-     * @throws CsvBadConverterException If a custom converter for a field cannot
-     *                                  be initialized
-     */
-    protected BeanField findField(String name) throws CsvBadConverterException {
-        return fieldMap.get(name.toUpperCase().trim());
-    }
-
-    /**
-     * Determines if the name of a property descriptor matches the column name.
-     * Currently only used by unit tests.
-     *
-     * @param name Name of the column.
-     * @param desc Property descriptor to check against
-     * @return True if the name matches the name in the property descriptor.
-     */
-    protected boolean matches(String name, PropertyDescriptor desc) {
-        return desc.getName().equals(name.trim());
-    }
-
-    /**
      * Builds a map of property descriptors for the bean.
      *
      * @return Map of property descriptors
@@ -162,10 +211,9 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     protected Map<String, PropertyDescriptor> loadDescriptorMap() throws IntrospectionException {
         Map<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
 
-        PropertyDescriptor[] descriptors;
-        descriptors = loadDescriptors(getType());
+        PropertyDescriptor[] descriptors = loadDescriptors(getType());
         for (PropertyDescriptor descriptor : descriptors) {
-            map.put(descriptor.getName().toUpperCase().trim(), descriptor);
+            map.put(descriptor.getName().toUpperCase(), descriptor);
         }
 
         return map;
@@ -215,12 +263,20 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
             // Always check for a custom converter first.
             if (field.isAnnotationPresent(CsvCustomBindByName.class)) {
                 columnName = field.getAnnotation(CsvCustomBindByName.class).column().toUpperCase().trim();
+                if(StringUtils.isEmpty(columnName)) {
+                    columnName = field.getName().toUpperCase();
+                }
                 Class<? extends AbstractBeanField> converter = field
                         .getAnnotation(CsvCustomBindByName.class)
                         .converter();
                 BeanField bean = instantiateCustomConverter(converter);
                 bean.setField(field);
-                fieldMap.put(columnName, bean);
+                if(StringUtils.isEmpty(columnName)) {
+                    fieldMap.put(field.getName().toUpperCase(), bean);
+                }
+                else {
+                    fieldMap.put(columnName, bean);
+                }
             }
 
             // Then check for CsvBindByName.
@@ -231,14 +287,14 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
                 if (field.isAnnotationPresent(CsvDate.class)) {
                     String formatString = field.getAnnotation(CsvDate.class).value();
                     if (StringUtils.isEmpty(columnName)) {
-                        fieldMap.put(field.getName().toUpperCase().trim(),
+                        fieldMap.put(field.getName().toUpperCase(),
                                 new BeanFieldDate(field, required, formatString, locale));
                     } else {
                         fieldMap.put(columnName, new BeanFieldDate(field, required, formatString, locale));
                     }
                 } else {
                     if (StringUtils.isEmpty(columnName)) {
-                        fieldMap.put(field.getName().toUpperCase().trim(),
+                        fieldMap.put(field.getName().toUpperCase(),
                                 new BeanFieldPrimitiveTypes(field, required, locale));
                     } else {
                         fieldMap.put(columnName, new BeanFieldPrimitiveTypes(field, required, locale));
@@ -250,7 +306,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
             // CsvBind is deprecated.
             else {
                 boolean required = field.getAnnotation(CsvBind.class).required();
-                fieldMap.put(field.getName().toUpperCase().trim(),
+                fieldMap.put(field.getName().toUpperCase(),
                         new BeanFieldPrimitiveTypes(field, required, null));
             }
         }
@@ -263,7 +319,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
 
     private List<Field> loadFields(Class<? extends T> cls) {
         List<Field> fields = new ArrayList<Field>();
-        for (Field field : cls.getDeclaredFields()) {
+        for (Field field : FieldUtils.getAllFields(cls)) {
             if (field.isAnnotationPresent(CsvBind.class)
                     || field.isAnnotationPresent(CsvBindByName.class)
                     || field.isAnnotationPresent(CsvCustomBindByName.class)) {
@@ -275,7 +331,10 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
     }
 
     @Override
-    public T createBean() throws InstantiationException, IllegalAccessException {
+    public T createBean() throws InstantiationException, IllegalAccessException, IllegalStateException {
+        if(type == null) {
+            throw new IllegalStateException("The type has not been set in the MappingStrategy.");
+        }
         return type.newInstance();
     }
 

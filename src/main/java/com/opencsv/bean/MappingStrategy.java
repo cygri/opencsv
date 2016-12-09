@@ -53,6 +53,18 @@ public interface MappingStrategy<T> {
      *                                  be initialized
      */
     BeanField findField(int col) throws CsvBadConverterException;
+    
+    /**
+     * Finds and returns the highest index in this mapping.
+     * This is especially important for writing, since position-based mapping
+     * can ignore some columns that must be included in the output anyway.
+     * {@link #findField(int) } will return null for these columns, so we need
+     * a way to know when to stop writing new columns.
+     * @return The highest index in the mapping. If there are no columns in the
+     *   mapping, returns -1.
+     * @since 3.9
+     */
+    int findMaxFieldIndex();
 
     /**
      * Implementation will return a bean of the type of object you are mapping.
@@ -68,13 +80,23 @@ public interface MappingStrategy<T> {
      * begins to use to map columns to bean properties.
      *
      * @param reader The CSVReader to use for header parsing
-    * @throws java.io.IOException If parsing fails
-    */
+     * @throws java.io.IOException If parsing fails
+     */
    void captureHeader(CSVReader reader) throws IOException;
+   
+   /**
+    * Implementations of this method must return an array of column headers
+    * based on the contents of the mapping strategy.
+    * If no header can or should be generated, an array of zero length should
+    * be returned, and not null.
+    * @return An array of column names for a header
+    * @since 3.9
+    */
+   String[] generateHeader();
 
     /**
      * Gets the column index that corresponds to a specific column name.
-    * If the CSV file doesn't have a header row, this method will always return
+     * If the CSV file doesn't have a header row, this method will always return
      * null.
      *
      * @param name The column name
@@ -86,6 +108,6 @@ public interface MappingStrategy<T> {
      * Determines whether the mapping strategy is driven by annotations.
      *
      * @return Whether the mapping strategy is driven by annotations
-    */
+     */
    boolean isAnnotationDriven();
 }

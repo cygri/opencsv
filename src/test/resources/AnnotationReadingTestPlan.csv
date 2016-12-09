@@ -33,7 +33,7 @@ Test case,Test,Expected behavior,Status
 32,Mapping a date type using a specified format string and no locale,Members are filled correctly,pass
 33,Mapping a date type using a specified format string and a locale,Members are filled correctly,pass
 34,Using @CsvDate on a non-date object,RuntimeException with inner exception CsvDataTypeMismatchException,pass
-35,Using a non-existant locale,Members are filled correctly,pass
+35,Using a non-existent locale,Members are filled correctly,pass
 36,Mapping with ConvertGermanToBoolean using all available values,Members are filled correctly,pass
 37,Mapping with ConvertGermanToBoolean using an empty input,Members contain VM defaults,pass
 38,Mapping with ConvertGermanToBoolean using an invalid string,RuntimeException with inner exception CsvDataTypeMismatchException,pass
@@ -75,3 +75,5 @@ Test case,Test,Expected behavior,Status
 77,Annotating a column with @CsvBindByPosition with a column number that is not in the input,Member is not filled,pass
 78,Required date field with empty input,RuntimeException with inner exception CsvRequiredFieldEmptyException,pass
 79,"Verify that reflection is being used for setter, and not introspection",Members are filled correctly,pass
+80,Mapping optional date field using @CsvDate and no source data,Members are null,pass
+81,Mapping a subclass with annotations in both subclass and superclass,Members are filled correctly,pass

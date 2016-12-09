@@ -24,7 +24,7 @@ import com.opencsv.bean.AbstractBeanField;
 public class BadIntConverter extends AbstractBeanField {
 
     private BadIntConverter() {
-        // Throws an exception because access is provate
+        // Throws an exception because access is private
     }
 
     @Override

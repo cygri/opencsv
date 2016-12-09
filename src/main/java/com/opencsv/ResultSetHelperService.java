@@ -21,8 +21,6 @@ import org.apache.commons.lang3.text.StrBuilder;
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Helper class for processing JDBC ResultSet objects.
@@ -62,15 +60,12 @@ public class ResultSetHelperService implements ResultSetHelper {
 
    @Override
    public String[] getColumnNames(ResultSet rs) throws SQLException {
-      List<String> names = new ArrayList<String>();
       ResultSetMetaData metadata = rs.getMetaData();
-
-      for (int i = 1; i <= metadata.getColumnCount(); i++) {
-         names.add(metadata.getColumnLabel(i));
+      String[] nameArray = new String[metadata.getColumnCount()];
+      for (int i = 0; i < metadata.getColumnCount(); i++) {
+         nameArray[i] = metadata.getColumnLabel(i+1);
       }
-
-      String[] nameArray = new String[names.size()];
-      return names.toArray(nameArray);
+      return nameArray;
    }
 
    @Override
@@ -85,15 +80,13 @@ public class ResultSetHelperService implements ResultSetHelper {
 
    @Override
    public String[] getColumnValues(ResultSet rs, boolean trim, String dateFormatString, String timeFormatString) throws SQLException, IOException {
-      List<String> values = new ArrayList<String>();
       ResultSetMetaData metadata = rs.getMetaData();
-
+      String[] valueArray = new String[metadata.getColumnCount()];
       for (int i = 1; i <= metadata.getColumnCount(); i++) {
-         values.add(getColumnValue(rs, metadata.getColumnType(i), i, trim, dateFormatString, timeFormatString));
+         valueArray[i-1] = getColumnValue(rs, metadata.getColumnType(i), i,
+               trim, dateFormatString, timeFormatString);
       }
-
-      String[] valueArray = new String[values.size()];
-      return values.toArray(valueArray);
+      return valueArray;
    }
 
    /**

@@ -28,6 +28,7 @@ package com.opencsv.exceptions;
  * using it. It is meant more for custom converters.</p>
  *
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 public class CsvConstraintViolationException extends CsvException {
     private final Object sourceObject;

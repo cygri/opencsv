@@ -1,6 +1,6 @@
 package com.opencsv;
 
-/**
+/*
  Copyright 2015 Bytecode Pty Ltd.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -438,8 +438,8 @@ public class CSVWriter implements Closeable, Flushable {
    }
 
     /**
-     * lazy resultSetHelper creation
-     * @return instance of resultSetHelper
+     * Lazy resultSetHelper creation.
+     * @return Instance of resultSetHelper
      */
    protected ResultSetHelper resultService(){
       if (resultService == null){

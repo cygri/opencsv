@@ -15,18 +15,29 @@
  */
 package com.opencsv.bean.mocks;
 
+import com.opencsv.bean.CsvBind;
+
 /**
- * The members of this class are not annotated, but the entire class is
- * intended to be annotated in a containing class.
- *
+ * For test case 23 (writing).
  * @author Andrew Rucker Jones
  */
-public class ComplexClassForCustomAnnotation {
-    public int i;
-    public char c;
-    public String s;
+public class BindByNameUnknownTypeLegacy {
+    public static final String TOSTRING = "This is just a test of unknown datatypes.";
     
-    public int getI() {return i;} public void setI(int i) {this.i = i;}
-    public char getC() {return c;} public void setC(char c) {this.c = c;}
-    public String getS() {return s;} public void setS(String s) {this.s = s;}
+    @CsvBind
+    private final BindByNameUnknownTypeInnerClass test =
+            new BindByNameUnknownTypeInnerClass(TOSTRING);
+    public BindByNameUnknownTypeInnerClass getTest() {return test;}
+    
+    private class BindByNameUnknownTypeInnerClass {
+        private final String s;
+        public BindByNameUnknownTypeInnerClass(String s) {
+            this.s = s;
+        }
+        
+        @Override
+        public String toString() {
+            return s;
+        }
+    }
 }

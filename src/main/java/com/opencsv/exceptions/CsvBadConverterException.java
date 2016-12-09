@@ -21,8 +21,9 @@ package com.opencsv.exceptions;
  * Typically this means it could not be instantiated.
  *
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
-public class CsvBadConverterException extends RuntimeException {
+public class CsvBadConverterException extends CsvRuntimeException {
     private final Class converterClass;
 
     /**

@@ -17,31 +17,28 @@ package com.opencsv.bean;
 
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.converters.*;
-import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
-import org.apache.commons.beanutils.locale.converters.SqlDateLocaleConverter;
-import org.apache.commons.beanutils.locale.converters.SqlTimeLocaleConverter;
-import org.apache.commons.beanutils.locale.converters.SqlTimestampLocaleConverter;
-import org.apache.commons.lang3.StringUtils;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.lang.reflect.Field;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class converts an input to a date type.
- *
+ * I would dearly love to use Apache Commons BeanUtils to make this class smaller
+ * and easier, but BeanUtils is abysmal with dates of all types.
+ * 
+ * @param <T> Type of the bean to be manipulated
+ * 
  * @author Andrew Rucker Jones
+ * @since 3.8
  * @see com.opencsv.bean.CsvDate
  */
-public class BeanFieldDate extends AbstractBeanField {
+public class BeanFieldDate<T> extends AbstractBeanField<T> {
 
     private final boolean required;
     private final String formatString;
@@ -63,26 +60,12 @@ public class BeanFieldDate extends AbstractBeanField {
         this.formatString = formatString;
         this.locale = locale;
     }
-
+    
     /**
-     * Converts the input string to a calendar object.
-     * <p>I would dearly love to use Apache Commons BeanUtils for this, but it
-     * doesn't seem to allow using format patterns and specified locales. The
-     * following types are explicitly supported:
-     * <ul><li>Calendar (always a GregorianCalendar)</li>
-     * <li>GregorianCalendar</li>
-     * <li>XMLGregorianCalendar</li></ul></p>
-     *
-     * @param value     The string to be converted into a date/time type
-     * @param fieldType The class of the destination field
-     * @return The calendar object resulting from the conversion
-     * @throws CsvDataTypeMismatchException If the conversion fails
+     * @return A {@link java.text.SimpleDateFormat} primed with the proper
+     *   format string and a locale, if one has been set.
      */
-    private Object convertCalendar(String value, Class fieldType)
-            throws CsvDataTypeMismatchException {
-        Object o;
-
-        // Prepare SimpleDateFormat
+    private SimpleDateFormat getFormat() {
         SimpleDateFormat sdf;
         if (StringUtils.isNotEmpty(locale)) {
             Locale l = Locale.forLanguageTag(locale);
@@ -90,165 +73,225 @@ public class BeanFieldDate extends AbstractBeanField {
         } else {
             sdf = new SimpleDateFormat(formatString);
         }
+        return sdf;
+    }
+    
+    /**
+     * Converts the input to/from a date object.
+     * <p>This method should work with any type derived from {@link java.util.Date}
+     * as long as it has a constructor taking one long that specifies the number
+     * of milliseconds since the epoch. The following types are explicitly
+     * supported:
+     * <ul><li>java.util.Date</li>
+     * <li>java.sql.Date</li>
+     * <li>java.sql.Time</li>
+     * <li>java.sql.Timestamp</li></ul></p>
+     *
+     * @param <U> The type to be converted to
+     * @param value The string to be converted into a date/time type or vice
+     *   versa
+     * @param fieldType The class of the destination field
+     * @return The object resulting from the conversion
+     * @throws CsvDataTypeMismatchException If the conversion fails
+     */
+    private <U> U convertDate(Object value, Class<U> fieldType)
+            throws CsvDataTypeMismatchException {
+        U o;
 
-        // Parse input
-        Date d;
-        try {
-            d = sdf.parse(value);
-        } catch (ParseException e) {
-            CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
-            csve.initCause(e);
-            throw csve;
-        }
-
-        // Make a GregorianCalendar out of it, because this works for all
-        // supported types, at least as an intermediate step.
-        GregorianCalendar gc = new GregorianCalendar();
-        gc.setTime(d);
-        o = gc;
-
-        // XMLGregorianCalendar requires special processing.
-        if (fieldType == XMLGregorianCalendar.class) {
+        if(value instanceof String) {
+            Date d;
             try {
-                o = DatatypeFactory
-                        .newInstance()
-                        .newXMLGregorianCalendar((GregorianCalendar) o);
-            } catch (DatatypeConfigurationException e) {
-                // I've never known how to handle this exception elegantly,
-                // especially since I can't conceive of the circumstances
-                // under which it is thrown.
-                CsvDataTypeMismatchException ex = new CsvDataTypeMismatchException(
-                        "It was not possible to initialize an XMLGregorianCalendar.");
-                ex.initCause(e);
-                throw ex;
+                d = getFormat().parse((String)value);
+                o = fieldType.getConstructor(Long.TYPE).newInstance(d.getTime());
+            }
+            // I would have prefered a CsvBeanIntrospectionException, but that
+            // would have broken backward compatibility. This is not completely
+            // illogical: I know all of the data types I expect here, and they
+            // should all be instantiated with no problems. Ergo, this must be
+            // the wrong data type.
+            // Multi-catch in Java 7
+            catch(ParseException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                csve.initCause(e);
+                throw csve;
+            }
+            catch(InstantiationException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                csve.initCause(e);
+                throw csve;
+            }
+            catch(IllegalAccessException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                csve.initCause(e);
+                throw csve;
+            }
+            catch(NoSuchMethodException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                csve.initCause(e);
+                throw csve;
+            }
+            catch(InvocationTargetException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                csve.initCause(e);
+                throw csve;
             }
         }
-
-        return o;
-    }
-
-    /**
-     * Converts the input string to a locale-specific date/time object.
-     * This is used only on destination objects that support locale-specific
-     * conversions and only when the locale has been specified. The division
-     * between this and
-     * {@link #convertLocaleInspecific(java.lang.String, java.lang.Class)} is
-     * based around the division in the class hierarchy of Apache Commons
-     * BeanUtils, which I find counterintuitive and decidedly unhelpful.
-     *
-     * @param value     The string to be converted into a date/time type
-     * @param fieldType The class of the destination field
-     * @return The date/time object resulting from the conversion
-     * @throws CsvDataTypeMismatchException If a non-convertable type is
-     *                                      passed in, or if the conversion fails
-     */
-    private Object convertLocaleSpecific(String value, Class fieldType)
-            throws CsvDataTypeMismatchException {
-        DateLocaleConverter c;
-        Object o;
-        Locale l = Locale.forLanguageTag(locale);
-
-        // Get the proper converter
-        if (fieldType == Date.class) {
-            c = new DateLocaleConverter(l, formatString);
-        } else if (fieldType == java.sql.Date.class) {
-            c = new SqlDateLocaleConverter(l, formatString);
-        } else if (fieldType == Time.class) {
-            c = new SqlTimeLocaleConverter(l, formatString);
-        } else if (fieldType == Timestamp.class) {
-            c = new SqlTimestampLocaleConverter(l, formatString);
-        } else {
-            throw new CsvDataTypeMismatchException(value, field.getType(),
-                    NOT_DATE);
+        else if(Date.class.isAssignableFrom(value.getClass())) {
+            o = fieldType.cast(getFormat().format((Date)value));
         }
-
-        // Convert with respect to format string and locale
-        try {
-            o = c.convert(fieldType, (Object) value);
-        } catch (ConversionException e) {
-            CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
-            csve.initCause(e);
-            throw csve;
+        else {
+            throw new CsvDataTypeMismatchException(value, fieldType, NOT_DATE);
         }
-
-        return o;
-    }
-
-    /**
-     * Converts the input string to a date/time object.
-     * This is used on destination objects that don't support locale-specific
-     * conversions or when the locale hasn't been specified. The division
-     * between this and
-     * {@link #convertLocaleSpecific(java.lang.String, java.lang.Class)} is
-     * based around the division in the class hierarchy of Apache Commons
-     * BeanUtils, which I find counterintuitive and decidedly unhelpful.
-     *
-     * @param value     The string to be converted into a date/time type
-     * @param fieldType The class of the destination field
-     * @return The date/time object resulting from the conversion
-     * @throws CsvDataTypeMismatchException If a non-convertable type is
-     *                                      passed in, or if the conversion fails
-     */
-    private Object convertLocaleInspecific(String value, Class fieldType)
-            throws CsvDataTypeMismatchException {
-        DateTimeConverter c;
-        Object o;
-        Class conversionType = fieldType;
         
-        // Get the proper converter
-        if (fieldType == Date.class) {
-            c = new DateConverter();
-        } else if (fieldType == java.sql.Date.class) {
-            c = new SqlDateConverter();
-        } else if (fieldType == Time.class) {
-            c = new SqlTimeConverter();
-        } else if (fieldType == Timestamp.class) {
-            c = new SqlTimestampConverter();
+        return o;
+    }
+    
+    /**
+     * Converts the input to/from a calendar object.
+     * <p>This method should work for any type that implements
+     * {@link java.util.Calendar} or is derived from
+     * {@link javax.xml.datatype.XMLGregorianCalendar}. The following types are
+     * explicitly supported:
+     * <ul><li>Calendar (always a GregorianCalendar)</li>
+     * <li>GregorianCalendar</li>
+     * <li>XMLGregorianCalendar</li></ul>
+     * It is also known to work with
+     * org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl.</p>
+     *
+     * @param <U> The type to be converted to
+     * @param value The string to be converted into a date/time type or vice
+     *   versa
+     * @param fieldType The class of the destination field
+     * @return The object resulting from the conversion
+     * @throws CsvDataTypeMismatchException If the conversion fails
+     */
+    private <U> U convertCalendar(Object value, Class<U> fieldType)
+            throws CsvDataTypeMismatchException {
+        U o;
+
+        if(value instanceof String) {
+            // Parse input
+            Date d;
+            try {
+                d = getFormat().parse((String)value);
+            } catch (ParseException e) {
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                csve.initCause(e);
+                throw csve;
+            }
+
+            // Make a GregorianCalendar out of it, because this works for all
+            // supported types, at least as an intermediate step.
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(d);
+
+            // XMLGregorianCalendar requires special processing.
+            if (fieldType == XMLGregorianCalendar.class) {
+                try {
+                    o = fieldType.cast(DatatypeFactory
+                            .newInstance()
+                            .newXMLGregorianCalendar(gc));
+                } catch (DatatypeConfigurationException e) {
+                    // I've never known how to handle this exception elegantly,
+                    // especially since I can't conceive of the circumstances
+                    // under which it is thrown.
+                    CsvDataTypeMismatchException ex = new CsvDataTypeMismatchException(
+                            "It was not possible to initialize an XMLGregorianCalendar.");
+                    ex.initCause(e);
+                    throw ex;
+                }
+            }
+            else {
+                o = fieldType.cast(gc);
+            }
+        }
+        else {
+            Calendar c;
+            if(value instanceof XMLGregorianCalendar) {
+                c = ((XMLGregorianCalendar)value).toGregorianCalendar();
+            }
+            else if (value instanceof Calendar) {
+                c = (Calendar)value;
+            }
+            else {
+                throw new CsvDataTypeMismatchException(value, fieldType, NOT_DATE);
+            }
+            o = fieldType.cast(getFormat().format(c.getTime()));
+        }
+
+        return o;
+    }
+
+    /**
+     * Splits the conversion into date-based and calendar-based.
+     * 
+     * @param <U> The type to be converted to
+     * @param value The string to be converted into a date/time type or vice
+     *   versa
+     * @param fieldType The class of the destination field
+     * @return The object resulting from the conversion
+     * @throws CsvDataTypeMismatchException If a non-convertable type is
+     *                                      passed in, or if the conversion fails
+     */
+    private <U> U convertCommon(Object value, Class<U> fieldType)
+            throws CsvDataTypeMismatchException {
+        U o;
+        Class conversionClass = (fieldType == String.class)?value.getClass():fieldType;
+        
+        // Send to the proper submethod
+        if (Date.class.isAssignableFrom(conversionClass)) {
+            o = convertDate(value, fieldType);
+        } else if (Calendar.class.isAssignableFrom(conversionClass)
+                || XMLGregorianCalendar.class.isAssignableFrom(conversionClass)) {
+            o = convertCalendar(value, fieldType);
         } else {
-            throw new CsvDataTypeMismatchException(value, field.getType(),
-                    NOT_DATE);
+            throw new CsvDataTypeMismatchException(value, fieldType, NOT_DATE);
         }
-
-        // Convert with respect to format string
-        c.setPattern(formatString);
-        try {
-            o = c.convert(conversionType, value);
-        } catch (ConversionException e) {
-            CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
-            csve.initCause(e);
-            throw csve;
-        }
-
+        
         return o;
     }
 
     @Override
-    protected Object convert(String value) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-        if (required && StringUtils.isEmpty(value)) {
-            throw new CsvRequiredFieldEmptyException();
-        }
-
-        Class fieldType = field.getType();
-        Object o;
-
-        // Send to the proper submethod
-        Collection<Class> localeFields = Arrays.<Class>asList(
-                Date.class, java.sql.Date.class, Time.class, Timestamp.class);
-        Collection<Class> calendarFields = Arrays.<Class>asList(
-                Calendar.class, GregorianCalendar.class, XMLGregorianCalendar.class);
-        if (localeFields.contains(fieldType)) {
-            if (StringUtils.isNotEmpty(locale)) {
-                o = convertLocaleSpecific(value, fieldType);
-            } else {
-                o = convertLocaleInspecific(value, fieldType);
+    protected Object convert(String value) throws CsvDataTypeMismatchException,
+            CsvRequiredFieldEmptyException {
+        if (StringUtils.isEmpty(value)) {
+            if(required) {
+                throw new CsvRequiredFieldEmptyException();
             }
-        } else if (calendarFields.contains(fieldType)) {
-            o = convertCalendar(value, fieldType);
-        } else {
-            throw new CsvDataTypeMismatchException(value, field.getType(),
-                    NOT_DATE);
+            return null;
         }
+        return convertCommon(value, field.getType());
+    }
 
-        return o;
+    /**
+     * This method converts the encapsulated date type to a string, respecting
+     * any locales and conversion patterns that have been set through opencsv
+     * annotations.
+     * 
+     * @param value The object containing a date of one of the supported types
+     * @return A string representation of the date. If a
+     *   {@link CsvBindByName#locale() locale} or {@link CsvDate#value() conversion
+     *   pattern} has been specified through annotations, these are used when
+     *   creating the return value.
+     * @throws CsvDataTypeMismatchException If an unsupported type as been
+     *   improperly annotated
+     * @throws CsvRequiredFieldEmptyException If the field is required, but
+     *   {@code value} is null
+     */
+    @Override
+    protected String convertToWrite(Object value)
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        
+        // Validation
+        if(value == null) {
+            if(required) {
+                throw new CsvRequiredFieldEmptyException();
+            }
+            else {
+                return null;
+            }
+        }
+        
+        return convertCommon(value, String.class);
     }
 }

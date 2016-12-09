@@ -19,18 +19,20 @@ import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class takes a string and splits it on whitespace into a list of strings.
  *
+ * @param <T> Type of the bean to be manipulated
+ * 
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
-public class ConvertSplitOnWhitespace extends AbstractBeanField {
+public class ConvertSplitOnWhitespace<T> extends AbstractBeanField<T> {
 
     /**
      * Silence code style checker by adding a useless constructor.
@@ -64,6 +66,32 @@ public class ConvertSplitOnWhitespace extends AbstractBeanField {
             l = new ArrayList<String>(Arrays.asList(value.split("\\s+")));
         }
         return l;
+    }
+    
+    /**
+     * This method takes the current value of the field in question in the bean
+     * passed in and converts it to a string.
+     * 
+     * @return The concatenation of a list of strings, with every entry
+     *   separated by a space
+     * @throws CsvDataTypeMismatchException If the field is not a list of strings
+     */
+    @Override
+    protected String convertToWrite(Object value) throws CsvDataTypeMismatchException {
+        String result = "";
+        try {
+            if(value != null) {
+                List<String> values = (List<String>) value;
+                result = StringUtils.join(values, ' ');
+            }
+        }
+        catch(ClassCastException e) {
+            CsvDataTypeMismatchException csve =
+                    new CsvDataTypeMismatchException("The field must be of type List<String>.");
+            csve.initCause(e);
+            throw csve;
+        }
+        return result;
     }
 
 }

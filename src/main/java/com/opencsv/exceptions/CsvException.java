@@ -19,6 +19,7 @@ package com.opencsv.exceptions;
  * This is the base class for all exceptions for opencsv.
  *
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 public class CsvException extends Exception {
 

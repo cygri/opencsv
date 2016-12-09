@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
@@ -82,6 +84,16 @@ public class CsvToBeanTest {
          public boolean isAnnotationDriven() {
             return false;
          }
+         
+         @Override
+         public String[] generateHeader() {
+             return new String[0];
+         }
+         
+         @Override
+         public int findMaxFieldIndex() {
+             return -1;
+         }
       };
    }
 
@@ -115,6 +127,16 @@ public class CsvToBeanTest {
          @Override
          public boolean isAnnotationDriven() {
             return false;
+         }
+         
+         @Override
+         public String[] generateHeader() {
+             return new String[0];
+         }
+         
+         @Override
+         public int findMaxFieldIndex() {
+             return -1;
          }
       };
    }
@@ -276,5 +298,119 @@ public class CsvToBeanTest {
       CsvToBean<SimpleAnnotatedMockBean> csvToBean = new CsvToBean<SimpleAnnotatedMockBean>();
 
       csvToBean.parse(strategy, createReader(TEST_STRING_WITHOUT_MANDATORY_FIELD));
+   }
+   
+   @Test(expected = IllegalStateException.class)
+   public void throwIllegalStateWhenParseWithoutArgumentsIsCalled() {
+       CsvToBean csvtb = new CsvToBean();
+       csvtb.parse();
+   }
+   
+   @Test(expected = IllegalStateException.class)
+   public void throwIllegalStateWhenOnlyReaderIsSpecifiedToParseWithoutArguments() {
+       CsvToBean csvtb = new CsvToBean();
+       csvtb.setCsvReader(new CSVReader(new StringReader(TEST_STRING)));
+       csvtb.parse();
+   }
+   
+   @Test(expected = IllegalStateException.class)
+   public void throwIllegalStateWhenOnlyMapperIsSpecifiedToParseWithoutArguments() {
+       CsvToBean csvtb = new CsvToBean();
+       csvtb.setMappingStrategy(new HeaderColumnNameMappingStrategy<SimpleAnnotatedMockBean>());
+       csvtb.parse();
+   }
+   
+   @Test(expected = IllegalArgumentException.class)
+   public void throwIllegalStateWhenReaderNotProvidedInBuilder() {
+       new CsvToBeanBuilder<SimpleAnnotatedMockBean>(null)
+               .withType(SimpleAnnotatedMockBean.class)
+               .build();
+   }
+   
+   @Test(expected = IllegalStateException.class)
+   public void throwIllegalStateWhenTypeAndMapperNotProvidedInBuilder() {
+       new CsvToBeanBuilder<SimpleAnnotatedMockBean>(new StringReader(TEST_STRING_WITHOUT_MANDATORY_FIELD))
+               .build();
+   }
+   
+   @Test
+   public void testMinimumBuilder() {
+       List<SimpleAnnotatedMockBean> result =
+               new CsvToBeanBuilder<SimpleAnnotatedMockBean>(new StringReader(TEST_STRING))
+                       .withType(SimpleAnnotatedMockBean.class)
+                       .build()
+                       .parse();
+       assertEquals(2, result.size());
+   }
+   
+   private class BegToBeFiltered implements CsvToBeanFilter {
+
+      @Override
+      public boolean allowLine(String[] line) {
+         for(String col : line) {
+             if(col.equals("filtermebaby")) return false;
+         }
+         return true;
+      }
+
+   }
+
+   @Test
+   public void testMaximumBuilder() throws FileNotFoundException {
+       HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull> map = new HeaderColumnNameMappingStrategy<AnnotatedMockBeanFull>();
+       map.setType(AnnotatedMockBeanFull.class);
+       
+       // Yeah, some of these are the default values, but I'm having trouble concocting
+       // a CSV file screwy enough to meet the requirements posed by not using
+       // defaults for everything.
+       CsvToBean csvtb =
+               new CsvToBeanBuilder<AnnotatedMockBeanFull>(new FileReader("src/test/resources/testinputmaximumbuilder.csv"))
+                       .withEscapeChar('?')
+                       .withFieldAsNull(CSVReaderNullFieldIndicator.NEITHER) //default
+                       .withFilter(new BegToBeFiltered())
+                       .withIgnoreLeadingWhiteSpace(false)
+                       .withIgnoreQuotations(true)
+                       .withKeepCarriageReturn(false) //default
+                       .withMappingStrategy(map)
+                       .withQuoteChar('!')
+                       .withSeparator('#')
+                       .withSkipLines(1)
+                       .withStrictQuotes(false) // default
+                       .withThrowExceptions(false)
+                       .withType(AnnotatedMockBeanFull.class)
+                       .withVerifyReader(false)
+                       .build();
+       List<AnnotatedMockBeanFull> result = csvtb.parse();
+       
+       // Three lines, one filtered, one throws an exception
+       assertEquals(1, result.size());
+       assertEquals(1, csvtb.getCapturedExceptions().size());
+       AnnotatedMockBeanFull bean = result.get(0);
+       assertEquals("\ttest string of everything!", bean.getStringClass());
+       assertTrue(bean.getBoolWrapped());
+       assertFalse(bean.isBoolPrimitive());
+       assertTrue(bean.getByteWrappedDefaultLocale() == 1);
+       // Nothing else really matters
+   }
+   
+   @Test
+   public void testColumnMappingStrategyWithBuilder() throws FileNotFoundException {
+       List<AnnotatedMockBeanFull> result =
+               new CsvToBeanBuilder<AnnotatedMockBeanFull>(new FileReader("src/test/resources/testinputposfullgood.csv"))
+                       .withSeparator(';')
+                       .withType(AnnotatedMockBeanFull.class)
+                       .build()
+                       .parse();
+       assertEquals(2, result.size());
+   }
+   
+   @Test
+   public void testMappingWithoutAnnotationsWithBuilder() {
+       List<MockBean> result =
+               new CsvToBeanBuilder<MockBean>(new StringReader(TEST_STRING))
+                       .withType(MockBean.class)
+                       .build()
+                       .parse();
+       assertEquals(2, result.size());
    }
 }

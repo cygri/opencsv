@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opencsv.bean.mocks;
+package com.opencsv.exceptions;
 
 /**
- * The members of this class are not annotated, but the entire class is
- * intended to be annotated in a containing class.
- *
+ * The base class for all unchecked exceptions in opencsv.
  * @author Andrew Rucker Jones
  */
-public class ComplexClassForCustomAnnotation {
-    public int i;
-    public char c;
-    public String s;
+public class CsvRuntimeException extends RuntimeException {
     
-    public int getI() {return i;} public void setI(int i) {this.i = i;}
-    public char getC() {return c;} public void setC(char c) {this.c = c;}
-    public String getS() {return s;} public void setS(String s) {this.s = s;}
+    /** Nullary constructor. Does nothing. */
+    public CsvRuntimeException() {}
+    
+    /**
+     * Constructor with a message.
+     * @param message A human-readable error message
+     */
+    public CsvRuntimeException(String message) {super(message);}
 }

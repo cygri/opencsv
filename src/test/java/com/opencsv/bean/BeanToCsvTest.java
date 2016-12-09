@@ -27,8 +27,6 @@ public class BeanToCsvTest {
          + "\"null\",\"null\",\"2\"\n";
 
    private List<MockBean> testData;
-   private MockBean mb1;
-   private MockBean mb2;
    private List<SimpleAnnotatedMockBean> annotatedTestData;
    private List<MockBean> nullData;
    private List<SimpleAnnotatedMockBean> nullAnnotatedData;
@@ -182,6 +180,16 @@ public class BeanToCsvTest {
          public boolean isAnnotationDriven() {
             return false;
          }
+         
+         @Override
+         public String[] generateHeader() {
+             return new String[0];
+         }
+         
+         @Override
+         public int findMaxFieldIndex() {
+             return -1;
+         }
       };
    }
 
@@ -201,7 +209,7 @@ public class BeanToCsvTest {
 
       StringWriter sw = new StringWriter();
 
-      assertFalse(bean.write(strat, sw, new ArrayList<Object>()));
+      assertFalse(bean.write(strat, sw, new ArrayList<MockBean>()));
    }
 
    @Test

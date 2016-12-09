@@ -42,10 +42,26 @@ public class ColumnPositionMappingStrategy<T> extends HeaderColumnNameMappingStr
     public void captureHeader(CSVReader reader) throws IOException {
         //do nothing, first line is not header
     }
+    
+    /**
+     * This method returns an empty array.
+     * The column position mapping strategy assumes that there is no header, and
+     * thus it also does not write one, accordingly.
+     * @return An empty array
+     */
+    @Override
+    public String[] generateHeader() {
+        return new String[0];
+    }
 
     @Override
     public Integer getColumnIndex(String name) {
         return indexLookup.get(name);
+    }
+
+    @Override
+    public int findMaxFieldIndex() {
+        return columnMapping == null ? -1 : columnMapping.length-1;
     }
 
     /**

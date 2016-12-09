@@ -45,4 +45,17 @@ public class ConverterComplexClassForCustomAnnotation<T> extends AbstractBeanFie
         o.s = sa[2];
         return o;
     }
+    
+    @Override
+    protected String convertToWrite(Object o) throws CsvDataTypeMismatchException {
+        if(!(o instanceof ComplexClassForCustomAnnotation)) {
+            throw new CsvDataTypeMismatchException();
+        }
+        ComplexClassForCustomAnnotation c = (ComplexClassForCustomAnnotation)o;
+        StringBuilder sb = new StringBuilder();
+        sb.append(c.i).append('.');
+        sb.append(c.c).append('.');
+        sb.append(c.s);
+        return sb.toString();
+    }
 }

@@ -28,9 +28,15 @@ import org.apache.commons.lang3.StringUtils;
  * Boolean.
  * This class also demonstrates how to localize booleans for any other language.
  *
+ * @param <T> Type of the bean to be manipulated
+ * 
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
-public class ConvertGermanToBoolean extends AbstractBeanField {
+public class ConvertGermanToBoolean<T> extends AbstractBeanField<T> {
+    
+    protected static final String WAHR = "wahr";
+    protected static final String FALSCH = "falsch";
 
     /**
      * Silence code style checker by adding a useless constructor.
@@ -56,8 +62,8 @@ public class ConvertGermanToBoolean extends AbstractBeanField {
         if (StringUtils.isEmpty(value)) {
             return null;
         }
-        String[] trueStrings = {"wahr", "ja", "j", "1", "w"};
-        String[] falseStrings = {"falsch", "nein", "n", "0", "f"};
+        String[] trueStrings = {WAHR, "ja", "j", "1", "w"};
+        String[] falseStrings = {FALSCH, "nein", "n", "0", "f"};
         Converter bc = new BooleanConverter(trueStrings, falseStrings);
         try {
             return bc.convert(Boolean.class, value.trim());
@@ -68,4 +74,34 @@ public class ConvertGermanToBoolean extends AbstractBeanField {
             throw csve;
         }
     }
+    
+    /**
+     * This method takes the current value of the field in question in the bean
+     * passed in and converts it to a string.
+     * This implementation returns true/false values in German.
+     * 
+     * @return "wahr" if true, "falsch" if false
+     * @throws CsvDataTypeMismatchException If the field is not a {@code boolean}
+     *   or {@link java.lang.Boolean}
+     * @throws CsvRequiredFieldEmptyException Not thrown by this implementation
+     */
+    @Override
+    protected String convertToWrite(Object value)
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        String result = "";
+        try {
+            if(value != null) {
+                Boolean b = (Boolean) value;
+                result = b?WAHR:FALSCH;
+            }
+        }
+        catch(ClassCastException e) {
+            CsvDataTypeMismatchException csve =
+                    new CsvDataTypeMismatchException("The field must be of type Boolean or boolean.");
+            csve.initCause(e);
+            throw csve;
+        }
+        return result;
+    }
+
 }

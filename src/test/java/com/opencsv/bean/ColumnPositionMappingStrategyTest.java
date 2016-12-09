@@ -16,7 +16,9 @@ package com.opencsv.bean;
  limitations under the License.
  */
 
+import com.opencsv.CSVReader;
 import com.opencsv.bean.mocks.MockBean;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -161,5 +163,19 @@ public class ColumnPositionMappingStrategyTest {
 
       assertEquals(null, strat.getColumnName(0));
       assertArrayEquals(new String[0], strat.getColumnMapping());
+   }
+   
+   @Test
+   public void throwsIllegalStateExceptionIfTypeNotSet() throws IOException {
+      ColumnPositionMappingStrategy<MockBean> s = new ColumnPositionMappingStrategy<MockBean>();
+      StringReader reader = new StringReader("doesnt,matter\nat,all");
+      CSVReader csvReader = new CSVReader(reader);
+      CsvToBean csvtb = new CsvToBean();
+      try {
+          csvtb.parse(s, csvReader);
+      }
+      catch(RuntimeException e) {
+          assertEquals(IllegalStateException.class, e.getCause().getClass());
+      }
    }
 }

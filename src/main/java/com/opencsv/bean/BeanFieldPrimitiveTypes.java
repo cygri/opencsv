@@ -18,14 +18,12 @@ package com.opencsv.bean;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.converters.*;
-import org.apache.commons.beanutils.locale.converters.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Locale;
+import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.locale.LocaleConvertUtilsBean;
 
 /**
  * This class wraps fields from the reflection API in order to handle
@@ -33,16 +31,17 @@ import java.util.Locale;
  *
  * @param <T> The type of the bean
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
 
     private final boolean required;
     private final String locale;
-
+    
     /**
-     * @param field    A {@link java.lang.reflect.Field} object.
+     * @param field    A {@link java.lang.reflect.Field} object
      * @param required True if the field is required to contain a value, false
-     *                 if it is allowed to be null or a blank string.
+     *                 if it is allowed to be null or a blank string
      * @param locale   If not null or empty, specifies the locale used for
      *                 converting locale-specific data types
      */
@@ -54,7 +53,7 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
 
     /**
      * @return True if the field is required to be set (cannot be null or an
-     * empty string), false otherwise.
+     * empty string), false otherwise
      */
     public boolean isRequired() {
         return this.required;
@@ -72,93 +71,71 @@ public class BeanFieldPrimitiveTypes<T> extends AbstractBeanField<T> {
         Object o = null;
 
         if (StringUtils.isNotBlank(value)) {
-            Class<?> fieldType = field.getType();
             try {
-                if (fieldType.equals(Boolean.TYPE) || fieldType.equals(Boolean.class)) {
-                    BooleanConverter c = new BooleanConverter();
-                    o = c.convert(Boolean.class, value.trim());
-                } else if (fieldType.equals(Byte.TYPE) || fieldType.equals(Byte.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        ByteConverter c = new ByteConverter();
-                        o = c.convert(Byte.class, value.trim());
-                    } else {
-                        ByteLocaleConverter c = new ByteLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(Double.TYPE) || fieldType.equals(Double.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        DoubleConverter c = new DoubleConverter();
-                        o = c.convert(Double.class, value.trim());
-                    } else {
-                        DoubleLocaleConverter c = new DoubleLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(Float.TYPE) || fieldType.equals(Float.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        FloatConverter c = new FloatConverter();
-                        o = c.convert(Float.class, value.trim());
-                    } else {
-                        FloatLocaleConverter c = new FloatLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(Integer.TYPE) || fieldType.equals(Integer.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        IntegerConverter c = new IntegerConverter();
-                        o = c.convert(Integer.class, value.trim());
-                    } else {
-                        IntegerLocaleConverter c = new IntegerLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(Long.TYPE) || fieldType.equals(Long.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        LongConverter c = new LongConverter();
-                        o = c.convert(Long.class, value.trim());
-                    } else {
-                        LongLocaleConverter c = new LongLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(Short.TYPE) || fieldType.equals(Short.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        ShortConverter c = new ShortConverter();
-                        o = c.convert(Short.class, value.trim());
-                    } else {
-                        ShortLocaleConverter c = new ShortLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(Character.TYPE) || fieldType.equals(Character.class)) {
-                    CharacterConverter c = new CharacterConverter();
-                    o = c.convert(Character.class, value.charAt(0));
-                } else if (fieldType.equals(BigDecimal.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        BigDecimalConverter c = new BigDecimalConverter();
-                        o = c.convert(BigDecimal.class, value.trim());
-                    } else {
-                        BigDecimalLocaleConverter c = new BigDecimalLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.equals(BigInteger.class)) {
-                    if (StringUtils.isEmpty(locale)) {
-                        BigIntegerConverter c = new BigIntegerConverter();
-                        o = c.convert(BigInteger.class, value.trim());
-                    } else {
-                        BigIntegerLocaleConverter c = new BigIntegerLocaleConverter(Locale.forLanguageTag(locale));
-                        o = c.convert(value.trim());
-                    }
-                } else if (fieldType.isAssignableFrom(String.class)) {
-                    o = value;
-                } else {
-                    throw new CsvDataTypeMismatchException(value, fieldType, String.format(
-                            "Unable to set field value for field '%s' with value '%s' "
-                                    + "- type is unsupported. Use primitive, boxed "
-                                    + "primitive, BigDecimal, BigInteger and String types only.",
-                            fieldType, value));
+                if(StringUtils.isEmpty(locale)) {
+                    ConvertUtilsBean converter = new ConvertUtilsBean();
+                    converter.register(true, false, 0);
+                    o = converter.convert(value, field.getType());
+                }
+                else {
+                    LocaleConvertUtilsBean lcub = new LocaleConvertUtilsBean();
+                    lcub.setDefaultLocale(new Locale(locale));
+                    o = lcub.convert(value, field.getType());
                 }
             } catch (ConversionException e) {
-                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(value, fieldType);
+                CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(
+                        value, field.getType(),
+                        "Conversion of " + value + " to " + field.getType().getCanonicalName() + " failed.");
                 csve.initCause(e);
                 throw csve;
             }
         }
         return o;
+    }
+    
+    /**
+     * This method takes the current value of the field in question in the bean
+     * passed in and converts it to a string.
+     * It works for all of the primitives, wrapped primitives,
+     * {@link java.lang.String}, {@link java.math.BigDecimal}, and
+     * {@link java.math.BigInteger}.
+     * 
+     * @throws CsvDataTypeMismatchException If there is an error converting
+     *   value to a string
+     */
+    // The rest of the JavaDoc is automatically inherited from the base class.
+    @Override
+    protected String convertToWrite(Object value)
+            throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        // Validation
+        if(value == null) {
+            if(required) {
+                throw new CsvRequiredFieldEmptyException();
+            }
+            else {
+                return null;
+            }
+        }
+        
+        // Conversion
+        String result;
+        try {
+            if(StringUtils.isEmpty(locale)) {
+                ConvertUtilsBean converter = new ConvertUtilsBean();
+                result = converter.convert(value);
+            }
+            else {
+                LocaleConvertUtilsBean converter = new LocaleConvertUtilsBean();
+                converter.setDefaultLocale(new Locale(locale));
+                result = converter.convert(value);
+            }
+        }
+        catch(ConversionException e) {
+            CsvDataTypeMismatchException csve = new CsvDataTypeMismatchException(
+                    "The field must be primitive, boxed primitive, BigDecimal, BigInteger or String types only.");
+            csve.initCause(e);
+            throw csve;
+        }
+        return result;
     }
 }

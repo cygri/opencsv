@@ -75,6 +75,16 @@ public class AnnotationTest {
         strat.setType(AnnotatedMockBeanFull.class);
         FileReader fin = new FileReader("src/test/resources/testinputfullgood.csv");
         testGoodData(strat, fin);
+        
+        HeaderColumnNameMappingStrategy<AnnotatedMockBeanFullDerived> stratd =
+                new HeaderColumnNameMappingStrategy<AnnotatedMockBeanFullDerived>();
+        stratd.setType(AnnotatedMockBeanFullDerived.class);
+        fin = new FileReader("src/test/resources/testinputderivedgood.csv");
+        List<AnnotatedMockBeanFull> beanList = testGoodData(stratd, fin);
+        AnnotatedMockBeanFullDerived bean = (AnnotatedMockBeanFullDerived) beanList.get(0);
+        assertEquals(7, bean.getIntInSubclass());
+        bean = (AnnotatedMockBeanFullDerived) beanList.get(1);
+        assertEquals(8, bean.getIntInSubclass());
     }
 
     @Test
@@ -86,9 +96,9 @@ public class AnnotationTest {
         testGoodData(strat, fin);
     }
 
-    private static void testGoodData(MappingStrategy strat, Reader fin) {
+    private static List<AnnotatedMockBeanFull> testGoodData(MappingStrategy strat, Reader fin) {
         CSVReader read = new CSVReader(fin, ';');
-        CsvToBean ctb = new CsvToBean();
+        CsvToBean<AnnotatedMockBeanFull> ctb = new CsvToBean<AnnotatedMockBeanFull>();
         List<AnnotatedMockBeanFull> beanList = ctb.parse(strat, read);
         AnnotatedMockBeanFull bean = beanList.get(0);
         assertTrue(bean.getBoolWrapped());
@@ -153,6 +163,9 @@ public class AnnotationTest {
         GregorianCalendar gc = createDefaultTime();
         gc.set(Calendar.HOUR_OF_DAY, 16);
         assertEquals(gc.getTimeInMillis(), bean.getGcalDefaultLocale().getTimeInMillis());
+        assertNull(bean.getCalDefaultLocale());
+        
+        return beanList;
     }
 
     @Test
@@ -408,7 +421,7 @@ public class AnnotationTest {
             assertEquals(1, csve.getLineNumber());
             assertEquals(Date.class, csve.getDestinationClass());
             assertEquals(UNPARSABLE, (String) csve.getSourceObject());
-            assertTrue(csve.getCause() instanceof ConversionException);
+            assertTrue(csve.getCause() instanceof ParseException);
         }
 
         fin = new FileReader("src/test/resources/testinputcase83.csv");
@@ -422,7 +435,7 @@ public class AnnotationTest {
             assertEquals(1, csve.getLineNumber());
             assertEquals(Date.class, csve.getDestinationClass());
             assertEquals(UNPARSABLE, (String) csve.getSourceObject());
-            assertTrue(csve.getCause() instanceof ConversionException);
+            assertTrue(csve.getCause() instanceof ParseException);
         }
 
         fin = new FileReader("src/test/resources/testinputcase81.csv");
@@ -451,7 +464,7 @@ public class AnnotationTest {
             assertEquals(1, csve.getLineNumber());
             assertEquals(Date.class, csve.getDestinationClass());
             assertEquals(UNPARSABLE, (String) csve.getSourceObject());
-            assertTrue(csve.getCause() instanceof ConversionException);
+            assertTrue(csve.getCause() instanceof ParseException);
         }
 
         fin = new FileReader("src/test/resources/testinputcase83.csv");
@@ -465,7 +478,7 @@ public class AnnotationTest {
             assertEquals(1, csve.getLineNumber());
             assertEquals(Date.class, csve.getDestinationClass());
             assertEquals(UNPARSABLE, (String) csve.getSourceObject());
-            assertTrue(csve.getCause() instanceof ConversionException);
+            assertTrue(csve.getCause() instanceof ParseException);
         }
 
         HeaderColumnNameMappingStrategy<TestCase34> strat34 =

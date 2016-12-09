@@ -20,6 +20,7 @@ package com.opencsv.exceptions;
  * cannot be converted to the required type of the destination field.
  *
  * @author Andrew Rucker Jones
+ * @since 3.8
  */
 public class CsvDataTypeMismatchException extends CsvException {
     private final Object sourceObject;
@@ -38,8 +39,10 @@ public class CsvDataTypeMismatchException extends CsvException {
      * Constructor for setting the data and the class of the intended
      * destination field.
      *
-     * @param sourceObject     Object that was to be assigned to the destination field
-     * @param destinationClass Class of the destination field
+     * @param sourceObject     Object that was to be assigned to the destination
+     *   field. This may not be available in all contexts.
+     * @param destinationClass Class of the destination field. This may not be
+     *   available in all contexts.
      */
     public CsvDataTypeMismatchException(Object sourceObject, Class destinationClass) {
         this.sourceObject = sourceObject;
@@ -61,8 +64,10 @@ public class CsvDataTypeMismatchException extends CsvException {
      * Constructor for setting the data and the class of the intended
      * destination field along with an error message.
      *
-     * @param sourceObject     Object that was to be assigned to the destination field
-     * @param destinationClass Class of the destination field
+     * @param sourceObject     Object that was to be assigned to the destination
+     *   field. This may not be available in all contexts.
+     * @param destinationClass Class of the destination field. This may not be
+     *   available in all contexts.
      * @param message          Human-readable error text
      */
     public CsvDataTypeMismatchException(Object sourceObject, Class destinationClass, String message) {

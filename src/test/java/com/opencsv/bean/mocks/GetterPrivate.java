@@ -15,18 +15,14 @@
  */
 package com.opencsv.bean.mocks;
 
+import com.opencsv.bean.CsvBindByName;
+
 /**
- * The members of this class are not annotated, but the entire class is
- * intended to be annotated in a containing class.
- *
+ * For test case 20 (writing).
  * @author Andrew Rucker Jones
  */
-public class ComplexClassForCustomAnnotation {
-    public int i;
-    public char c;
-    public String s;
-    
-    public int getI() {return i;} public void setI(int i) {this.i = i;}
-    public char getC() {return c;} public void setC(char c) {this.c = c;}
-    public String getS() {return s;} public void setS(String s) {this.s = s;}
+public class GetterPrivate {
+        @CsvBindByName
+        private int test = 123;
+        private int getTest() {return test;}
 }
