@@ -52,6 +52,12 @@ public interface ICSVParser {
      */
     char NULL_CHARACTER = '\0';
     /**
+     * Multi-line fields with more than this number of lines are considered an
+     * error. This is to fail faster in the case of a stray unmatched quote in
+     * a very large file. 
+     */
+    int MAX_LINES_IN_MULTILINE = 10000;
+    /**
      * Denotes what field contents will cause the parser to return null:  EMPTY_SEPARATORS, EMPTY_QUOTES, BOTH, NEITHER (default)
      */
     CSVReaderNullFieldIndicator DEFAULT_NULL_FIELD_INDICATOR = NEITHER;

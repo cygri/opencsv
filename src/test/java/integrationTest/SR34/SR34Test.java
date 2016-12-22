@@ -3,12 +3,14 @@ package integrationTest.SR34;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.ICSVParser;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
 import java.util.List;
 
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -60,17 +62,16 @@ public class SR34Test {
         BufferedReader bufferedStringReader1 = new BufferedReader(new InputStreamReader(new FileInputStream(TEST_FILE), "UTF-8"));
         CSVReader reader1 = new CSVReader(bufferedStringReader1, ICSVParser.DEFAULT_SEPARATOR, ICSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
 
-        List<String[]> rawTokens1;
-        rawTokens1 = reader1.readAll();
-
-        assertEquals(1, rawTokens1.size());
-
-        String[] line = rawTokens1.get(0);
-        assertEquals(4, line.length);
-        assertEquals("10", line[0]);
-        assertEquals("IBM", line[1]);
-        assertEquals("2015063", line[2]);
-        assertEquals("064230733910", line[3]);
+        try {
+            reader1.readAll();
+            fail("Should have thrown IOException due to unterminated quote");
+        } catch (IOException possiblyExpected) {
+            if (!possiblyExpected.getMessage().toLowerCase().contains("un-terminated")) {
+                fail("Unexpected IOException: " + possiblyExpected.getMessage());
+            }
+        } finally {
+            reader1.close();
+        }
     }
 
     @Test
@@ -80,6 +81,7 @@ public class SR34Test {
 
         List<String[]> rawTokens1;
         rawTokens1 = reader1.readAll();
+        reader1.close();
 
         assertEquals(1, rawTokens1.size());
 

@@ -274,6 +274,9 @@ public class CSVReader implements Closeable, Iterable<String[]> {
         do {
             String nextLine = getNextLine();
             if (!hasNext) {
+                if (parser.isPending()) {
+                    throw new IOException("Un-terminated quoted field at end of CSV file");
+                }
                 return validateResult(result);
             }
             String[] r = parser.parseLineMulti(nextLine);

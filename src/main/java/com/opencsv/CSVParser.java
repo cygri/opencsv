@@ -65,8 +65,9 @@ public class CSVParser implements ICSVParser {
      */
     private final boolean ignoreQuotations;
     private final CSVReaderNullFieldIndicator nullFieldIndicator;
-    private String pending;
+    private StringBuilder pending;
     private boolean inField = false;
+    private int multiLineCount = 0;
 
     /**
      * Constructs CSVParser using a comma for the separator.
@@ -298,19 +299,21 @@ public class CSVParser implements ICSVParser {
 
         if (nextLine == null) {
             if (pending != null) {
-                String s = pending;
+                String[] result = new String[]{pending.toString()};
                 pending = null;
-                return new String[]{s};
+                return result;
             }
             return null;
         }
 
         List<String> tokensOnThisLine = new ArrayList<String>();
-        StringBuilder sb = new StringBuilder(nextLine.length() + READ_BUFFER_SIZE);
         boolean inQuotes = false;
         boolean fromQuotedField = false;
-        if (pending != null) {
-            sb.append(pending);
+        StringBuilder sb;
+        if (pending == null) {
+            sb = new StringBuilder(nextLine.length() + READ_BUFFER_SIZE);
+        } else {
+            sb = pending;
             pending = null;
             inQuotes = !this.ignoreQuotations;
         }
@@ -368,8 +371,14 @@ public class CSVParser implements ICSVParser {
             if (multi) {
                 // continuing a quoted section, re-append newline
                 sb.append('\n');
-                pending = sb.toString();
+                pending = sb;
                 sb = null; // this partial content is not to be added to field list yet
+                multiLineCount++;
+                if (multiLineCount > MAX_LINES_IN_MULTILINE) {
+                    throw new IOException(
+                        "Multi-line field with more than " + MAX_LINES_IN_MULTILINE + 
+                        " lines. Possible stray quote?");
+                }
             } else {
                 throw new IOException("Un-terminated quoted field at end of CSV line");
             }
@@ -377,6 +386,7 @@ public class CSVParser implements ICSVParser {
                 fromQuotedField = true;
             }
         } else {
+            multiLineCount = 0;
             inField = false;
         }
 
